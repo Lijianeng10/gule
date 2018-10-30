@@ -1,0 +1,72 @@
+/* navMenu */
+.fa-sitemap {margin-right: 8px;}
+.navMenubox {background: #fff; margin: 10px auto; overflow: hidden; border-radius: 10px;}
+.navMenu-top { padding: 10px; color: #fff; border-bottom: 0px solid rgba(255,255,255,.1) }
+.navMenu> li { display: block; margin: 0; padding: 0; border: 0px; }
+.navMenu>li>a { display: block; overflow: hidden; padding-left: 0px; line-height: 45px; color:#0f0f0f; transition: all .3s; position: relative; text-decoration: none; /*border-top: 1px solid #D3D3D3;*/ }
+/*.navMenu > li:nth-of-type(1)> a { border-top: 1px solid transparent; }*/
+/*.navMenu > li:last-child > a { border-bottom: 1px solid transparent; }*/
+.navMenu>li>a>i { float: left; font-style: normal; margin: 0 5px; }
+.navMenu li a .arrow:before { display: block; float: right; margin-right: 15px; display: inline; font-family: FontAwesome; height: auto; content: "\f105"; font-weight: 200; text-shadow: none; }
+.navMenu li a .arrow.open:before { float: right; margin-top: 0px; margin-right: 15px; display: inline; font-family: FontAwesome; height: auto;content: "\f107"; font-weight: 200; text-shadow: none; }
+.navMenu>li>a.active, .navMenu>li>a:hover { color:#267CBE; text-decoration:none;}
+.navMenu>li>ul.sub-menu, .navMenu>li>ul.sub-menu>li>ul.sub-menu { display: none; list-style: none; clear: both;}
+.navMenu>li.active > ul.sub-menu, .navMenu>li>ul.sub-menu>li.active >ul.sub-menu { }
+.navMenu>li>ul.sub-menu li {  margin: 0px; padding: 0px; }
+.navMenu>li>ul.sub-menu li>a { display: block; line-height: 45px; padding-left: 20px; color: #ABB1B7; clear: both; }
+.navMenu>li>ul.sub-menu li>a.active, .navMenu>li>ul.sub-menu li>a:hover, .navMenu>li>ul.sub-menu>li.active >a { color: #267CBE;background-color:#F5F7FB; text-decoration:none; }
+.navMenu>li>ul.sub-menu li>a{
+    padding-left: 20%;
+}
+.navMenubox #slimtest1>.navMenu>li>a.afinve:hover, .navMenubox #slimtest1>.navMenu>li>a.afinve:hover span {
+    color: #267CBE;
+    background:#F5F7FB;
+    text-decoration:none;
+
+}
+.navMenu>li>ul.sub-menu li>ul.sub-menu li>a{
+    padding-left: 30%;
+}
+
+.menu-t1{
+    /*margin-left: 10px;*/
+    padding-left: 8%;
+    font-size: 16px;
+    font-weight: 400;
+    color: #485a6a;
+}
+
+
+/*.navMenu>li>ul.sub-menu li.afinve {*/
+/*border-top: 1px dashed #e5e5e5;*/
+/*}*/
+
+.navMenu>li.open>ul.sub-menu li>ul.sub-menu li>a{
+    position: relative;
+}
+.navMenu>li>ul.sub-menu li>ul.sub-menu li>a:before {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 0;
+    left:22px;
+    width: 1px;
+    height: 100%;
+    /*border-left: 1px dashed #9cbdd8;*/
+}
+.navMenu>li.open>ul.sub-menu li>ul.sub-menu li>a:after{
+    display: block;
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left:22px;
+    width: 30px;
+    /*border-bottom: 1px dashed #9cbdd8;*/
+}
+/*.icon_1:before { content: "nihao"; }*/
+/*.icon_2:before { content: "hao"; }*/
+/*.icon_3:before { content: "a"; }*/
+/*---------------------*/
+
+.clearfix:after{content:"\200B";display:block;height:0;clear:both}
