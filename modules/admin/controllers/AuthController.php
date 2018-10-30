@@ -1,20 +1,20 @@
 <?php
 
-namespace app\modules\shopadmin\controllers;
+namespace app\modules\admin\controllers;
 
-use app\modules\shopadmin\models\AdminRole;
+use app\modules\admin\models\AdminRole;
 use app\modules\common\helpers\AdminCommonfun;
 use Yii;
 use yii\web\Controller;
-use app\modules\shopadmin\models\SysAuth;
-use app\modules\shopadmin\models\SysRole;
-use app\modules\shopadmin\models\SysAdmin;
+use app\modules\admin\models\SysAuth;
+use app\modules\admin\models\SysRole;
+use app\modules\admin\models\SysAdmin;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\db\Exception;
 
 /**
- * Auth controller for the `auth` module
+ * Default controller for the `admin` module
  */
 class AuthController extends Controller
 {
@@ -196,7 +196,7 @@ class AuthController extends Controller
         $type = $request->get('type', 2);//type 用来区分是列表搜索1 还是新增编辑2
         $authLists = SysAuth::find()
             ->select(['auth_id as id', 'auth_name as text', 'auth_pid'])
-            //->where(['auth_pid' => $id])
+            ->where(['auth_pid' => $id])
             ->orderBy('auth_sort desc')
             ->asArray()
             ->all();
@@ -220,43 +220,24 @@ class AuthController extends Controller
                 $auth[0] = [
                     'id' => '-1',
                     'text' => '所有权限',
-					'auth_pid' => '0',
                     'state' => 'open',
                 ];
                 $auth[1] = [
                     'id' => '0',
                     'text' => '顶级权限',
-					'auth_pid' => '0',
                     'state' => 'open',
                 ];
             }elseif($type==2){
                 $auth[0] = [
                     'id' => '0',
                     'text' => '顶级权限',
-					'auth_pid' => '0',
                     'state' => 'open',
                 ];
             }
 
         }
-		$tree = array();
-        $authLists = $this->actionTree($authLists, $tree);
         $authLists = array_merge($auth, $authLists);
         return json_encode($authLists);
-    }
-	
-	public function actionTree($info, $child, $pid = 0) {
-        $child = array();
-        if (!empty($info)) {
-            foreach ($info as $k => &$v) {
-                if ($v['auth_pid'] == $pid) {
-                    $v['children'] = $this->actionTree($info, $child, $v['id']);
-                    $child[] = $v;
-                    unset($info[$k]);
-                }
-            }
-        }
-        return $child;
     }
 
     public function actionGetMyAuths(){

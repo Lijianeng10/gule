@@ -26,6 +26,28 @@ class admin extends \yii\base\Module {
             "LoginFilter" => [
                 "class" => 'app\modules\core\filters\LoginFilter'
             ],
+//            "AuthFilter" => [
+//                "class" => 'app\modules\core\filters\AuthFilter',
+//                "except" => [
+//                    /**
+//                     * 后台管理用户
+//                     */
+//                    'admin/login',
+//                    'admin/logout',
+//                    'admin/get-admin-list',
+//                    'admin/add',
+//                    'admin/update',
+//
+//                    'auth/*',
+//                    'role/*',
+////                    'views/*'
+//                    /**
+//                     * 权限
+//                     */
+//                    'auth/add',
+//                    'auth/edit-save',
+//                ],
+//            ],
         ];
     }
 

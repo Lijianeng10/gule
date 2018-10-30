@@ -5,21 +5,21 @@ namespace app\modules\admin\models;
 use Yii;
 
 /**
- * This is the model class for table "sys_admin_role".
+ * This is the model class for table "sys_role_auth".
  *
- * @property integer $admin_role_id
- * @property integer $admin_id
+ * @property integer $role_auth_id
  * @property integer $role_id
+ * @property integer $auth_id
  * @property string $update_time
  */
-class SysAdminRole extends \yii\db\ActiveRecord
+class SysRoleAuth extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'sys_admin_role';
+        return 'sys_role_auth';
     }
 
     /**
@@ -28,8 +28,8 @@ class SysAdminRole extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['admin_id'], 'required'],
-            [['admin_id', 'role_id'], 'integer'],
+            [['role_id', 'auth_id'], 'required'],
+            [['role_id', 'auth_id'], 'integer'],
             [['update_time'], 'safe'],
         ];
     }
@@ -40,9 +40,9 @@ class SysAdminRole extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'admin_role_id' => 'Admin Role ID',
-            'admin_id' => 'Admin ID',
+            'role_auth_id' => 'Role Auth ID',
             'role_id' => 'Role ID',
+            'auth_id' => 'Auth ID',
             'update_time' => 'Update Time',
         ];
     }

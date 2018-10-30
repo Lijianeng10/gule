@@ -1,0 +1,59 @@
+<div class="super-theme-example">
+    <form id="myform">
+        <!--                <div class="form-item" >-->
+        <input name="admin_id" type="hidden" value=" <?php echo $admin['admin_id']; ?> ">
+        <!--                </div>-->
+        <div class="form-item">
+            <label for="" class="label-top">管理员登录名：</label>
+            <input name="admin_name" class="easyui-validatebox easyui-textbox" prompt="请输入用户名"
+                   data-options="required:true,validType:'length[3,10]'" value="<?php echo $admin['admin_name'];?>">
+        </div>
+        <div class="form-item">
+            <label for="" class="label-top">管理员密码：</label>
+            <input name="admin_pwd" class="easyui-textbox" data-options="iconCls:'fa fa-user',iconAlign:'left'" prompt="请输入密码" value="********">
+        </div>
+        <div class="form-item">
+            <label for="" class="label-top">管理员昵称：</label>
+            <input name="admin_nickname" class="easyui-validatebox easyui-textbox"
+                   value="<?php echo $admin['admin_nickname']; ?>">
+        </div>
+        <div class="form-item">
+            <label for="" class="label-top">管理员手机号：</label>
+            <input name="admin_tel" class="easyui-validatebox easyui-textbox"
+                   value="<?php echo $admin['admin_tel']; ?>">
+        </div>
+<!--        <div class="form-item">-->
+<!--            <label for="" class="label-top">管理员头像：</label>-->
+<!--            <img height='50' width='50' src="--><?php //echo $admin['admin_pic'] ?><!-- ">-->
+<!--        </div>-->
+        <div class="form-item">
+            <label for="" class="label-top">所属角色：</label>
+            <input class="easyui-validatebox easyui-combobox" name="admin_role[]" id="admin_role" data-options="required:true">
+        </div>
+        <div class="form-item">
+            <label for="" class="label-top">所属类型：</label>
+            <select id="ec" class="easyui-combobox" data-options="editable:false,panelHeight:null" name="admin_type">
+                <option value="0" <?php if ($admin['admin_type'] == 0){ ?>selected <?php } ?>>系统管理员</option>
+                <option value="1" <?php if ($admin['admin_type'] == 1){ ?>selected <?php } ?>>中心管理员</option>
+            </select>
+        </div>
+        <div class="form-item">
+            <label for="" class="label-top">启用状态：</label>
+            <select id="ec" class="easyui-combobox" data-options="editable:false,panelHeight:null" name="status">
+                <option value="0" <?php if ($admin['status'] != 1){ ?>selected <?php } ?>>禁用</option>
+                <option value="1" <?php if ($admin['status'] == 1){ ?>selected <?php } ?>>启用</option>
+            </select>
+        </div>
+    </form>
+</div>
+<script>
+    $("#admin_role").combobox({
+        url : '/adminmod/admin/get-role-list?id='+<?php echo $admin['admin_id'];?>,
+        valueField : 'id',
+        textField : 'text',
+        multiple:true,//是否可以多选
+        panelHeight:'auto',//面板高度
+        editable:false, //不可编辑
+    });
+
+</script>

@@ -106,7 +106,7 @@ $(function() {
 		$.messager.confirm('提示', '确定退出系统？', function(r) {
 			if(r) {
 				//ajax 请求退出接口
-                window.location.href="/shopadminmod/admin/logout";
+                window.location.href="/adminmod/admin/logout";
 			}
 		});
 	});

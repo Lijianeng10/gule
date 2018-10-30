@@ -19,7 +19,7 @@ use Yii;
  * @property string $last_login
  * @property string $update_time
  */
-class ChannelAdmin extends \yii\db\ActiveRecord
+class Admin extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc

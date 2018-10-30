@@ -34,15 +34,15 @@ class MainController extends Controller
         $menus = [
             [
                 'auth_url' => '',
-                'auth_name' => '渠道用户管理',
+                'auth_name' => '用户管理',
                 'auth_pid' => 0,
                 'auth_id' => 481,
-                'text' => '渠道用户管理',
+                'text' => '用户管理',
                 'id' => 481,
                 'childrens' => [
                     [
-                        'auth_url' => '/usermod/views/to-user-list',
-                        'auth_name' => '渠道列表',
+                        'auth_url' => '/adminmod/views/to-admin-list',
+                        'auth_name' => '用户列表',
                         'auth_pid' => 0,
                         'auth_id' => 481,
                         'text' => '渠道列表',

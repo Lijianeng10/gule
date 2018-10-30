@@ -1,16 +1,16 @@
 <?php
 
-namespace app\modules\shopadmin\controllers;
+namespace app\modules\admin\controllers;
 
 use function Amp\onError;
 use Yii;
 use yii\web\Controller;
 use yii\db\Query;
 use yii\db\Exception;
-use app\modules\shopadmin\models\SysAuth;
-use app\modules\shopadmin\models\SysRole;
-use app\modules\shopadmin\models\SysAdmin;
-use app\modules\shopadmin\models\SysAdminRole;
+use app\modules\admin\models\SysAuth;
+use app\modules\admin\models\SysRole;
+use app\modules\admin\models\Admin;
+use app\modules\admin\models\SysAdminRole;
 use app\modules\common\helpers\AdminCommonfun;
 use app\modules\common\helpers\Constants;
 
@@ -43,7 +43,7 @@ class RoleController extends Controller {
             $where[] = ['like','role_name',$role_name];
         }
         if($status === '0' || $status ==='1'){
-            $where[] = ['role_status'=>$status];
+            $where[] = ['status'=>$status];
         }
         if($start_time||$end_time){
             if($start_time){
@@ -53,10 +53,10 @@ class RoleController extends Controller {
                 $where[] = ['<','create_time',$end_time];
             }
         }
-        if($session['admin']['type'] !=0 ){
+        if($session['admin']['admin_type'] !=0 ){
             //除了超级管理员  都只能看到自己和自己所创建的角色
             if (!in_array(Constants::ADMIN_ROLE,$session['admin']['role'])){
-                $where[] = ["or",["admin_id"=>$session["admin"]["admin_id"]],["role_id"=>$session['admin']["role"]]];
+                $where[] = ["or",["admin_pid"=>$session["admin"]["admin_id"]],["role_id"=>$session['admin']["role"]]];
             }
         }
 
@@ -82,10 +82,9 @@ class RoleController extends Controller {
         $at_time = 'y/m/d h:i:s';
         $role = new SysRole();
         $role->role_name = $param["role_name"];
-        $role->admin_id = $session["admin"]["admin_id"];
-        $role->role_status = $param["status"];
-        $role->role_create_at = date('Y-m-d H:i:s');
-        $role->role_update_at = date('Y-m-d H:i:s');
+        $role->admin_pid = $session["admin"]["admin_id"];
+        $role->status = $param["status"];
+        $role->create_time = date('Y-m-d H:i:s');
         if(!$role->save()){
 //            print_r($role->errors);die;
             return $this->jsonError(100,'操作失败');
@@ -113,7 +112,7 @@ class RoleController extends Controller {
         }
 
         $role->role_name = $role_name;
-        $role->role_status = $status;
+        $role->status = $status;
 
         if(!$role->save()){
 //            print_r($role->errors);die;
@@ -129,7 +128,7 @@ class RoleController extends Controller {
      */
     public function actionDelete() {
         if (!Yii::$app->request->isPost) {
-            return $this->redirect('/shopadmin/role/index');
+            return $this->redirect('/admin/role/index');
         }
         $post = Yii::$app->request->post();
         if (!is_array($post['ids'])) {
@@ -162,7 +161,7 @@ class RoleController extends Controller {
         if($parmas['status']==1){
             $status = 0;
         }
-        SysRole::updateAll(['role_status'=>$status],['role_id'=>$parmas['id']]);
+        SysRole::updateAll(['status'=>$status],['role_id'=>$parmas['id']]);
         return $this->jsonResult(600,'修改成功',true);
     }
 
@@ -192,7 +191,7 @@ class RoleController extends Controller {
         if (isset($get['role_id']) && $get['role_id'] != null) {
             $role_id = $get['role_id'];
 //            array_key_exists(Constants::ADMIN_ROLE,$session["admin"]["role"])&&
-            if ($session["admin"]["type"]==0) { // 如果是内部用户、总管理员
+            if ($session["admin"]["admin_type"]==0) { // 如果是内部用户、总管理员
                 $authLists = (new Query())->select(['*','auth_id as id','auth_name as text'])->from('sys_auth')->where(["auth_status" => 1])->orderBy("auth_create_at asc")->all();
             } else {
                 $authLists =AdminCommonfun::getAuthurls();
