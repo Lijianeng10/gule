@@ -1,7 +1,7 @@
 <!doctype html>
 <head>
 	<meta charset="UTF-8">
-	<title>咕啦体育-商城管理系统</title>
+	<title>咕啦体育-刮刮彩管理系统</title>
 	<link rel="stylesheet" href="/css/login/login.css">
     <script src="/easyui/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 </head>
@@ -10,7 +10,7 @@
 			<div class="contain">
 				<div class="tit">
 					<h3>欢迎来到</h3>
-					<p>咕啦-商城后台</p>
+					<p>咕啦-刮刮彩后台</p>
 				</div>
 				<div class="login-box">
 					<h2>用户登录</h2>
@@ -48,7 +48,7 @@
         var admin_name = $('input[name="admin_name"]').val();
         var admin_pwd = $('input[name="admin_pwd"]').val();
         $.ajax({
-            url: '/shopadminmod/admin/login',
+            url: '/adminmod/admin/login',
             header:{
                 contentType: 'application/x-www-form-urlencoded'
             },

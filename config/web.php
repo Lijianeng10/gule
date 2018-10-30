@@ -25,6 +25,9 @@ $config = [
         'usermod' => [//会员模块
             'class' => 'app\modules\user\user',
         ],
+        'adminmod' => [//管理用户模块
+            'class' => 'app\modules\admin\admin',
+        ],
     ],
     'components' => [
         'request' => [

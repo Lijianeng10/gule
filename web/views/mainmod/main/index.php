@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>咕啦体育-商城管理系统</title>
+		<title>咕啦体育-刮刮彩管理系统</title>
         <!--easyui-->
 		<link rel="stylesheet" href="/easyui/themes/super/css/font-awesome.min.css">
 		<link rel="stylesheet" href="/easyui/themes/super/superBlue.css" id="themeCss">
