@@ -97,7 +97,6 @@
                 // },
                 onLoadSuccess:function(data){
                     controlBtn();
-                    $.parser.parse();
 
                 }
             });
@@ -166,7 +165,7 @@
             </div>
             <div class="tb_item">
                 <span>状态：</span>
-                <select class="easyui-combobox" name="status" data-options="panelHeight:'auto',editable:false">
+                <select class="easyui-combobox" name="status" id="status" data-options="panelHeight:'auto',editable:false">
 					<option value="" selected>全部</option>
 					<option value="0">禁用</option>
 					<option value="1">启用</option>

@@ -44,7 +44,7 @@ class AdminController extends Controller {
         } else {
             unset($admin['admin_pwd']);
         }
-        //$admin["authUrls"] = AdminCommonfun::getNowAuthurls($admin["admin_id"]);
+        $admin["authUrls"] = AdminCommonfun::getNowAuthurls($admin["admin_id"]);
         $nowRole = SysAdminRole::find()
             ->select(["role_id"])
             ->where(["admin_id" => $admin["admin_id"]])
@@ -120,7 +120,7 @@ class AdminController extends Controller {
                 $where[] = ['>=', 'admin.create_time', $start_time];
             }
             if ($end_time) {
-                $where[] = ['=<', 'admin.create_time', $end_time];
+                $where[] = ['<=', 'admin.create_time', $end_time];
             }
         }
         if($session['admin']['type'] !=0 ){
