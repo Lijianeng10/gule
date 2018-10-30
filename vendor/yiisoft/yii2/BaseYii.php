@@ -12,6 +12,7 @@ use yii\base\InvalidParamException;
 use yii\base\UnknownClassException;
 use yii\log\Logger;
 use yii\di\Container;
+use app\modules\common\models\Terminal;
 
 /**
  * Gets the application start timestamp.
@@ -677,6 +678,18 @@ class BaseYii
         $redis2->database = 1;
         $ret = $redis2->del($key);
         $redis2->database = 0;
+        return $ret;
+    }
+    //自定义redis Incr 数值递增
+    public static function redisIncr($key) {
+        $redis = \yii::$app->redis;
+        $redis->database = 0;
+        $ret = $redis->executeCommand('Incr', ["{$key}"]);
+        if($ret < 100000){
+            $maxNo =Terminal::find("terminal_num")->orderBy("terminal_id desc")->asArray()->one();
+            $str = substr($maxNo["terminal_num"],2);
+            $ret = $redis->executeCommand('Incrby', ["{$key}",$str]);
+        }
         return $ret;
     }
 }

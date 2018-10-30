@@ -1,12 +1,12 @@
 <?php
 if(YII_ENV_DEV){
-//    return [
-//            'class' => 'app\modules\components\redis\Connection',
-//            'hostname' => '211.149.205.201',
-//            'password' => 'goodluck',
-//            'port' => 63790,
-//            'database' => 0,
-//        ];
+    return [
+        'class' => 'app\modules\components\redis\Connection',
+        'hostname' => '114.115.148.102',
+        'password' => 'goodluck',
+        'port' => 63790,
+        'database' => 0,
+    ];
 }else{
 //    return [
 //            'class' => 'app\modules\components\redis\Connection',

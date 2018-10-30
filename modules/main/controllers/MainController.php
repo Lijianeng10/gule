@@ -34,19 +34,37 @@ class MainController extends Controller
         $menus = [
             [
                 'auth_url' => '',
-                'auth_name' => '用户管理',
+                'auth_name' => '网点管理',
                 'auth_pid' => 0,
                 'auth_id' => 481,
-                'text' => '用户管理',
+                'text' => '网点管理',
                 'id' => 481,
                 'childrens' => [
                     [
-                        'auth_url' => '/adminmod/views/to-admin-list',
-                        'auth_name' => '用户列表',
+                        'auth_url' => '',
+                        'auth_name' => '彩票机管理',
                         'auth_pid' => 0,
                         'auth_id' => 481,
-                        'text' => '渠道列表',
+                        'text' => '彩票机管理',
                         'id' => 481,
+                        'childrens' => [
+                            [
+                                'auth_url' => '/usermod/views/to-machine-num-list',
+                                'auth_name' => '终端号列表',
+                                'auth_pid' => 0,
+                                'auth_id' => 481,
+                                'text' => '终端号列表',
+                                'id' => 481,
+                            ],
+                            [
+                                'auth_url' => '/usermod/views/to-machine-list',
+                                'auth_name' => '彩票机列表',
+                                'auth_pid' => 0,
+                                'auth_id' => 481,
+                                'text' => '彩票机列表',
+                                'id' => 481,
+                            ]
+                        ]
                     ]
                 ]
             ],
