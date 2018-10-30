@@ -18,7 +18,7 @@ class ViewsController extends Controller {
     /**
      * 终端号列表
      */
-    public function actionToMachineNumList(){
+    public function actionToTerminalList(){
         return $this->render('/usermod/terminal/list');
     }
     /**

@@ -22,11 +22,11 @@ class TerminalController extends Controller {
         $rows = $request->post('rows');
         $sort = $request->post('sort', 'create_time');
         $order = $request->post('order');
-        $picName = $request->post('pic_name', '');
+        $terminal_num = $request->post('terminal_num', '');
         $status = $request->post('status', '');
         $where = ['and'];
-        if ($picName) {
-            $where[] = ['like', 'pic_name', $picName];
+        if ($terminal_num) {
+            $where[] = ['like', 'terminal_num', $terminal_num];
         }
         if ($status != '') {
             $where[] = ['status' => $status];

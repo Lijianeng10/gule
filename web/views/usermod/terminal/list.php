@@ -24,12 +24,8 @@
                 editRow: undefined,
                 search: function () {
                     $('#datagrid').datagrid('load', {
-                        'user_info': $.trim($('input[name="user_info"]').val()),
+                        'terminal_num': $.trim($('input[name="terminal_num"]').val()),
                         'status': $.trim($('input[name="status"]').val()),
-                        'start_time': $.trim($('input[name="start_time"]').val()),
-                        'end_time': $.trim($('input[name="end_time"]').val()),
-                        'authen_status': $.trim($('input[name="authen_status"]').val()),
-                        'vxstatus': $.trim($('input[name="vxstatus"]').val()),
                     });
                 },
             };
@@ -68,17 +64,17 @@
                         field: 'opt',
                         title: '操作',
                         width: 100,
-                        align: 'left',
+                        align: 'center',
                         formatter: optFormatter,
                     }
                     ]
                 ],
                 onLoadSuccess:function(data){
                     // controlBtn();
-                    $("a[name='edit_banner']").linkbutton({text:'编辑'});
-                    $("a[name='del_banner']").linkbutton({text:'删除'});
-                    $("a[name='up']").linkbutton({text:'上线'});
-                    $("a[name='down']").linkbutton({text:'下线'});
+                    $("a[name='up']").linkbutton({text:'启用',iconCls:'fa fa-edit'});
+                    $("a[name='down']").linkbutton({text:'禁用',iconCls:'fa fa-edit'});
+                    // $("a[name='edit_banner']").linkbutton({text:'编辑'});
+                    // $("a[name='del_banner']").linkbutton({text:'删除'});
                 }
             });
             function statusFormatter(value,row){
@@ -92,7 +88,11 @@
             }
             function optFormatter(value, row) {
                 var str = "";
-
+                if(row.status ==0){
+                    str += '<a href="#" name="up" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.terminal_id+','+row.status+')">启用</a>';
+                }else if(row.status == 1){
+                    str += '<a href="#" name="down"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.terminal_id+','+row.status+')">禁用</a>';
+                }
                  return str;
             }
         });
@@ -108,8 +108,8 @@
         </div>
         <div class="tb-column">
             <div class="tb_item">
-                <span>用户信息：</span>
-                <input type="text"  name="user_info" class="easyui-textbox">
+                <span>终端号：</span>
+                <input type="text"  name="terminal_num" class="easyui-textbox">
             </div>
             <div class="tb_item">
                 <span>状态：</span>
