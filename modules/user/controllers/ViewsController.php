@@ -15,4 +15,16 @@ class ViewsController extends Controller {
     public function actionToUserList(){
         return $this->render('/usermod/user/list',[]);
     }
+    /**
+     * 终端号列表
+     */
+    public function actionToMachineNumList(){
+        return $this->render('/usermod/terminal/list');
+    }
+    /**
+     * 终端号列表
+     */
+    public function actionToTerminalAdd(){
+        return $this->render('/usermod/terminal/add');
+    }
 }

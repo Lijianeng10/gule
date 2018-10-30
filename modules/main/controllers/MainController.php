@@ -23,13 +23,6 @@ class MainController extends Controller
             return $this->render('/mainmod/main/login');
         }
         $menus = AdminCommonfun::getAuthurls();
-        //需要隐藏模块
-        /*$ret=AdminCommonfun::getSysConf('shop_hidden_module');
-        $closeMenu =explode(",",$ret["shop_hidden_module"]);
-        $authIds = SysAuth::find()->select("auth_id")->where(["in","auth_url",$closeMenu])->asArray()->all();
-        foreach ($authIds as $key => $value) {
-            $menus = AdminCommonfun::delCloseAuth($value["auth_id"], $menus);
-        }*/
         $menus = AdminCommonfun::getChildrens(0, $menus);
         return $this->render('/mainmod/main/index', ["menus" => $menus]);
     }
