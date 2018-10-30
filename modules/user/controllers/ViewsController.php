@@ -22,9 +22,24 @@ class ViewsController extends Controller {
         return $this->render('/usermod/terminal/list');
     }
     /**
-     * 终端号列表
+     * 新增终端号
      */
     public function actionToTerminalAdd(){
         return $this->render('/usermod/terminal/add');
+    }
+    /**
+     * 机器列表
+     */
+    public function actionToMachineList(){
+        return $this->render('/usermod/machine/list');
+    }
+    /**
+     * 彩种列表
+     */
+    public function actionToLotteryList(){
+        return $this->render('/usermod/lottery/list');
+    }
+    public function actionToLotteryAdd(){
+        return $this->render('/usermod/lottery/add');
     }
 }
