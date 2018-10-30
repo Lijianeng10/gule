@@ -270,6 +270,16 @@ class AdminController extends Controller {
         if ($parmas['status'] == 1) {
             $status = 0;
         }
+		
+		if($status == 0){
+			$sysLists = Admin::find()
+							->select(['admin_name'])
+							->Where(['admin_id' => $parmas['id']])->one();
+			if($sysLists['admin_name'] == 'admin'){
+				return $this->jsonResult(109, '不能禁用超级管理员');
+			}
+		}
+		
         Admin::updateAll(['status' => $status], ['admin_id' => $parmas['id']]);
         return $this->jsonResult(600, '修改成功', true);
     }
