@@ -31,5 +31,7 @@
                 <option value="1" <?php if($role['status'] ==1){?>selected <?php }?>>启用</option>
             </select>
         </div>
+		
+		<input type="hidden" name="role_name_old" id="role_name_old" value="<?php echo $role['role_name']; ?>">
     </form>
 </div>

@@ -66,7 +66,7 @@ class SysRole extends \yii\db\ActiveRecord
         $myroles = $session['admin']['role'];
         $where = ['and'];
 
-        if($session['admin']['admin_type']!=0){
+        if($session['admin']['type']!=0){
             if (!in_array(1,$myroles)){//除了超级管理员  都只能看到自己所属角色和自己所创建的角色
                 $where[] = ["or",["admin_pid"=>$adminId],['in',"role_id",$myroles]];
             }

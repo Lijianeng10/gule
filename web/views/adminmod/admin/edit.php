@@ -14,8 +14,8 @@
         </div>
         <div class="form-item">
             <label for="" class="label-top">管理员昵称：</label>
-            <input name="admin_nickname" class="easyui-validatebox easyui-textbox"
-                   value="<?php echo $admin['admin_nickname']; ?>">
+            <input name="nickname" class="easyui-validatebox easyui-textbox"
+                   value="<?php echo $admin['nickname']; ?>">
         </div>
         <div class="form-item">
             <label for="" class="label-top">管理员手机号：</label>
@@ -33,8 +33,8 @@
         <div class="form-item">
             <label for="" class="label-top">所属类型：</label>
             <select id="ec" class="easyui-combobox" data-options="editable:false,panelHeight:null" name="admin_type">
-                <option value="0" <?php if ($admin['admin_type'] == 0){ ?>selected <?php } ?>>系统管理员</option>
-                <option value="1" <?php if ($admin['admin_type'] == 1){ ?>selected <?php } ?>>中心管理员</option>
+                <option value="0" <?php if ($admin['type'] == 0){ ?>selected <?php } ?>>内部用户</option>
+                <option value="1" <?php if ($admin['type'] == 1){ ?>selected <?php } ?>>渠道用户</option>
             </select>
         </div>
         <div class="form-item">
@@ -44,6 +44,8 @@
                 <option value="1" <?php if ($admin['status'] == 1){ ?>selected <?php } ?>>启用</option>
             </select>
         </div>
+		
+		<input type="hidden" name="admin_name_old" id="admin_name_old" value="<?php echo $admin['admin_name']; ?>">
     </form>
 </div>
 <script>
