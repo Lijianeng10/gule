@@ -123,19 +123,19 @@
 
     </div>
     <script>
-        function change_status(bananer_id,status){
-            var statusStr = "下线";
+        function change_status(id,status){
+            var statusStr = "启用";
             if(status==1){
-                statusStr='发布'
+                statusStr='禁用';
             }
-            changeStatus('您确定要 ('+statusStr+') 该广告吗吗?',"/shopwebsitemod/banner/change-status",bananer_id,status);
+            changeStatus('您确定要 ('+statusStr+') 该终端号吗?',"/usermod/terminal/change-status",id,status);
         }
 
         /**
          * 新增终端号
          */
         function add() {
-            add_dialog('win','/usermod/views/to-terminal-add','/usermod/terminal/add-machine-num','',500,300);
+            add_dialog('win','/usermod/views/to-terminal-add','/usermod/terminal/add-terminal-num','datagrid',500,300);
         }
     </script>
 </body>

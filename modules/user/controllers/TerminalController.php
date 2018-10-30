@@ -71,4 +71,13 @@ class TerminalController extends Controller {
         $no = "PS" . $No;
         return $no;
     }
+    public function actionChangeStatus() {
+        $parmas = \Yii::$app->request->post();
+        $status = 1;
+        if ($parmas['status'] == 1) {
+            $status = 0;
+        }
+        Terminal::updateAll(['status' => $status], ['terminal_id' => $parmas['id']]);
+        return $this->jsonResult(600, '修改成功', true);
+    }
 }
