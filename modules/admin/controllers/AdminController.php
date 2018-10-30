@@ -44,14 +44,14 @@ class AdminController extends Controller {
         } else {
             unset($admin['admin_pwd']);
         }
-//        $admin["authUrls"] = AdminCommonfun::getNowAuthurls($admin["admin_id"]);
-//        $nowRole = SysAdminRole::find()
-//            ->select(["role_id"])
-//            ->where(["admin_id" => $admin["admin_id"]])
-//            ->indexBy('role_id')
-//            ->asArray()
-//            ->all();
-//        $admin["role"] = $nowRole;
+        //$admin["authUrls"] = AdminCommonfun::getNowAuthurls($admin["admin_id"]);
+        $nowRole = SysAdminRole::find()
+            ->select(["role_id"])
+            ->where(["admin_id" => $admin["admin_id"]])
+            ->indexBy('role_id')
+            ->asArray()
+            ->all();
+        $admin["role"] = $nowRole;
         \Yii::$app->session['admin'] = $admin;
 
         $admin_new =Admin::findOne($admin['admin_id']);
@@ -90,12 +90,12 @@ class AdminController extends Controller {
         $request = \Yii::$app->request;
         $page = $request->post('page');
         $rows = $request->post('rows');
-        $sort = $request->post('sort', 'create_time');
-        $order = $request->post('order');
+        $sort = $request->post('sort', 'admin.create_time');
+        $order = $request->post('order','desc');
         $admin_name = $request->post('admin_name');
         $admin_nickname = $request->post('admin_nickname');
         $admin_tel = $request->post('admin_tel');
-        $admin_type = $request->post('type');
+        $admin_type = $request->post('admin_type');
         $status = $request->post('status');
         $start_time = $request->post('start_time');
         $end_time = $request->post('end_time');
@@ -109,18 +109,18 @@ class AdminController extends Controller {
         if ($admin_tel) {
             $where[] = ['like', 'admin.admin_tel', $admin_tel];
         }
-        if ($type === '0' || $type === '1') {
-            $where[] = ['admin.type' => $type];
+        if ($admin_type === '0' || $admin_type === '1') {
+            $where[] = ['admin.type' => $admin_type];
         }
         if ($status === '0' || $status === '1') {
             $where[] = ['admin.status' => $status];
         }
         if ($start_time || $end_time) {
             if ($start_time) {
-                $where[] = ['>', 'admin.create_time', $start_time];
+                $where[] = ['>=', 'admin.create_time', $start_time];
             }
             if ($end_time) {
-                $where[] = ['<', 'admin.create_time', $end_time];
+                $where[] = ['=<', 'admin.create_time', $end_time];
             }
         }
         if($session['admin']['type'] !=0 ){
@@ -153,10 +153,16 @@ class AdminController extends Controller {
     public function actionAdd() {
         $session = \Yii::$app->session;
         $post = \Yii::$app->request->post();
+		
+		$admin_count = Admin::find()->Where(['admin_name' => trim($post['admin_name'])])->count();//判断该用户是否已存在
+		if($admin_count > 0){
+			return $this->jsonError(109, '该用户已存在，不能重复添加！');
+		}
+		
         $admin = new Admin();
         foreach ($admin->attributes as $k => $v) {
             if (isset($post[$k])) {
-                if ($k == 'admin_pwd') {
+                if ($k == 'password') {
                     $admin->$k = md5(md5($post[$k]));
                 } elseif ($k != 'admin_role') {
                     $admin->$k = $post[$k];
@@ -167,14 +173,6 @@ class AdminController extends Controller {
         $admin->admin_pid = $session["admin"]["admin_id"];
         if (!$admin->save()) {
             return $this->jsonError(100, '操作失败');
-        }
-        if (isset($post['center_id'])) {//如果设置所属中心，则新增关系表
-            $centerAdmin = new CenterAdmin();
-            $centerAdmin->center_id = $post['center_id'];
-            $centerAdmin->admin_id = $admin->admin_id;
-            if (!$centerAdmin->save()) {
-//                return $this->jsonError(100,'操作失败');
-            }
         }
 
         //新增角色表
@@ -197,22 +195,31 @@ class AdminController extends Controller {
     public function actionUpdate() {
         $post = \Yii::$app->request->post();
         $admin_name = trim($post['admin_name']);
-        $admin_nickname = $post['admin_nickname'];
+		$admin_name_old = trim($post['admin_name_old']);
+        $nickname = $post['nickname'];
         $admin_pwd = $post['admin_pwd'];
         $admin_tel = $post['admin_tel'];
         $admin_type = $post['admin_type'];
+		
+		if($admin_name_old != $admin_name){
+			$admin_count = Admin::find()->Where(['admin_name' => $admin_name])->count();//判断该用户是否已存在
+			if($admin_count > 0){
+				return $this->jsonError(109, '该用户已存在，不能重复添加！');
+			}
+		}
+		
         $status = $post['status'];
         $admin = Admin::find()->where(['admin_id' => $post['admin_id']])->one();
         if (!$admin) {
             return $this->jsonError(100, '没有该条数据，请重试');
         }
         $admin->admin_name = $admin_name;
-        $admin->admin_nickname = $admin_nickname;
+        $admin->nickname = $nickname;
         if ($admin_pwd != '********') {
-            $admin->admin_pwd = md5(md5($admin_pwd));
+            $admin->password = md5(md5($admin_pwd));
         }
         $admin->admin_tel = $admin_tel;
-        $admin->admin_type = $admin_type;
+        $admin->type = $admin_type;
         $admin->status = $status;
         if (!$admin->save()) {
             return $this->jsonError(100, '操作失败');
@@ -236,8 +243,16 @@ class AdminController extends Controller {
      */
     public function actionDelete() {
         $ids = \Yii::$app->request->post()['ids'];
+		$sysLists = Admin::find()
+                        ->select(['admin_name'])
+                        ->Where(['admin_id' => $ids])->one();
+		if($sysLists['admin_name'] == 'admin'){
+			return $this->jsonResult(109, '超级管理员不能删除');
+		}
         $idsArr = explode(',', $ids);
         Admin::deleteAll(['in', 'admin_id', $idsArr]);
+		
+		Yii::$app->db->createCommand()->delete('sys_admin_role', ['admin_id' => $ids])->execute();
 
         return $this->jsonResult(600, '操作成功', true);
     }

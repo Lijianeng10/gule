@@ -24,7 +24,6 @@
                         'admin_nickname': $.trim($('input[name="admin_nickname"]').val()),
                         'admin_tel': $.trim($('input[name="admin_tel"]').val()),
                         'admin_type': $.trim($('input[name="admin_type"]').val()),
-                        'center_id': $.trim($('input[name="center_id"]').val()),
                         'status': $.trim($('input[name="status"]').val()),
                         'start_time': $.trim($('input[name="start_time"]').val()),
                         'end_time': $.trim($('input[name="end_time"]').val()),
@@ -46,22 +45,18 @@
                 toolbar: '#tb',
                 columns: [
                     [{
-                        field: 'admin_id',
-                        title: 'admin_id',
-                        width: 50,
-                        hidden:true,
-                        sortable: true
-                    },{
                         field: 'admin_name',
                         title: '管理员登录名',
                         width: 50,
-                        sortable: true
+                        sortable: true,
+						align: 'center'
                     },{
-                        field: 'admin_nickname',
+                        field: 'nickname',
                         title: '管理员昵称',
                         width: 60,
+						align: 'center'
                     },{
-                        field: 'admin_type',
+                        field: 'type',
                         title: '所属类型',
                         width: 50,
                         align: 'center',
@@ -81,15 +76,18 @@
                         field: 'admin_tel',
                         title: '联系方式',
                         width: 50,
+						align: 'center'
                     },{
                         field: 'create_time',
                         title: '创建时间',
                         sortable: true,
                         width: 60,
+						align: 'center'
                     }, {
                         field: 'opt',
                         title: '操作',
                         width: 80,
+						align: 'center',
                         formatter: optFormatter,
                     }]
                 ],
@@ -105,9 +103,9 @@
             });
             function typeFormatter(value,row){
                 if(value==1){
-                    return "中心管理员";
+                    return "渠道用户";
                 }
-                return "系统管理员";
+                return "内部用户";
             }
             function statusFormatter(value,row){
                 var str= "";
@@ -127,37 +125,6 @@
                 }
                  return str;
             }
-            $('#admin_type').combobox({
-                valueField:'id', //值字段
-                textField:'text', //显示的字段
-                panelHeight:'auto',
-                data:[{
-                    'id':'',
-                    'text':"全部",
-                    "selected":true
-                },{
-                    'id':'0',
-                    'text':"系统管理员"
-                },{
-                    'id':'1',
-                    'text':"中心管理员"
-                }],
-                editable:false,//不可编辑，只能选择
-                onSelect:function(row){
-                    if(row.id == 1){
-                        $("#a").show();
-                        var url = '/centermod/center/get-center-list-options';
-                        $('#centerlist').combobox('reload', url);
-                    }else{
-                        $("#a").hide();
-                    }
-                }
-            });
-            $('#centerlist').combobox({
-                valueField:'id', //值字段
-                textField:'text', //显示的字段
-                panelHeight:'auto',
-            });
             // $('#datagrid').datagrid('reload');
         });
 	</script>
@@ -190,15 +157,19 @@
                 <input type="text"  name="admin_tel" class="textbox" >
             </div>
             <div class="tb_item">
-                <span>所属类型：</span>
-                <input type="text" id="admin_type" name="admin_type" >
+                <span>用户类型：</span>
+				<select class="easyui-combobox" name="admin_type" id="admin_type" data-options="panelHeight:'auto',editable:false">
+					<option value="" selected>全部</option>
+					<option value="0">内部用户</option>
+					<option value="1">渠道</option>
+                </select>
             </div>
             <div class="tb_item">
                 <span>状态：</span>
-                <select class="easyui-combobox" name="status" data-options="panelHeight:'auto'">
-    	          <option value="" selected>全部</option>
-                  <option value="0">禁用</option>
-                  <option value="1">启用</option>
+                <select class="easyui-combobox" name="status" data-options="panelHeight:'auto',editable:false">
+					<option value="" selected>全部</option>
+					<option value="0">禁用</option>
+					<option value="1">启用</option>
                 </select>
             </div>
             <div class="tb_item">

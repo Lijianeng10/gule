@@ -7,11 +7,11 @@
         </div>
         <div class="form-item">
             <label for="" class="label-top">管理员密码：</label>
-            <input name="admin_pwd" class="easyui-textbox" data-options="iconCls:'fa fa-user',iconAlign:'left'" prompt="请输入密码">
+            <input name="password" class="easyui-textbox" data-options="iconCls:'fa fa-user',iconAlign:'left'" prompt="请输入密码">
         </div>
         <div class="form-item">
             <label for="" class="label-top">管理员昵称：</label>
-            <input name="admin_nickname" class="easyui-validatebox easyui-textbox">
+            <input name="nickname" class="easyui-validatebox easyui-textbox">
         </div>
         <div class="form-item">
             <label for="" class="label-top">管理员手机号：</label>
@@ -23,18 +23,17 @@
         </div>
         <div class="form-item">
             <label for="" class="label-top">所属类型：</label>
-            <input type="text" class="easyui-combobox" id="admin_type_add" name="admin_type" >
-        </div>
-        <div class="form-item" id="add_hidden" style="display: none">
-            <label for="" class="label-top">所属中心：</label>
-            <input type="text" id="center_id" name="center_id" >
+			<select name="type" class="easyui-combobox" value="">
+                <option value="0" selected>内部用户</option>
+                <option value="1">渠道用户</option>
+            </select>
         </div>
 
         <div class="form-item">
             <label for="" class="label-top">启用状态：</label>
             <select name="status" class="easyui-combobox" value="">
                 <option value="0" >禁用</option>
-                <option value="1" >启用</option>
+                <option value="1"  selected>启用</option>
             </select>
         </div>
     </form>
@@ -46,37 +45,5 @@
         textField : 'text',
         multiple:true,//是否可以多选
         panelHeight:'auto',
-    });
-    $("#admin_type_add").combobox({
-        valueField:'id', //值字段
-        textField:'text', //显示的字段
-        panelHeight:'auto',
-        data:[{
-            'id':'',
-            'text':"全部",
-            "selected":true
-        },{
-            'id':'0',
-            'text':"系统管理员"
-        },{
-            'id':'1',
-            'text':"中心管理员"
-        }],
-        editable:false,//不可编辑，只能选择
-        onSelect:function(row){
-            if(row.id == 1){
-                $("#add_hidden").show();
-                var url = '/centermod/center/get-center-list-options';
-                $('#center_id').combobox('reload', url);
-            }else{
-                $("#add_hidden").hide();
-            }
-        }
-    });
-    $('#center_id').combobox({
-        valueField:'id', //值字段
-        textField:'text', //显示的字段
-        panelHeight:'auto',
-        editable:false,//不可编辑，只能选择
     });
 </script>

@@ -9,7 +9,7 @@
             <label for="" class="label-top">启用状态：</label>
             <select name="status" class="easyui-combobox" value="">
                 <option value="0">禁用</option>
-                <option value="1">启用</option>
+                <option value="1" selected>启用</option>
             </select>
         </div>
     </form>

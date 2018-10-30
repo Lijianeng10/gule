@@ -49,7 +49,8 @@
                         field: 'auth_name',
                         title: '权限名称',
                         width: 50,
-                        sortable: true
+                        sortable: true,
+						align: 'center',
                     }, {
                         field: 'auth_pname',
                         title: '父级权限',
@@ -59,6 +60,7 @@
                         field: 'auth_url',
                         title: '对应链接',
                         width: 100,
+						align: 'center',
                     },{
                         field: 'auth_sort',
                         title: '排序',
@@ -70,6 +72,7 @@
                         title: '权限类型',
                         width: 60,
                         sortable: true,
+						align: 'center',
                         formatter: typeFormatter,
                     }, {
                         field: 'auth_status',
@@ -81,16 +84,18 @@
                         field: 'auth_create_at',
                         title: '创建时间',
                         width: 60,
+						align: 'center',
                     },{
                         field: 'auth_update_at',
                         title: '更新时间',
                         width: 60,
+						align: 'center',
                     },
                         {
                         field: 'opt',
                         title: '操作',
                         width: 80,
-                        align: 'left',
+                        align: 'center',
                         formatter: optFormatter,
                     }]
                 ],

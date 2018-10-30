@@ -3,7 +3,7 @@
  */
 function controlBtn() {
     $.ajax({
-        url: '/shopadminmod/auth/get-my-auths',
+        url: '/adminmod/auth/get-my-auths',
         type: 'post',
         success: function (data) {
             var data = eval('(' + data + ')');

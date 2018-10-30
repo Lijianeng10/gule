@@ -8,7 +8,7 @@
 
 namespace app\modules\common\helpers;
 
-use app\modules\shopadmin\models\SysAuth;
+use app\modules\admin\models\SysAuth;
 use Yii;
 use yii\db\Query;
 use app\modules\common\models\SysConf;
@@ -46,7 +46,7 @@ class AdminCommonfun {
         $authList = SysAuth::find()->select(['sys_auth.auth_url','sys_auth.auth_name','sys_auth.auth_pid','sys_auth.auth_id','sys_auth.auth_name as text','sys_auth.auth_id as id'])
             ->leftJoin('sys_role_auth ru','ru.auth_id = sys_auth.auth_id')
             ->leftJoin('sys_admin_role ar','ar.role_id = ru.role_id')
-            ->leftJoin('sys_admin sy','sy.admin_id = ar.admin_id')
+            ->leftJoin('admin sy','sy.admin_id = ar.admin_id')
             ->where(['sy.admin_id'=>$adminId,'sys_auth.auth_status'=>1])
 //            ->andWhere(['sys_auth.auth_type'=>1])
             ->orderBy('sys_auth.auth_sort desc,sys_auth.auth_id asc')
@@ -98,7 +98,7 @@ class AdminCommonfun {
         $authUrls =SysAuth::find()->select(["auth_url"])
             ->leftJoin('sys_role_auth ru','ru.auth_id = sys_auth.auth_id')
             ->leftJoin('sys_admin_role ar','ar.role_id = ru.role_id')
-            ->leftJoin('sys_admin a','a.admin_id = ar.admin_id')
+            ->leftJoin('admin a','a.admin_id = ar.admin_id')
             ->where(['a.admin_id'=>$adminId])
             ->andWhere(['sys_auth.auth_status'=>1])
             ->orderBy("sys_auth.auth_sort desc,sys_auth.auth_id asc")

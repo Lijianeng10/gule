@@ -53,7 +53,7 @@ class RoleController extends Controller {
                 $where[] = ['<','create_time',$end_time];
             }
         }
-        if($session['admin']['admin_type'] !=0 ){
+        if($session['admin']['type'] !=0 ){
             //除了超级管理员  都只能看到自己和自己所创建的角色
             if (!in_array(Constants::ADMIN_ROLE,$session['admin']['role'])){
                 $where[] = ["or",["admin_pid"=>$session["admin"]["admin_id"]],["role_id"=>$session['admin']["role"]]];
@@ -77,6 +77,11 @@ class RoleController extends Controller {
     public function actionAdd() {
 
         $param = Yii::$app->request->post();
+		
+		$role_count = SysRole::find()->Where(['role_name' => trim($param['role_name'])])->count();//判断该角色是否已存在
+		if($role_count > 0){
+			return $this->jsonError(109, '该角色已存在，不能重复添加！');
+		}
 
         $session = Yii::$app->session;
         $at_time = 'y/m/d h:i:s';
@@ -103,7 +108,15 @@ class RoleController extends Controller {
     public function actionUpdate(){
         $post =\Yii::$app->request->post();
         $role_name = $post['role_name'];
+		$role_name_old = $post['role_name_old'];
         $status = $post['status'];
+		
+		if($role_name_old != $role_name){
+			$role_count = SysRole::find()->Where(['role_name' => $role_name])->count();//判断该角色是否已存在
+			if($role_count > 0){
+				return $this->jsonError(109, '该角色已存在，不能重复添加！');
+			}
+		}
 
 
         $role = SysRole::find()->where(['role_id'=>$post['role_id']])->one();
@@ -191,7 +204,7 @@ class RoleController extends Controller {
         if (isset($get['role_id']) && $get['role_id'] != null) {
             $role_id = $get['role_id'];
 //            array_key_exists(Constants::ADMIN_ROLE,$session["admin"]["role"])&&
-            if ($session["admin"]["admin_type"]==0) { // 如果是内部用户、总管理员
+            if ($session["admin"]["type"]==0) { // 如果是内部用户、总管理员
                 $authLists = (new Query())->select(['*','auth_id as id','auth_name as text'])->from('sys_auth')->where(["auth_status" => 1])->orderBy("auth_create_at asc")->all();
             } else {
                 $authLists =AdminCommonfun::getAuthurls();
