@@ -208,4 +208,33 @@ class OrdersController extends Controller {
         }
         return \Yii::datagridJson($AttrList, $total);
     }
+	
+	/**
+     * 说明:确认发货
+     * @author chenqiwei
+     * @date 2018/9/29 上午10:00
+     * @param
+     * @return
+     */
+    public function actionSureSend() {
+		$session = \Yii::$app->session;
+		$parmas_get = \Yii::$app->request->get();
+        $parmas_post = \Yii::$app->request->post();
+		$db = \Yii::$app->db;
+		$now_times = date('Y-m-d H:i:s',time());
+		
+		$order = Order::find()->where(['order_id' => $parmas_get['order_id']])->one();
+        if (!$order) {
+            return $this->jsonError(100, '没有该条数据，请刷新重试');
+        }
+		$order->order_status = 2;
+        $order->courier_name = $parmas_post['courier_name'];
+        $order->courier_code = $parmas_post['courier_code'];
+		$order->send_time = $now_times;
+        if (!$order->save()) {
+            return $this->jsonError(109,$order->errors);
+        }
+
+        return $this->jsonResult(600, '操作成功', true);
+    }
 }
