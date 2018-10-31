@@ -63,22 +63,14 @@
                 rownumbers: true,
                 loadMsg: '数据加载中...',
                 toolbar: '#tb',
-				frozenColumns:[[{
+                columns: [
+                    [ {
                         field:'order_code',
                         title: '订单编号',
                         width: 160,
-						align: 'center',
+                        align: 'center',
                         sortable: true
                     }, {
-                        field: 'user_name',
-                        title: '下单用户',
-						align: 'center',
-                        width: 80,
-                        // sortable: true
-                    }]
-				],
-                columns: [
-                    [ {
                         field:'order_num',
                         title: '商品总数',
                         width: 70,
@@ -121,8 +113,7 @@
                         field: 'remark_xs',
                         title: '留言',
                         width: 80,
-                        halign: 'center',
-						align: 'left',
+						align: 'center',
                         //sortable: true,
 						formatter: remarkXsFormatter
                     },{
@@ -267,56 +258,6 @@
 				}],
 			});
 		}
-		//申请退款
-        function refund(){
-            var rows = $('#datagrid').datagrid('getSelections');
-             if (rows.length == 0) {
-                $.messager.alert('警告!', '对不起,请选择一条数据!', 'waring');
-                return;
-            } else if (rows.length > 1) {
-                $.messager.alert('警告!', '对不起,只能选择一条数据进行操作!', 'waring');
-                return;
-            }
-            var status = rows[0]['order_status'];
-            var orderCode = rows[0]['order_code'];
-            if(status==0||status==3||status==5){
-                $.messager.alert('警告!', '对不起,该订单状态不允许执行退款操作!', 'waring');
-                return;
-            }
-            $.messager.confirm('确认', '您确定该订单执行退款操作吗?', function (r) {
-                if (r) {
-                    $.ajax({
-                        url:'/ordersmod/orders/refund-orders',
-                        type: 'post',
-                        data: {
-                            'orderCode':orderCode,
-                            'status':status
-                        },
-                        success: function (data) {
-                            var data = eval('(' + data + ')');
-                            if (data.code == 600) {
-                                $.messager.show({
-                                    title: '提示',
-                                    msg: '操作成功！',
-                                });
-                                $('#datagrid').datagrid('reload');
-
-                            } else {
-                                var msg = '操作失败！';
-                                if (data.msg != null && data.msg != '') {
-                                    msg = data.msg;
-                                }
-                                $.messager.show({
-                                    title: '错误',
-                                    msg: msg,
-                                });
-                            }
-
-                        }
-                    });
-                }
-            });
-        }
     </script>
 
 
@@ -329,7 +270,7 @@
 	
 		<div>
             <a href="#" class="easyui-linkbutton primary goodsCategorySearch" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
-            <a href="#" class="easyui-linkbutton primary goodsCategorySearch" iconCls="fa fa-search" onclick="refund()"> 退 款 </a>
+            <a href="#" class="easyui-linkbutton primary goodsCategorySearch" iconCls="fa fa-search" onclick="create_window('dlg','新增订单','/ordersmod/views/to-add-orders',800,600)"> 新 增 </a>
         </div>
 		
     	<div class="tb-column">
