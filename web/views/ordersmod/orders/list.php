@@ -184,7 +184,7 @@
 			//留言
 			function remarkXsFormatter(value, row) {
 				var str = '';
-				if(row.remark != ''){
+				if(value!= null){
 					str += "<span style='cursor:pointer' title='"+row.remark+"'>"+value+"</span>";
 				}
                 return str;
