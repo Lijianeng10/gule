@@ -30,7 +30,7 @@ class Commonfun {
      * @return string
      */
     public static function getCode($codeType) {
-        $redisStr = 'JK' . $codeType ;
+        $redisStr = 'JK' . $codeType;
         $likeStr = "JK" . $codeType;
         $code = $likeStr . (self::getSerialnum($redisStr));
         return $code;
@@ -728,39 +728,40 @@ class Commonfun {
 //            var_dump($ret);
         }
     }
+
     /**
      * 获取是否实名验证
      */
-    public static function javaGetStatus($custNo){
-    		$surl = \Yii::$app->params['java_getStatus'];
-    		$postData = ['custNo' => $custNo];
-    		$curl_ret = \Yii::sendCurlPost($surl, $postData);
-    		return $curl_ret;
+    public static function javaGetStatus($custNo) {
+        $surl = \Yii::$app->params['java_getStatus'];
+        $postData = ['custNo' => $custNo];
+        $curl_ret = \Yii::sendCurlPost($surl, $postData);
+        return $curl_ret;
     }
-    
+
     /**
      * 获取预计派奖时间
      * @param type $maxTime
      * @return type
      */
-    public static function getAwardTime($maxTime){
+    public static function getAwardTime($maxTime) {
         $date = date('Y-m-d', strtotime($maxTime));
         $nDate = strtotime($maxTime);
         $time1 = strtotime($date . ' 21:30:00');
         $time2 = strtotime($date . ' 23:59:59');
         $time3 = strtotime($date . ' 00:00:00');
         $time4 = strtotime($date . ' 07:00:00');
-        if($nDate >= $time1 && $nDate <= $time2) {
+        if ($nDate >= $time1 && $nDate <= $time2) {
             $time = date('Y-m-d', strtotime('+1 day', $nDate)) . '09:00:00';
-        }elseif ($nDate >= $time3 && $nDate <= $time4) {
+        } elseif ($nDate >= $time3 && $nDate <= $time4) {
             $time = $date . '09:00:00';
-        }  else {
+        } else {
             $time = date('Y-m-d H:i:s', strtotime('+3 hours', strtotime($maxTime)));
         }
-        $awardTime = (string)strtotime($time);
+        $awardTime = (string) strtotime($time);
         return $awardTime;
     }
-    
+
     /**
      * 判断数组是否存在该键
      * @param type $data
@@ -788,16 +789,28 @@ class Commonfun {
         $result = strtr($tempStr, $arr);
         return $result;
     }
-	
-	/**
+
+    /**
      * utf8格式截取字符串
      * @return string
      */
-	public static function utf8Substr($string, $length) {  
-		if(mb_strlen($string, 'utf8') > $length) {
-			return mb_substr($string, 0, $length, 'utf8').'...';
-		} else {
-			return $string;
-		}  
-	}
+    public static function utf8Substr($string, $length) {
+        if (mb_strlen($string, 'utf8') > $length) {
+            return mb_substr($string, 0, $length, 'utf8') . '...';
+        } else {
+            return $string;
+        }
+    }
+    
+    /**
+     * 签名加密
+     * @param type $midCode
+     * @return type
+     */
+    public static function getSign($md5Code) {
+        $signCode = $md5Code . 'edb04a228a564813a2b408e54a14a6bc';
+        $sign = md5($signCode);
+        return $sign;
+    }
+
 }

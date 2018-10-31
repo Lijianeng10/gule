@@ -28,6 +28,9 @@ $config = [
         'adminmod' => [//管理用户模块
             'class' => 'app\modules\admin\admin',
         ],
+        'store' => [
+            'class' => 'app\modules\admin\admin',
+        ]
     ],
     'components' => [
         'request' => [
