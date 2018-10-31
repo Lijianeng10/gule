@@ -73,7 +73,7 @@
                     },{
                         field:'cust_no',
                         title: '门店编号',
-                        width: 50,
+                        width: 70,
                         align: 'center',
                         sortable: true
                     }, {

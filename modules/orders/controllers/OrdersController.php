@@ -9,6 +9,7 @@ use app\modules\common\models\Order;
 use app\modules\common\models\OrderDetail;
 use app\modules\common\models\StoreLottery;
 use app\modules\common\helpers\Constants;
+use app\modules\common\helpers\Commonfun;
 
 /**
  * Orders controller for the `orders` module
