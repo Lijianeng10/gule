@@ -25,6 +25,19 @@ class OrdersController extends Controller {
         }
         return json_encode($lotteryLists);
     }
+	
+	/**
+     * 获取彩票面值
+     */
+    public function actionGetSubValue() {
+        $aub_value_arr = Constants::SUB_VALUE_ARR;//彩票面值
+        $subValueLists=[];
+        foreach($aub_value_arr as $key => $val){
+            $subValueLists[] = ['id'=>$key,'text'=>$val];
+        }
+        return json_encode($subValueLists);
+    }
+	
     /**
      * 新增网点订单
      */

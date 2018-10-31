@@ -19,29 +19,6 @@
         text-align: right;
     }
 </style>
-<!--    <script>-->
-<!--        var editor;-->
-<!--        KindEditor.ready(function (K) {-->
-<!--            editor = K.create('#editor_id', {-->
-<!--                minWidth: '550px',-->
-<!--                height: '350px',-->
-<!--                items: [-->
-<!--                    'undo', 'redo', '|', 'preview', 'template', 'cut', 'copy', 'paste',-->
-<!--                    '|', 'justifyleft', 'justifycenter', 'justifyright',-->
-<!--                    'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',-->
-<!--                    'superscript', 'clearhtml', 'quickformat', 'selectall', '|', '/',-->
-<!--                    'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',-->
-<!--                    'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|',-->
-<!--                    'insertfile', 'table', 'hr', 'emoticons', 'pagebreak',-->
-<!--                    'anchor', 'link', 'unlink', '|'-->
-<!--                ],-->
-<!--                //     关闭过滤模式，保留所有标签-->
-<!--                filterMode: false,-->
-<!--            });-->
-<!--            // 设置HTML内容-->
-<!--            editor.html();-->
-<!--        });-->
-<!--    </script>-->
 <div class="super-theme-example">
     <form id="myform">
         <div class="form-item" style="width:80%">
@@ -51,48 +28,38 @@
             <label for="" class="label-top">网点编号：</label>
             <input type="text" name="cust_no" class="easyui-textbox" prompt="请输入网点编号" style="width:60%">
         </div>
-        <!--            <div class="form-item" style="width:80%">-->
-        <!--                <label for="" class="label-top">商品副标题：</label>-->
-        <!--                <input type="text" name="sub_title" id="sub_title" class="easyui-validatebox  easyui-textbox"  prompt="最多输入50个字" data-options="validType:'length[1,50]'" style="width:80%" maxlength="50">-->
-        <!--            </div>-->
-        <!--            <div class="form-item" style="width:80%">-->
-        <!--                <label for="" class="label-top">商品货号：</label>-->
-        <!--                <input type="text" name="product_no" id="product_no" class="easyui-validatebox  easyui-textbox"  data-options="validType:'length[1,25]'" maxlength="25">-->
-        <!--            </div>-->
         <div class="form-item" style="width:80%">
             <label for="" class="label-top" style="font-size:16px;font-weight: bold">彩票信息</label>
         </div>
-<!--        <div class="form-item" style="width:80%">-->
-<!--            <label for="" class="label-top">彩种：</label>-->
-<!--            <span>-->
-<!--                    --><?php //foreach ($lotteryData as $lottery): ?>
-<!--                        <input id="lotteryType" type="radio" name="lotteryType" class="easyui-validatebox"-->
-<!--                               value="--><?php //echo $lottery['lottery_id']; ?><!--" data-options="required:true"-->
-<!--                               style="width:20px;"><label>--><?php //echo $lottery['lottery_name']; ?><!--</label>-->
-<!--                    --><?php //endforeach; ?>
-<!--                <a href="#" class="easyui-linkbutton primary" id="addLottery">添加</a>-->
-<!--                </span>-->
-<!--        </div>-->
-        <div class="form-item" style="width:80%;">
-            <a href="#" class="easyui-linkbutton primary" id="addTable" style="margin-left: 100px;margin-bottom: 5px;">添 加</a>
-<!--            <label for="" class="label-top">彩票面额：</label>-->
-<!--            <span style="height:30px;">-->
-<!--                    <input type="checkbox" name="lotteryValue" class="l_value" value="2" style="width:20px">2元-->
-<!--                    <input type="checkbox" name="lotteryValue" class="l_value" value="3" style="width:20px">3元-->
-<!--                    <input type="checkbox" name="lotteryValue" class="l_value" value="5" style="width:20px">5元-->
-<!--                    <input type="checkbox" name="lotteryValue" class="l_value" value="10" style="width:20px">10元-->
-<!--                    <input type="checkbox" name="lotteryValue" class="l_value" value="20" style="width:20px">20元-->
-<!--                    <input type="checkbox" name="lotteryValue" class="l_value" value="30" style="width:20px">30元-->
-<!--                </span>-->
+        <div class="form-item" style="width:100%;">
+            <a href="#" class="easyui-linkbutton primary" id="addTable" style="margin-left: 100px;margin-bottom: 5px;">新增记录行</a>
             <table id="value_table" border='1px' cellspacing="0" style="width:80%;text-align:center;margin-left: 100px;">
                 <tr>
-                    <th style="width:15%">彩种</th>
-                    <th style="width:15%">彩票面额</th>
-                    <th style="width:17%">购买数量(包)</th>
-                    <th style="width:17%">每包张数</th>
-                    <th style="width:17%">价格(包)</th>
-                    <th style="width:17%" class="lottery">价格(包)</th>
+					<td style="width:15%">行数</td>
+                    <td style="width:15%">彩种</td>
+                    <td style="width:15%">彩票面额</td>
+                    <td style="width:17%">购买数量(包)</td>
+                    <td style="width:17%">每包张数</td>
+                    <td style="width:17%">价格(包)</td>
                 </tr>
+				<tr>
+					<td style="width:15%" style="width:30px">1</td>
+					<td style="width:15%">
+						<input class="easyui-validatebox easyui-combobox" style="width:100px" id="lottery_id1" name="lottery_id1">
+					</td>
+					<td style="width:15%">
+						<input class="easyui-validatebox easyui-combobox" style="width:80px" id="sub_value1" name="sub_value1">
+					</td>
+					<td style="width:17%">
+						<input type="text" id="nums1" name="nums1" style="width:100px" class="easyui-textbox" >
+					</td>
+					<td style="width:17%">
+						<input type="text" id="sheet_nums1" style="width:100px" name="sheet_nums1" class="easyui-textbox" >
+					</td>
+					<td style="width:17%">
+						<input type="text" id="price1" name="price1" style="width:100px" class="easyui-textbox" >
+					</td>
+				</tr>
             </table>
         </div>
         <div class="form-item" style="width:80%">
@@ -113,27 +80,56 @@
         <div class="form-item">
             <button class="easyui-linkbutton primary" style="margin-left: 10px;" id="sureBtn">提 交</button>
         </div>
+		
+		<input type="hidden" name="count" id="count" value="1">
     </form>
 </div>
 <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
 <script>
     $(function () {
-        //彩种下拉框
-        $('.lottery').combobox({
-            url:'/ordersmod/orders/get-lottery',
-            valueField:'id',
-            textField:'text',
-            panelHeight:'auto',
-            editable:false,//不可编辑，只能选择
-        });
-        //新增彩票订单
-        $("#addTable").click(function () {
-            var str = '';
-            str = '<tr style="height: 30px;">';
-            str +='<td><span class="lottery"></span></td>'
-            str +='</tr>'
-            $("#value_table").append(str);
-        })
+
+		toAdd();
+		function toAdd(){
+			var count = parseFloat($("#count").val());
+			for(var i=1;i<=count;i++){
+				
+				//彩种下拉框
+				$('#lottery_id' + count).combobox({
+					url:'/ordersmod/orders/get-lottery',
+					valueField:'id',
+					textField:'text',
+					panelHeight:'auto',
+					editable:false,//不可编辑，只能选择
+				});
+				//面值下拉框
+				$('#sub_value' + count).combobox({
+					url:'/ordersmod/orders/get-sub-value',
+					valueField:'id',
+					textField:'text',
+					panelHeight:'auto',
+					editable:false,//不可编辑，只能选择
+				});
+				
+			}
+		}
+			
+		//新增彩票订单
+		$("#addTable").click(function () {
+			var count = parseFloat($("#count").val());
+			var new_count = count + 1;
+			var str = '';
+			str = '<tr>';
+			str +='<td style="width:15%" style="width:30px">'+new_count+'</td>'
+			str +='<td style="width:15%"><input class="easyui-validatebox easyui-combobox" style="width:100px" id="lottery_id'+new_count+'" name="lottery_id'+new_count+'"></td>'
+			str +='<td style="width:15%"><input class="easyui-validatebox easyui-combobox" style="width:80px" id="sub_value'+new_count+'" name="sub_value'+new_count+'"></td>'
+			str +='<td style="width:17%"><input type="text" id="nums'+new_count+'" name="nums'+new_count+'" style="width:100px" class="easyui-textbox" ></td>'
+			str +='<td style="width:17%"><input type="text" id="sheet_nums'+new_count+'" name="sheet_nums'+new_count+'" style="width:100px" class="easyui-textbox" ></td>'
+			str +='<td style="width:17%"><input type="text" id="price'+new_count+'" name="price'+new_count+'" style="width:100px" class="easyui-textbox" ></td>'
+			str +='</tr>'
+			$("#value_table").append(str);
+			$("#count").val(new_count);
+			toAdd();
+		})
 
 
 
@@ -194,7 +190,7 @@
     //提交保存信息
     $("#sureBtn").click(function () {
         document.forms[0].target = "rfFrame";
-        editor.sync();
+        /*editor.sync();
         var remark = $.trim($("#editor_id").val());
         var srcArr = [];
         $(".productPic").each(function () {
@@ -228,52 +224,101 @@
                 msg: '所输价格库存的数值均不可小于0'
             });
             return false;
-        }
-        var title = $("#title").val();
-        var subTitle = $("#sub_title").val();
-        var productNo = $("#product_no").val();
-        var productPrice = $("#product_price").val();
-        var productStock = $("#product_stock").val();
-        var status = $("#status").val();
-        var lotteryType = $("input[name='lotteryType']:checked").val();
-
-        if (!title) {
+        }*/
+		var cust_no = $("input[name='cust_no']").val();
+		if (!cust_no) {
             $.messager.show({
                 title: '提示',
-                msg: '商品标题不可为空',
+                msg: '网点编号不可为空',
             });
             return false;
         }
-        if (!productPrice) {
-            $.messager.show({
-                title: '提示',
-                msg: '商品价格不可为空',
-            });
-            return false;
-        }
-        if (!masterPic) {
-            $.messager.show({
-                title: '提示',
-                msg: '商品主图不可为空',
-            });
-            return false;
-        }
+		
+		var count = parseFloat($("#count").val());
+		var content = [];
+		var order_num = 0;//用于记录商品总数
+		var order_money = 0;//用于记录订单总金额
+		for(var i=1;i<=count;i++){
+			var lottery_id = $("#lottery_id" + i).val();//获取彩种的value值
+			var lottery_name = $('#lottery_id' + i).combobox('getText');//获取彩种的text值
+			var sub_value = $("#sub_value" + i).val();//获取彩票面额的值
+			var nums = parseFloat($("#nums" + i).val());//获取购买数量的值
+			var sheet_nums = parseFloat($("#sheet_nums" + i).val());//获取每包张数的值
+			var price = parseFloat($("#price" + i).val());//获取价格的值
+			if(lottery_id != '' || sub_value != '' || nums != '' || sheet_nums != '' || price != ''){
+				if(lottery_id == ''){
+					$.messager.show({
+						title: '提示',
+						msg: "彩票信息-第"+i+"行彩种不能为空！",
+					});
+					return (false);
+				}
+				if(sub_value == ''){
+					$.messager.show({
+						title: '提示',
+						msg: "彩票信息-第"+i+"行彩票面额不能为空！",
+					});
+					return (false);
+				}
+				if(nums == ''){
+					$.messager.show({
+						title: '提示',
+						msg: "彩票信息-第"+i+"行购买数量不能为空！",
+					});
+					return (false);
+				}
+				if(sheet_nums == ''){
+					$.messager.show({
+						title: '提示',
+						msg: "彩票信息-第"+i+"行每包张数不能为空！",
+					});
+					return (false);
+				}
+				if(price == ''){
+					$.messager.show({
+						title: '提示',
+						msg: "彩票信息-第"+i+"行价格不能为空！",
+					});
+					return (false);
+				}
+				order_num = order_num + nums;
+				order_money = order_money + (nums * price);
+				
+				var lArr = {};
+				lArr['lottery_id'] = lottery_id;
+				lArr['lottery_name'] = lottery_name;
+				lArr['sub_value'] = sub_value;
+				lArr['nums'] = nums;
+				lArr['sheet_nums'] = sheet_nums;
+				lArr['price'] = price;
+				content.push(lArr);
+			}
+		}
+		if(!content.length){
+			$.messager.show({
+				title: '提示',
+				msg: "彩票信息不能为空！",
+			});
+			return (false);
+		}
+        
+        var consignee_name = $("input[name='consignee_name']").val();
+        var consignee_tel = $("input[name='consignee_tel']").val();
+        var address = $("input[name='consignee_address']").val();
+		var consignee_address = consignee_name + ' ' + consignee_tel + ' ' + address;
+		
         if ($('#myform').form('validate')) {
             $.ajax({
-                url: '/productmod/product/add',
+                url: '/ordersmod/orders/play-order',
                 type: 'post',
                 data: {
-                    title: title,
-                    srcArr: srcArr,
-                    productSub: productSub,
-                    subTitle: subTitle,
-                    productNo: productNo,
-                    productPrice: productPrice,
-                    productStock: productStock,
-                    remark: remark,
-                    status: status,
-                    lotteryType: lotteryType,
-                    masterPic: masterPic
+                    cust_no: cust_no,
+                    content: content,
+                    consignee_name: consignee_name,
+                    consignee_tel: consignee_tel,
+                    consignee_address: consignee_address,
+                    order_num: order_num,
+                    order_money: order_money
                 },
                 beforeSend: function () {
                     $.messager.progress({
