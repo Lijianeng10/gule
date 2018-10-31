@@ -104,7 +104,7 @@ class OrdersController extends Controller {
         $info = StoreLottery::find()->where($where)->one();
         if(!empty($info)){
             $newNums = $info->stock + $nums;
-            StoreLottery::updateAll(["stock"=>$newNums],$where);
+            $res = StoreLottery::updateAll(["stock"=>$newNums],$where);
         }else{
             //新增门店彩种表数据
             $storeLottery = new StoreLottery();
@@ -116,7 +116,6 @@ class OrdersController extends Controller {
             $storeLottery->create_time = date("Y-m-d H:i:s");
             $storeLottery->save();
         }
-        return ['code'=>600,'msg'=>'操作成功'];
     }
     /**
      * 获取订单状态

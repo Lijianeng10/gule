@@ -32,8 +32,7 @@ class StoreLottery extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['store_lottey_id'], 'required'],
-            [['store_lottey_id', 'lottery_id', 'lottery_value', 'stock'], 'integer'],
+            [['lottery_id', 'lottery_value', 'stock'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
             [['cust_no', 'channel_no'], 'string', 'max' => 50],
         ];
