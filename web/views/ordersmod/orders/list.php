@@ -59,7 +59,7 @@
                 pagination: true,
                 pageSize: 20,
                 singleSelect:true,
-                //fitColumns: true,
+                fitColumns: true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
                 toolbar: '#tb',
@@ -68,6 +68,12 @@
                         field:'order_code',
                         title: '订单编号',
                         width: 160,
+                        align: 'center',
+                        sortable: true
+                    },{
+                        field:'cust_no',
+                        title: '门店编号',
+                        width: 50,
                         align: 'center',
                         sortable: true
                     }, {
