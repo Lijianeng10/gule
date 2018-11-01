@@ -28,7 +28,7 @@
         </div>
         <div class="form-item">
             <label for="" class="label-top">权限名称：</label>
-            <input name="auth_name" class="easyui-validatebox easyui-textbox" prompt="请输入权限名称" data-options="required:true,validType:'length[2,10]'" value="<?php echo $auth['auth_name'];?>">
+            <input name="auth_name" class="easyui-validatebox easyui-textbox" prompt="请输入权限名称" data-options="required:true" value="<?php echo $auth['auth_name'];?>">
         </div>
         <div class="form-item">
             <label for="" class="label-top">对应路径：</label>

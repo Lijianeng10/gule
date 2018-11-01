@@ -8,7 +8,7 @@
         <div class="form-item">
             <label for="" class="label-top">权限名称：</label>
             <input name="auth_name" class="easyui-validatebox easyui-textbox" prompt="请输入权限名称"
-                   data-options="required:true,validType:'length[3,10]'">
+                   data-options="required:true">
         </div>
         <div class="form-item">
             <label for="" class="label-top">对应路径：</label>
