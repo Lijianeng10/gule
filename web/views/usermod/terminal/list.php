@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="/js/kindeditor/themes/default/default.css" />
         <script charset="utf-8" src="/js/kindeditor/kindeditor-all.js"></script>
         <script charset="utf-8" src="/js/kindeditor/lang/zh_CN.js"></script>
+        <script charset="utf-8" src="/js/qrcode.min.js"></script>
 	</head>
 <body style="height: 100%;">
     <script type="text/javascript">
@@ -26,6 +27,7 @@
                     $('#datagrid').datagrid('load', {
                         'terminal_num': $.trim($('input[name="terminal_num"]').val()),
                         'status': $.trim($('input[name="status"]').val()),
+                        'use_status': $.trim($('input[name="use_status"]').val()),
                     });
                 },
             };
@@ -48,11 +50,24 @@
                         sortable: true,
                         align: 'center'
                     },{
+                        field: 'machine_code',
+                        title: '机器设备号',
+                        width: 80,
+                        sortable: true,
+                        align: 'center'
+                    },{
                         field: 'create_time',
                         title: '创建时间',
                         width: 80,
                         sortable: true,
                         align: 'center'
+                    },{
+                        field: 'use_status',
+                        title: '使用状态',
+                        width: 40,
+                        align: 'center',
+                        sortable: true,
+                        formatter: useStatusFormatter
                     },{
                         field: 'status',
                         title: '状态',
@@ -73,10 +88,19 @@
                     // controlBtn();
                     $("a[name='up']").linkbutton({text:'启用',iconCls:'fa fa-edit'});
                     $("a[name='down']").linkbutton({text:'禁用',iconCls:'fa fa-edit'});
-                    // $("a[name='edit_banner']").linkbutton({text:'编辑'});
+                    $("a[name='qrcode']").linkbutton({text:'二维码'});
                     // $("a[name='del_banner']").linkbutton({text:'删除'});
                 }
             });
+            function useStatusFormatter(value,row){
+                var str= "";
+                if(value ==1){
+                    str ="已使用"
+                } else{
+                    str ="未使用"
+                }
+                return str;
+            }
             function statusFormatter(value,row){
                 var str= "";
                 if(row.status ==1){
@@ -93,6 +117,7 @@
                 }else if(row.status == 1){
                     str += '<a href="#" name="down"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.terminal_id+','+row.status+')">禁用</a>';
                 }
+                str += '<a href="#" name="qrcode"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-search" onclick="read(\''+row.qrcode_url+'\')">二维码</a>';
                  return str;
             }
         });
@@ -119,6 +144,14 @@
                     <option value="2">禁用</option>
                 </select>
             </div>
+            <div class="tb_item">
+                <span>使用状态：</span>
+                <select class="easyui-combobox" name="use_status" style="width: 100px" data-options="editable:false">
+                    <option value="" selected>全部</option>
+                    <option value="0">未使用</option>
+                    <option value="1">已使用</option>
+                </select>
+            </div>
         </div>
 
     </div>
@@ -136,6 +169,13 @@
          */
         function add() {
             add_dialog('win','/usermod/views/to-terminal-add','/usermod/terminal/add-terminal-num','datagrid',500,300);
+        }
+
+        /**
+         * 查看二维码
+         */
+        function read(url) {
+            create_window('win','机器二维码','/usermod/views/to-terminal-qrcode?url='+url,500,300);
         }
     </script>
 </body>

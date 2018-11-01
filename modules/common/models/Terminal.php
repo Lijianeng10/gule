@@ -11,6 +11,7 @@ use Yii;
  * @property string $terminal_num
  * @property integer $status
  * @property string $create_time
+ * @property string $qrcode_url
  */
 class Terminal extends \yii\db\ActiveRecord
 {
@@ -29,7 +30,7 @@ class Terminal extends \yii\db\ActiveRecord
     {
         return [
             [['status'], 'integer'],
-            [['create_time'], 'safe'],
+            [['create_time','qrcode_url'], 'safe'],
             [['terminal_num'], 'string', 'max' => 50],
         ];
     }
@@ -44,6 +45,7 @@ class Terminal extends \yii\db\ActiveRecord
             'terminal_num' => 'Terminal Num',
             'status' => 'Status',
             'create_time' => 'Create Time',
+            'qrcode_url' => 'Qrcode Url',
         ];
     }
 }

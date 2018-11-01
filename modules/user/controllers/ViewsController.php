@@ -28,6 +28,14 @@ class ViewsController extends Controller {
         return $this->render('/usermod/terminal/add');
     }
     /**
+     * 查看终端号二维码
+     */
+    public function actionToTerminalQrcode(){
+        $request= \Yii::$app->request;
+        $url = $request->get('url');
+        return $this->render('/usermod/terminal/qrcode',['url'=>$url]);
+    }
+    /**
      * 机器列表
      */
     public function actionToMachineList(){
