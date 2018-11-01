@@ -15,6 +15,9 @@ class StoreController extends Controller {
     public function actionToJumpPage() {
         $request = \Yii::$app->request;
         $custNo = $request->get('custNo', '');
+        if($custNo == 'gl00002324'){
+            return 'http://caipiao.goodluckchina.net';
+        }
         $terminalNum = $request->get('terminalNum', '');
         if(empty($terminalNum)) {
             return $this->jsonError(100, '参数缺失');
