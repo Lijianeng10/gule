@@ -163,7 +163,7 @@ class AdminController extends Controller {
         foreach ($admin->attributes as $k => $v) {
             if (isset($post[$k])) {
                 if ($k == 'password') {
-                    $admin->$k = md5(md5($post[$k]));
+                    $admin->$k = md5($post['admin_name'].$post[$k]);
                 } elseif ($k != 'admin_role') {
                     $admin->$k = $post[$k];
                 }
@@ -216,7 +216,7 @@ class AdminController extends Controller {
         $admin->admin_name = $admin_name;
         $admin->nickname = $nickname;
         if ($admin_pwd != '********') {
-            $admin->password = md5(md5($admin_pwd));
+            $admin->password = md5($admin_name.$admin_pwd);
         }
         $admin->admin_tel = $admin_tel;
         $admin->type = $admin_type;
