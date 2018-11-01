@@ -15,10 +15,10 @@
 
 	</head>
 	<body id="main" class="easyui-layout">
-		<div data-options="region:'north',border:true" class="super-north" style="background: url(/images/link-bg.png);border: none;">
+		<div data-options="region:'north',border:true" class="super-north" style="background: url(/images/link-bg.png) center no-repeat;border: none;">
             <?php include("head.php");?>
 		</div>
-		<div data-options="region:'west',title:'主菜单导航栏',border:false,split:true"  style="width: 200px;background: #f3f3f3;font-size: 14px">
+		<div data-options="region:'west',border:false,split:true"  style="width: 200px;background: #3C3F41; font-size: 14px">
             <?php include("left.php");?>
 		</div>
 		</div>
@@ -30,13 +30,13 @@
 				</div>
 			</div>
 		</div>
-		<div data-options="region:'south'" class="super-south">
-			<!--页脚-->
-			<div class="super-footer-info">
-				<span><i class="fa fa-info-circle"></i> 作者：咕啦体育</span>
-				<span><i class="fa fa-copyright"></i> CopyRight 2018 版权所有 <i class="fa fa-caret-right"></i></span>
-			</div>
-		</div>
+<!--		<div data-options="region:'south'" class="super-south">-->
+<!--			<!--页脚-->-->
+<!--			<div class="super-footer-info">-->
+<!--				<span><i class="fa fa-info-circle"></i> 作者：咕啦体育</span>-->
+<!--				<span><i class="fa fa-copyright"></i> CopyRight 2018 版权所有 <i class="fa fa-caret-right"></i></span>-->
+<!--			</div>-->
+<!--		</div>-->
 
 		<!--主题设置弹窗-->
 		<div id="win">

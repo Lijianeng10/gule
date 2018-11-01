@@ -33,7 +33,8 @@ class ViewsController extends Controller {
     public function actionToTerminalQrcode(){
         $request= \Yii::$app->request;
         $url = $request->get('url');
-        return $this->render('/usermod/terminal/qrcode',['url'=>$url]);
+        $num = explode('=',$url)[1];
+        return $this->render('/usermod/terminal/qrcode',['url'=>$url,'num'=>$num]);
     }
     /**
      * 机器列表
