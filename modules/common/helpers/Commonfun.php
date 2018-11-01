@@ -29,9 +29,10 @@ class Commonfun {
      * @param char $letter
      * @return string
      */
-    public static function getCode($codeType) {
-        $redisStr = 'JK' . $codeType;
-        $likeStr = "JK" . $codeType;
+    public static function getCode($lotteryType, $letter) {
+        $time = date('ymdH');
+        $redisStr = "GGC:" . $lotteryType . ":" . $time . ":" . $letter;
+        $likeStr = "GGC" . $lotteryType . $time . $letter;
         $code = $likeStr . (self::getSerialnum($redisStr));
         return $code;
     }
@@ -44,8 +45,8 @@ class Commonfun {
     public static function getSerialnum($redisStr) {
         $redis = \Yii::$app->redis;
         $serialnum = $redis->executeCommand('incr', [$redisStr]);
-        $redis->executeCommand('expire', ["{$redisStr}"]);
-        $serialnum = sprintf("%05d", $serialnum);
+        $redis->executeCommand('expire', ["{$redisStr}", 7200]);
+        $serialnum = sprintf("%09d", $serialnum);
         return $serialnum;
     }
 
