@@ -37,8 +37,7 @@ class Machine extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['machine_id'], 'required'],
-            [['machine_id', 'lottery_id', 'lottery_value', 'stock', 'ac_status', 'online_status', 'status'], 'integer'],
+            [['lottery_id', 'lottery_value', 'stock', 'ac_status', 'online_status', 'status'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
             [['terminal_num', 'machine_code', 'cust_no', 'channel_no'], 'string', 'max' => 50],
         ];

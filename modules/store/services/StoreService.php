@@ -61,9 +61,12 @@ class StoreService {
      * @return type
      */
     public static function activeMachine($custNo, $terminalNum, $machineCode, $sellValue) {
-        $terminal = Terminal::find()->select(['terminal_id'])->where(['terminal_num' => $terminalNum, 'status' => 1, 'use_status' => 1])->asArray()->one();
+        $terminal = Terminal::find()->select(['terminal_id', 'use_status'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
         if (empty($terminal)) {
             return ['code' => 109, 'msg' => '此终端码已被禁用'];
+        }
+        if($terminal['use_status'] != 0) {
+            return ['code' => 109, 'msg' => '此终端码已被绑定'];
         }
         $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
         if ($machineData) {
@@ -82,6 +85,7 @@ class StoreService {
             if ($storeData['code'] != 0) {
                 return ['code' => 109, 'msg' => $storeData['msg']];
             }
+            $store = new Store();
             $store->cust_no = $custNo;
             $store->channel_no = $storeData['channel_no'];
             $store->user_tel = $storeData['user_tel'];
@@ -285,7 +289,6 @@ class StoreService {
      * @param type $terminalNum
      * @param type $channelNo
      * @param type $prePayMoney
-     * @param type $value
      * @return type
      */
     public static function createPayRecord($custNo, $terminalNum, $channelNo, $prePayMoney, $payType = 1) {
