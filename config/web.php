@@ -29,7 +29,7 @@ $config = [
             'class' => 'app\modules\admin\admin',
         ],
         'store' => [
-            'class' => 'app\modules\admin\admin',
+            'class' => 'app\modules\store\store',
         ]
     ],
     'components' => [
