@@ -10,10 +10,10 @@ use yii\web\Controller;
 class ViewsController extends Controller {
 
     /**
-     * @return string 会员列表
+     * @return string 网点列表
      */
-    public function actionToUserList(){
-        return $this->render('/usermod/user/list',[]);
+    public function actionToStoreList(){
+        return $this->render('/usermod/store/list',[]);
     }
     /**
      * 终端号列表
@@ -26,6 +26,14 @@ class ViewsController extends Controller {
      */
     public function actionToTerminalAdd(){
         return $this->render('/usermod/terminal/add');
+    }
+    /**
+     * 查看终端号二维码
+     */
+    public function actionToTerminalQrcode(){
+        $request= \Yii::$app->request;
+        $url = $request->get('url');
+        return $this->render('/usermod/terminal/qrcode',['url'=>$url]);
     }
     /**
      * 机器列表

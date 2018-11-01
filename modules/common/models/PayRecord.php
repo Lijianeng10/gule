@@ -14,6 +14,9 @@ use Yii;
  * @property string $terminal_num
  * @property string $outer_code
  * @property integer $pay_type
+ * @property integer $pay_way
+ * @property integer $lottery_id
+ * @property integer $lottery_value
  * @property integer $buy_nums
  * @property string $pre_pay_money
  * @property string $pay_money
@@ -39,7 +42,7 @@ class PayRecord extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pay_type', 'buy_nums', 'status'], 'integer'],
+            [['pay_type', 'pay_way', 'lottery_id', 'lottery_value', 'buy_nums', 'status'], 'integer'],
             [['pre_pay_money', 'pay_money'], 'number'],
             [['pay_time', 'create_time', 'modify_time', 'update_time'], 'safe'],
             [['order_code'], 'string', 'max' => 100],
@@ -61,6 +64,9 @@ class PayRecord extends \yii\db\ActiveRecord
             'terminal_num' => 'Terminal Num',
             'outer_code' => 'Outer Code',
             'pay_type' => 'Pay Type',
+            'pay_way' => 'Pay Way',
+            'lottery_id' => 'Lottery ID',
+            'lottery_value' => 'Lottery Value',
             'buy_nums' => 'Buy Nums',
             'pre_pay_money' => 'Pre Pay Money',
             'pay_money' => 'Pay Money',

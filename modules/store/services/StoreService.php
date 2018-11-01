@@ -61,7 +61,7 @@ class StoreService {
      * @return type
      */
     public static function activeMachine($custNo, $terminalNum, $machineCode, $sellValue) {
-        $terminal = Terminal::find()->select(['terminal_id'])->where(['terminal_num' => $terminalNum, 'status' => 1, 'user_status' => 1])->asArray()->one();
+        $terminal = Terminal::find()->select(['terminal_id'])->where(['terminal_num' => $terminalNum, 'status' => 1, 'use_status' => 1])->asArray()->one();
         if (empty($terminal)) {
             return ['code' => 109, 'msg' => '此终端码已被禁用'];
         }
@@ -107,6 +107,10 @@ class StoreService {
             $store->status = 1;
             if (!$store->save()) {
                 throw new Exception('门店绑定激活失败！');
+            }
+            $ret = Terminal::updateAll(['use_status'=>1],['terminal_num'=>$terminalNum]);
+            if(!$ret){
+                throw new Exception('终端码状态更新失败！');
             }
             $trans->commit();
             return ['code' => 600, 'msg' => '激活成功'];
