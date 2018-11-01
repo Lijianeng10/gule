@@ -29,15 +29,15 @@ class StoreService {
         $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status'])->where(['terminal_num' => $terminalNum])->asArray()->one();
         if ($custNo) {
             if (empty($machineData)) {
-                $url = '';
+                $url = ''; // 跳转
             } else {
                 if ($machineData['status'] == 0) {
                     return ['code' => 109, 'msg' => '该机器已被禁用'];
                 }
                 if ($machineData['cust_no'] == $custNo) {
-                    $url = '';
+                    $url = ''; // 跳转
                 } elseif ($machineData['cust_no'] != $custNo) {
-                    $url = '';
+                    $url = ''; // 跳转
                 }
             }
         } else {
