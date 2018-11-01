@@ -24,6 +24,7 @@ class TerminalController extends Controller {
         $order = $request->post('order');
         $terminal_num = $request->post('terminal_num', '');
         $status = $request->post('status', '');
+        $use_status = $request->post('use_status', '');
         $where = ['and'];
         if ($terminal_num) {
             $where[] = ['like', 'terminal_num', $terminal_num];
@@ -31,9 +32,15 @@ class TerminalController extends Controller {
         if ($status != '') {
             $where[] = ['status' => $status];
         }
+        if ($use_status != '') {
+            $where[] = ['use_status' => $use_status];
+        }
         $total = Terminal::find()->where($where)->count();
         $offset = $rows * ($page - 1);
+        $field = ['terminal.*','m.machine_code'];
         $lists = Terminal::find()
+            ->select($field)
+            ->leftJoin('machine as m','m.terminal_num = terminal.terminal_num')
             ->where($where)
             ->offset($offset)
             ->limit($rows)
@@ -53,9 +60,11 @@ class TerminalController extends Controller {
         }
         $dataAry = [];
         for($i=0;$i<$nums;$i++){
-            $dataAry[] = [$this->getNo(),date('Y-m-d H:i:s')];
+            $terminalNum =$this->getNo();
+            $qrcode = \Yii::$app->params['urlIp'].'/store/store/to-jump-page?terminalNum='.$terminalNum;
+            $dataAry[] = [$terminalNum,$qrcode,date('Y-m-d H:i:s')];
         }
-        $ret = Yii::$app->db->createCommand()->batchInsert('terminal', ['terminal_num', 'create_time'], $dataAry)->execute();
+        $ret = Yii::$app->db->createCommand()->batchInsert('terminal', ['terminal_num','qrcode_url','create_time'], $dataAry)->execute();
         if($ret){
             return $this->jsonError(600,'操作成功！');
         }else{

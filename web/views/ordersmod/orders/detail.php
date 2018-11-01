@@ -1,136 +1,96 @@
 <body style="height: 100%;">
-    <script type="text/javascript">
-        $(function() {
-			
-			//搜索
-            obj2 = {
-                editRow: undefined,
-                search: function () {
-                    $('#datagrid2').datagrid('load', {
-                        'goods_code': $.trim($('input[name="goods_code"]').val()),
-                        'goods_name': $.trim($('input[name="goods_name"]').val()),
-                    });
-                },
-            };
+<style type="text/css">
+    .form-item {
+        margin-bottom: 15px;
+        width: 50%;
+        float: left;
+    }
 
-            $('#datagrid2').datagrid({
-                url:'/ordersmod/orders/get-order-detail-list?order_id=<?=$goodsData['order_id']?>&order_code=<?=$goodsData['order_code']?>',
-                fit: true,
-                pagination: true,
-                pageSize: 20,
-                singleSelect:true,
-                fitColumns: true,
-                rownumbers: true,
-                loadMsg: '数据加载中...',
-                toolbar: '#tb2',
-                columns: [
-                    [{
-                        field: 'goods_code',
-                        title: '商品编号',
-                        width: 70,
-                        align: 'center',
-						sortable: true,
-                    }, {
-                        field: 'goods_name_xs',
-                        title: '商品名称',
-                        width: 80,
-                        halign: 'center',
-						align: 'left',
-						formatter: goodsNameXsFormatter
-                    }, {
-                        field: 'attr_name_xs',
-                        title: '商品属性',
-                        width: 80,
-                        halign: 'center',
-						align: 'left',
-                        //sortable: true,
-						formatter: attrNameXsFormatter
-                    }, {
-                        field: 'stock',
-                        title: '库存',
-                        width: 50,
-                        align: 'center',
-                        sortable: true,
-                    }, {
-                        field: 'sku_price',
-                        title: '单价',
-                        width: 50,
-                        align: 'center',
-                        sortable: true,
-                    }, {
-                        field: 'sku_num',
-                        title: '购买数量',
-                        width: 50,
-                        align: 'center',
-                        sortable: true,
-                    }, {
-                        field: 'is_gift',
-                        title: '是否参与优惠',
-                        width: 60,
-                        align: 'center',
-                        sortable: true,
-                        formatter: isGiftFormatter
-                    }, {
-                        field: 'total_money',
-                        title: '总金额',
-                        width: 50,
-                        align: 'center',
-                        sortable: true,
-                    }]
-                ],
-            });
-			
-			//商品名称
-			function goodsNameXsFormatter(value, row) {
-				var str = '';
-				if(row.goods_name != ''){
-					str += "<span style='cursor:pointer' title='"+row.goods_name+"'>"+value+"</span>";
-				}
-                return str;
-            }
-			
-			//商品属性
-			function attrNameXsFormatter(value, row) {
-				var str = '';
-				if(row.attr_name_str != ''){
-					str += "<span style='cursor:pointer' title='"+row.attr_name_str+"'>"+value+"</span>";
-				}
-                return str;
-            }
-			
-			function isGiftFormatter(value,row){
-				if(value == 0){
-					var str = '否';
-				}else{
-					var str = '是';
-				}
-                return str;
-            }
-        });
+    .form-item > label {
+        min-width: 72px;
+        display: inline-block;
+    }
 
-	</script>
+    .form-item input, select {
+        width: 170px;
+    }
 
-	<div style="margin-top:20px;">
-		<span style="font-weight:bold;font-size:15px;">订单编号：<?=$goodsData['order_code']?></span>
-	</div>
-	<div id="tb2">
-	
-		<div>
-            <a href="#" class="easyui-linkbutton primary goodsCategorySearch" iconCls="fa fa-search" onclick="obj2.search();"> 查 询 </a>
+    .label-top {
+        text-align: right;
+    }
+</style>
+<div class="super-theme-example">
+    <form id="myform">
+		<div class="form-item" style="width:80%">
+            <label for="" class="label-top">订单编号：</label>
+            <?php echo $ordersData['order_code'];?>
+        </div>
+        <div class="form-item" style="width:80%">
+            <label for="" class="label-top">网点编号：</label>
+            <?php echo $ordersData['cust_no'];?>
+        </div>
+        <div class="form-item" style="width:80%">
+            <label for="" class="label-top" style="font-size:16px;font-weight: bold">彩票信息</label>
+        </div>
+        <div class="form-item" style="width:100%;">
+            <table id="value_table" border='1px' cellspacing="0" style="width:80%;text-align:center;margin-left: 100px;">
+                <tr>
+                    <td style="width:15%">彩种</td>
+                    <td style="width:15%">彩票面额</td>
+                    <td style="width:17%">购买数量(包)</td>
+                    <td style="width:17%">每包张数</td>
+                    <td style="width:17%">价格(包)</td>
+                </tr>
+				<?php 
+				foreach($orderDetailData as $key => $val){
+				?>
+				<tr>
+					<td style="width:15%">
+						<?php echo $val['lottery_name'];?>
+					</td>
+					<td style="width:15%">
+						<?php echo $val['sub_value'];?>元
+					</td>
+					<td style="width:17%">
+						<?php echo $val['nums'];?>
+					</td>
+					<td style="width:17%">
+						<?php echo $val['sheet_nums'];?>
+					</td>
+					<td style="width:17%">
+						<?php echo $val['price'];?>
+					</td>
+				</tr>
+				<?php 
+				}
+				?>
+            </table>
+        </div>
+        <div class="form-item" style="width:80%">
+            <label for="" class="label-top" style="font-size:16px;font-weight: bold">收货信息</label>
+        </div>
+        <div class="form-item" style="width:80%">
+            <label for="" class="label-top">收货地址：</label>
+            <?php echo $ordersData['address'];?>
         </div>
 		
-    	<div class="tb-column">
-            <div class="tb_item">
-                <span>商品编号:</span>
-                <input type="text" id="goods_code" name="goods_code" class="textbox" placeholder="商品编号" >
-            </div>
-            <div class="tb_item">
-                <span>商品名称:</span>
-                <input type="text" id="goods_name" name="goods_name" class="textbox" placeholder="商品名称" >
-            </div>
-        </div>
-    </div>
-	<div class="dgdiv" style="height: 98%;margin-top:10px;">
-		<table id="datagrid2"></table>
-	</div>
+		<?php if(in_array($ordersData['order_status'],array('2','3','4'))){?>
+			<div class="form-item" style="width:80%">
+				<label for="" class="label-top" style="font-size:16px;font-weight: bold">物流信息</label>
+			</div>
+			<div class="form-item" style="width:80%">
+				<label for="" class="label-top">物流名称：</label>
+				<?php echo $ordersData['courier_name'];?>
+			</div>
+			<div class="form-item" style="width:80%">
+				<label for="" class="label-top">物流单号：</label>
+				<?php echo $ordersData['courier_code'];?>
+			</div>
+		<?php }?>
+		
+		<input type="hidden" name="count" id="count" value="1">
+    </form>
+</div>
 </body>
+
+

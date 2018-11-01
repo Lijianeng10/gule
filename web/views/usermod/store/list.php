@@ -47,7 +47,7 @@
                 columns: [
                     [{
                         field: 'cust_no',
-                        title: '会员编号',
+                        title: '网点编号',
                         width: 50,
                         align: 'center',
                         sortable: true
@@ -57,82 +57,43 @@
                         width: 50,
                         align: 'center',
                     },{
-                        field: 'user_name',
-                        title: '会员昵称',
+                        field: 'code',
+                        title: '代销证编号',
                         width: 50,
                         align: 'center',
                     },{
-                        field: 'agent_code',
-                        title: '上级代理编号',
-                        width: 50,
+                        field: 'area',
+                        title: '所属区域',
+                        width: 70,
                         align: 'center',
                     },{
-                        field: 'agent_name',
-                        title: '上级代理昵称',
-                        width: 50,
+                        field: 'agents',
+                        title: '区域经理信息',
+                        width: 70,
                         align: 'center',
                     },{
-                        field: 'all_funds',
-                        title: '总金额',
+                        field: 'machineNums',
+                        title: '机器总数',
                         width: 50,
                         sortable: true,
                         align: 'center',
                     },{
-                        field: 'able_funds',
-                        title: '可用余额',
+                        field: 'saleMoneys',
+                        title: '总销量',
                         width: 50,
                         sortable: true,
                         align: 'center',
                     },{
-                        field: 'ice_funds',
-                        title: '冻结余额',
+                        field: 'status',
+                        title: '状态',
                         width: 50,
                         align: 'center',
-                    },{
-                        field: 'no_withdraw',
-                        title: '不可提现余额',
-                        width: 50,
-                        align: 'center',
-                    },{
-                        field: 'draw',
-                        title: '可提现余额',
-                        width: 50,
-                        align: 'center',
-                        formatter: drawFormatter
-                    }, {
-                        field: 'third_uid',
-                        title: '微信绑定',
-                        width: 40,
-                        align: 'center',
-                        formatter: function (value) {
-                            return (value != "" && value != null ? "已绑定" : "未绑定")
-                        },
-                    }, {
-                        field: 'level_name',
-                        title: '会员等级',
-                        width: 40,
-                        align: 'center'
+                        formatter: statusFormatter
                     },{
                         field: 'create_time',
                         title: '开户时间',
-                        width: 80,
-                        sortable: true,
-                        align: 'center'
-                    },{
-                        field: 'authen_status',
-                        title: '认证状态',
-                        width: 40,
+                        width: 70,
                         align: 'center',
-                        formatter: function (value) {
-                            return value == 1 ? "已通过" : (value == 2 ? "审核中" : (value == 3 ? "审核失败" : "未认证"));
-                        },
-                    },{
-                        field: 'status',
-                        title: '使用状态',
-                        width: 40,
-                        align: 'center',
-                        sortable: true,
-                        formatter: statusFormatter
                     },{
                         field: 'opt',
                         title: '操作',
@@ -143,28 +104,25 @@
                     ]
                 ],
                 onLoadSuccess:function(data){
-                    controlBtn();
+                    // controlBtn();
                     $("a[name='edit_banner']").linkbutton({text:'编辑'});
                     $("a[name='del_banner']").linkbutton({text:'删除'});
                     $("a[name='up']").linkbutton({text:'上线'});
                     $("a[name='down']").linkbutton({text:'下线'});
                 }
             });
-            function picFormatter(value, row) {
-                if(value==='' || value == undefined){
-                    return "";
-                }
-                return '<img data-magnify="gallery" data-src="'+row.pic_url+'" data-caption="APP首页图片" src="'+row.pic_url+'" width="40px" height="40px" style="text-align: center">';
-            }
+
             function drawFormatter(value,row){
                 return (row.able_funds - row.no_withdraw).toFixed(2);
             }
             function statusFormatter(value,row){
                 var str= "";
-                if(row.status ==1){
-                    str ="正常"
-                } else{
+                if(value ==1){
+                    str ="激活"
+                } else if(value==2){
                     str ="禁用"
+                }else{
+                    str ="未激活"
                 }
                 return str;
             }
