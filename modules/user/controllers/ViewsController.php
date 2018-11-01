@@ -10,10 +10,10 @@ use yii\web\Controller;
 class ViewsController extends Controller {
 
     /**
-     * @return string 会员列表
+     * @return string 网点列表
      */
-    public function actionToUserList(){
-        return $this->render('/usermod/user/list',[]);
+    public function actionToStoreList(){
+        return $this->render('/usermod/store/list',[]);
     }
     /**
      * 终端号列表
