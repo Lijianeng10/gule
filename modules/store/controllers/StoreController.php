@@ -16,7 +16,7 @@ class StoreController extends Controller {
         $request = \Yii::$app->request;
         $custNo = $request->get('custNo', '');
         if($custNo == 'gl00002324'){
-            return 'http://caipiao.goodluckchina.net';
+            return $this->redirect('http://caipiao.goodluckchina.net');
         }
         $terminalNum = $request->get('terminalNum', '');
         if(empty($terminalNum)) {
