@@ -24,18 +24,16 @@
                 editRow: undefined,
                 search: function () {
                     $('#datagrid').datagrid('load', {
-                        'user_info': $.trim($('input[name="user_info"]').val()),
+                        'cust_no': $.trim($('input[name="cust_no"]').val()),
                         'status': $.trim($('input[name="status"]').val()),
                         'start_time': $.trim($('input[name="start_time"]').val()),
                         'end_time': $.trim($('input[name="end_time"]').val()),
-                        'authen_status': $.trim($('input[name="authen_status"]').val()),
-                        'vxstatus': $.trim($('input[name="vxstatus"]').val()),
                     });
                 },
             };
 
             $('#datagrid').datagrid({
-                url: '/usermod/user/get-user-list',
+                url: '/usermod/store/get-store-list',
                 fit: true,
                 pagination: true,
                 pageSize: 20,
@@ -79,7 +77,7 @@
                         align: 'center',
                     },{
                         field: 'saleMoneys',
-                        title: '总销量',
+                        title: '总销量(元)',
                         width: 50,
                         sortable: true,
                         align: 'center',
@@ -104,17 +102,10 @@
                     ]
                 ],
                 onLoadSuccess:function(data){
-                    // controlBtn();
-                    $("a[name='edit_banner']").linkbutton({text:'编辑'});
-                    $("a[name='del_banner']").linkbutton({text:'删除'});
-                    $("a[name='up']").linkbutton({text:'上线'});
-                    $("a[name='down']").linkbutton({text:'下线'});
+                    controlBtn();
                 }
             });
 
-            function drawFormatter(value,row){
-                return (row.able_funds - row.no_withdraw).toFixed(2);
-            }
             function statusFormatter(value,row){
                 var str= "";
                 if(value ==1){
@@ -128,7 +119,11 @@
             }
             function optFormatter(value, row) {
                 var str = "";
-
+                if(row.status == 1){
+                    str += '<a href="#"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.store_id+','+row.status+')">禁用</a>';
+                }else{
+                    str += '<a href="#"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.store_id+','+row.status+')">启用</a>';
+                }
                  return str;
             }
         });
@@ -143,13 +138,14 @@
         </div>
         <div class="tb-column">
             <div class="tb_item">
-                <span>用户信息：</span>
-                <input type="text"  name="user_info" class="easyui-textbox">
+                <span>门店编号：</span>
+                <input type="text"  name="cust_no" class="easyui-textbox">
             </div>
             <div class="tb_item">
                 <span>状态：</span>
-                <select class="easyui-combobox" name="status" style="width: 100px" data-options="editable:false">
+                <select class="easyui-combobox" name="status" style="width: 100px" data-options="panelHeight:'auto',editable:false">
                     <option value="" selected>全部</option>
+					<option value="0">未激活</option>
                     <option value="1">正常</option>
                     <option value="2">禁用</option>
                 </select>
@@ -160,35 +156,17 @@
                 -
                 <input type="text" name="end_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s');?>">
             </div>
-            <div class="tb_item">
-                <span>认证状态：</span>
-                <select class="easyui-combobox" name="authen_status" style="width: 100px" data-options="editable:false">
-                    <option value="" selected>全部</option>
-                    <option value="0">未认证</option>
-                    <option value="1">已通过</option>
-                    <option value="2">审核中</option>
-                    <option value="3">未通过</option>
-                </select>
-            </div>
-            <div class="tb_item">
-                <span>微信绑定：</span>
-                <select class="easyui-combobox" name="vxstatus" style="width: 100px" data-options="editable:false">
-                    <option value="" selected>全部</option>
-                    <option value="1">已绑定</option>
-                    <option value="2">未绑定</option>
-                </select>
-            </div>
         </div>
 
     </div>
     <div id="dlg"></div>
     <script>
-        function change_status(bananer_id,status){
-            var statusStr = "下线";
+        function change_status(store_id,status){
+            var statusStr = "启用";
             if(status==1){
-                statusStr='发布'
+                statusStr='禁用'
             }
-            changeStatus('您确定要 ('+statusStr+') 该广告吗吗?',"/shopwebsitemod/banner/change-status",bananer_id,status);
+            changeStatus('您确定要 ('+statusStr+') 该网点吗?',"/usermod/store/change-status",store_id,status);
         }
     </script>
 </body>
