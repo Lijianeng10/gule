@@ -201,7 +201,8 @@
             }
         });
 		function courier_add(order_code,order_id){
-            $('#add_win').dialog({
+			create_div("dlg");
+            $('#dlg').dialog({
                 width : '50%',
                 height : '30%',
                 modal : true,
@@ -230,7 +231,7 @@
 											title: '提示',
 											msg: '发货成功！',
 										});
-										$('#add_win').dialog('close').form('clear');
+										$('#dlg').dialog('close').form('clear');
 										$('#datagrid').datagrid('reload');
 									} else {
 										var msg = '操作失败！';
@@ -241,7 +242,7 @@
 											title: '错误',
 											msg: msg,
 										});
-										$('#add_win').dialog('close').form('clear');
+										$('#dlg').dialog('close').form('clear');
 										$('#datagrid').datagrid('reload');
 									}
 								}
@@ -258,7 +259,7 @@
 					text: '取消',
 					iconCls: 'fa fa-close',
 					handler: function () {
-						$('#add_win').dialog('close').form('clear');
+						$('#dlg').dialog('close').form('clear');
 						$('#datagrid').datagrid('reload');
 					},
 				}],
@@ -303,8 +304,6 @@
                 <input type="text" id="end_order_time" name="end_order_time" class="easyui-datetimebox">
             </div>
         </div>
-		
-		<div id="add_win" style="display: none"></div>
     </div>
 </body>
 </html>
