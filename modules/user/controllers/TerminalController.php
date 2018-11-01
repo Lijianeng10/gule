@@ -20,7 +20,7 @@ class TerminalController extends Controller {
         $request = \Yii::$app->request;
         $page = $request->post('page');
         $rows = $request->post('rows');
-        $sort = $request->post('sort', 'create_time');
+        $sort = $request->post('sort', 'terminal_num');
         $order = $request->post('order');
         $terminal_num = $request->post('terminal_num', '');
         $status = $request->post('status', '');
