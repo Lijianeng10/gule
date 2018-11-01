@@ -23,7 +23,7 @@
                 search: function () {
                     $('#datagrid').datagrid('load', {
                         'order_code': $.trim($('input[name="order_code"]').val()),
-                        'user_name': $.trim($('input[name="user_name"]').val()),
+                        'cust_no': $.trim($('input[name="cust_no"]').val()),
                         'order_status': $.trim($('input[name="order_status"]').val()),
                         'pay_status': $.trim($('input[name="pay_status"]').val()),
                         'start_order_time': $.trim($('input[name="start_order_time"]').val()),
@@ -285,8 +285,8 @@
                 <input type="text" id="order_code" name="order_code" class="easyui-textbox" placeholder="订单编号" >
             </div>
             <div class="tb_item">
-                <span>下单用户:</span>
-                <input type="text" id="user_name" name="user_name" class="easyui-textbox" placeholder="下单用户名称" >
+                <span>门店编号:</span>
+                <input type="text" id="cust_no" name="cust_no" class="easyui-textbox" placeholder="下单门店编号" >
             </div>
             <div class="tb_item">
                 <span>订单状态:</span>
@@ -298,9 +298,9 @@
             </div>
             <div class="tb_item">
                 <span>下单时间:</span>
-                <input type="text" id="start_order_time" name="start_order_time" class="easyui-datebox">
+                <input type="text" id="start_order_time" name="start_order_time" class="easyui-datetimebox">
                 -
-                <input type="text" id="end_order_time" name="end_order_time" class="easyui-datebox" value="<?php echo date('Y-m-d')?>">
+                <input type="text" id="end_order_time" name="end_order_time" class="easyui-datetimebox">
             </div>
         </div>
 		

@@ -156,17 +156,17 @@ class OrdersController extends Controller {
         $offset = $rows * ($page - 1);
 
         $order_code = $request->post('order_code');//订单编号
-        $user_name = $request->post('user_name');//下单用户名称
+        $cust_no = $request->post('cust_no');//下单用户编号
         $order_status = $request->post('order_status');//订单状态
         $pay_status = $request->post('pay_status');//支付状态
         $start_order_time = $request->post('start_order_time');//下单起始时间
         $end_order_time = $request->post('end_order_time');//下单结束时间
         $where = ['and'];
         if($order_code != ''){
-            $where[] = ['like','shop_orders.order_code',$order_code];
+            $where[] = ['like','order_code',$order_code];
         }
-        if($user_name != ''){
-            $where[] = ['like','user.user_name',$user_name];
+        if($cust_no != ''){
+            $where[] = ['like','cust_no',$cust_no];
         }
         if($order_status != '' && $order_status != '-1'){
             $where[] = ['order_status'=>$order_status];
