@@ -23,7 +23,7 @@
     <div class="super-theme-example">
         <form id="myform">
 			<div class="form-item" style="width:100%">
-                <span style="font-size:16px">订单编号：<?=$goodsData['order_code']?></span>
+                <span style="font-size:16px">订单编号：<?=$ordersData['order_code']?></span>
             </div>
             <div class="form-item">
                 <label for="" class="label-top">快递单号：</label>

@@ -9,6 +9,7 @@ use app\modules\common\models\Order;
 use app\modules\common\models\OrderDetail;
 use app\modules\common\models\StoreLottery;
 use app\modules\common\helpers\Constants;
+use app\modules\common\helpers\Commonfun;
 
 /**
  * Orders controller for the `orders` module
@@ -25,6 +26,19 @@ class OrdersController extends Controller {
         }
         return json_encode($lotteryLists);
     }
+	
+	/**
+     * 获取彩票面值
+     */
+    public function actionGetSubValue() {
+        $aub_value_arr = Constants::SUB_VALUE_ARR;//彩票面值
+        $subValueLists=[];
+        foreach($aub_value_arr as $key => $val){
+            $subValueLists[] = ['id'=>$key,'text'=>$val];
+        }
+        return json_encode($subValueLists);
+    }
+	
     /**
      * 新增网点订单
      */
@@ -63,11 +77,11 @@ class OrdersController extends Controller {
             if (!$order->save()) {
                 throw new Exception('下单失败');
             }
-            $field = ['order_id', 'order_code', 'lottery_id', 'lottery_name', 'sub_value', 'nums','sheet_nums','price','money'];
+            $field = ['order_id', 'order_code', 'lottery_id', 'lottery_name', 'sub_value', 'nums','sheet_nums','price','money','create_time'];
             $inVal = [];
             $upStr = '';
             foreach ($content as $k => $v){
-                $inVal[] = [$order->order_id,$order->order_code,$v['lottery_id'],$v['lottery_name'],$v['sub_value'],$v['nums'],$v['sheet_nums'],$v['price'],$v['nums']*$v['price']];
+                $inVal[] = [$order->order_id,$order->order_code,$v['lottery_id'],$v['lottery_name'],$v['sub_value'],$v['nums'],$v['sheet_nums'],$v['price'],$v['nums']*$v['price'],$format];
                 //更新门店彩种表数据
                 $this->updateStoreLottery($custNo,$channel,$v['lottery_id'],$v['sub_value'],$v['nums']*$v['sheet_nums']);
             }
@@ -90,7 +104,7 @@ class OrdersController extends Controller {
         $info = StoreLottery::find()->where($where)->one();
         if(!empty($info)){
             $newNums = $info->stock + $nums;
-            StoreLottery::updateAll(["stock"=>$newNums],$where);
+            $res = StoreLottery::updateAll(["stock"=>$newNums],$where);
         }else{
             //新增门店彩种表数据
             $storeLottery = new StoreLottery();
@@ -102,7 +116,6 @@ class OrdersController extends Controller {
             $storeLottery->create_time = date("Y-m-d H:i:s");
             $storeLottery->save();
         }
-        return ['code'=>600,'msg'=>'操作成功'];
     }
     /**
      * 获取订单状态
@@ -143,17 +156,17 @@ class OrdersController extends Controller {
         $offset = $rows * ($page - 1);
 
         $order_code = $request->post('order_code');//订单编号
-        $user_name = $request->post('user_name');//下单用户名称
+        $cust_no = $request->post('cust_no');//下单用户编号
         $order_status = $request->post('order_status');//订单状态
         $pay_status = $request->post('pay_status');//支付状态
         $start_order_time = $request->post('start_order_time');//下单起始时间
         $end_order_time = $request->post('end_order_time');//下单结束时间
         $where = ['and'];
         if($order_code != ''){
-            $where[] = ['like','shop_orders.order_code',$order_code];
+            $where[] = ['like','order_code',$order_code];
         }
-        if($user_name != ''){
-            $where[] = ['like','user.user_name',$user_name];
+        if($cust_no != ''){
+            $where[] = ['like','cust_no',$cust_no];
         }
         if($order_status != '' && $order_status != '-1'){
             $where[] = ['order_status'=>$order_status];
@@ -194,5 +207,34 @@ class OrdersController extends Controller {
             }
         }
         return \Yii::datagridJson($AttrList, $total);
+    }
+	
+	/**
+     * 说明:确认发货
+     * @author chenqiwei
+     * @date 2018/9/29 上午10:00
+     * @param
+     * @return
+     */
+    public function actionSureSend() {
+		$session = \Yii::$app->session;
+		$parmas_get = \Yii::$app->request->get();
+        $parmas_post = \Yii::$app->request->post();
+		$db = \Yii::$app->db;
+		$now_times = date('Y-m-d H:i:s',time());
+		
+		$order = Order::find()->where(['order_id' => $parmas_get['order_id']])->one();
+        if (!$order) {
+            return $this->jsonError(100, '没有该条数据，请刷新重试');
+        }
+		$order->order_status = 2;
+        $order->courier_name = $parmas_post['courier_name'];
+        $order->courier_code = $parmas_post['courier_code'];
+		$order->send_time = $now_times;
+        if (!$order->save()) {
+            return $this->jsonError(109,$order->errors);
+        }
+
+        return $this->jsonResult(600, '操作成功', true);
     }
 }
