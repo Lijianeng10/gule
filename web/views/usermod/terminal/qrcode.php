@@ -5,10 +5,29 @@
     }
 </style>
 <div class="super-theme-example">
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div id="qrcode"></div>
+                </td>
+                <td style="padding-left: 20px;">
+                    <span style="font-size: 18px;color:blue">终端号：<?php echo $num;?></span>
+                </td>
+                <td style="padding-left: 50px;">
+                    <div><a href="#" class="easyui-linkbutton info" onclick="dwn();">下载保存</a></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
     <div>
-        <div id="qrcode"></div>
+
+
         <div style="float: right;margin-right: 200px;">
-            <a href="#" class="easyui-linkbutton info" onclick="dwn();">下载保存</a>
+
         </div>
     </div>
 
