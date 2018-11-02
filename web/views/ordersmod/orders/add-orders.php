@@ -25,8 +25,8 @@
             <label for="" class="label-top" style="font-size:16px;font-weight: bold">订购网点信息</label>
         </div>
         <div class="form-item" style="width:80%">
-            <label for="" class="label-top">网点编号：</label>
-            <input type="text" name="cust_no_new" class="easyui-textbox" prompt="请输入网点编号" style="width:60%">
+            <label for="" class="label-top">网点信息：</label>
+            <input type="text" name="cust_no_new" class="easyui-textbox" prompt="请输入网点编号、手机号" style="width:60%">
         </div>
         <div class="form-item" style="width:80%">
             <label for="" class="label-top" style="font-size:16px;font-weight: bold">彩票信息</label>

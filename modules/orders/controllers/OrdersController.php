@@ -10,6 +10,7 @@ use app\modules\common\models\OrderDetail;
 use app\modules\common\models\StoreLottery;
 use app\modules\common\helpers\Constants;
 use app\modules\common\helpers\Commonfun;
+use app\modules\common\models\Store;
 
 /**
  * Orders controller for the `orders` module
@@ -48,11 +49,16 @@ class OrdersController extends Controller {
         if(empty($content)){
             return $this->jsonError(109,'请选择有效的彩种数据');
         }
+        //查找门店编号
+        $store = Store::find()->select(['cust_no'])->where(['or',['cust_no'=>$custNo],['user_tel'=>$custNo]])->one();
+        if(empty($store)){
+            return $this->jsonError(109,'不存在该网点信息，请检查重试！');
+        }
         $format = date('Y-m-d H:i:s');
         //新增订单主表数据 默认已支付
         $order = new Order();
         $order->order_code = 'GGC'.date('YmdHis').rand(10,99);
-        $order->cust_no = $custNo;
+        $order->cust_no = $store->cust_no;
         $order->order_num = $order_num;
         $order->order_money = $order_money;
         $order->order_status = 1;
