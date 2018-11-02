@@ -3,7 +3,7 @@
     <form id="myform">
         <div class="form-item">
             <label for="" class="label-top">管理员登录名：</label>
-            <input name="admin_name" class="easyui-validatebox easyui-textbox" prompt="请输入用户名" data-options="required:true,validType:'length[3,20]'" >
+            <input name="admin_name_new" class="easyui-validatebox easyui-textbox" prompt="请输入用户名" data-options="required:true" >
         </div>
         <div class="form-item">
             <label for="" class="label-top">管理员密码：</label>

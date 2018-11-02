@@ -149,9 +149,10 @@ class OrdersController extends Controller {
      */
     public function actionGetList(){
         $request = \Yii::$app->request;
+		$session = \Yii::$app->session;
         $page = $request->post('page');
         $rows = $request->post('rows');
-        $sort = $request->post('sort','order_time');
+        $sort = $request->post('sort','order.order_time');
         $order = $request->post('order','desc');
         $offset = $rows * ($page - 1);
 
@@ -163,27 +164,36 @@ class OrdersController extends Controller {
         $end_order_time = $request->post('end_order_time');//下单结束时间
         $where = ['and'];
         if($order_code != ''){
-            $where[] = ['like','order_code',$order_code];
+            $where[] = ['like','order.order_code',$order_code];
         }
         if($cust_no != ''){
-            $where[] = ['like','cust_no',$cust_no];
+            $where[] = ['like','order.cust_no',$cust_no];
         }
         if($order_status != '' && $order_status != '-1'){
-            $where[] = ['order_status'=>$order_status];
+            $where[] = ['order.order_status'=>$order_status];
         }
         if($pay_status != '' && $pay_status != '-1'){
-            $where[] = ['pay_status'=>$pay_status];
+            $where[] = ['order.pay_status'=>$pay_status];
         }
         if($start_order_time != ''){
-            $where[] = ['>=','order_time',$start_order_time];
+            $where[] = ['>=','order.order_time',$start_order_time];
         }
         if($end_order_time != ''){
-            $where[] = ['<=','order_time',$end_order_time];
+            $where[] = ['<=','order.order_time',$end_order_time];
         }
-        $total = Order::find()->where($where)->count();
+		
+		//判断登陆账号是否为渠道账户
+		if($session['admin']['type'] == 1){
+			$where[] = ['store.channel_no' => $session['admin']['admin_name']];
+		}
+		
+        $total = Order::find()
+			->leftJoin('store','store.cust_no = order.cust_no')
+			->where($where)
+			->count();
         $AttrList = Order::find()
-//            ->select(['shop_orders.*','user.user_name as user_name'])
-//            ->leftJoin('user','user.user_id = shop_orders.user_id')
+			//->select(['order.*','store.channel_no'])
+            ->leftJoin('store','store.cust_no = order.cust_no')
             ->where($where)
             ->offset($offset)
             ->limit($rows)

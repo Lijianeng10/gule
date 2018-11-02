@@ -5,8 +5,7 @@
         <!--                </div>-->
         <div class="form-item">
             <label for="" class="label-top">管理员登录名：</label>
-            <input name="admin_name" class="easyui-validatebox easyui-textbox" prompt="请输入用户名"
-                   data-options="required:true,validType:'length[3,10]'" value="<?php echo $admin['admin_name'];?>">
+            <?php echo $admin['admin_name'];?>
         </div>
         <div class="form-item">
             <label for="" class="label-top">管理员密码：</label>

@@ -3,7 +3,7 @@
         <div class="form-item">
             <label for="" class="label-top">角色名：</label>
             <input name="role_name" class="easyui-validatebox easyui-textbox" prompt="请输入名称"
-                   data-options="required:true,validType:'length[3,10]'">
+                   data-options="required:true">
         </div>
         <div class="form-item">
             <label for="" class="label-top">启用状态：</label>

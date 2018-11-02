@@ -14,6 +14,7 @@ class StoreController extends Controller {
     public function actionGetStoreList() {
 
         $request = \Yii::$app->request;
+		$session = \Yii::$app->session;
         $page = $request->post('page', 1);
         $size = $request->post('size', 15);
         $sort = $request->post('sort', 'desc');
@@ -36,6 +37,11 @@ class StoreController extends Controller {
 		if(!empty($end_time)){
             $where[] = ['<=','create_time',$end_time];
         }
+		
+		//判断登陆账号是否为渠道账户
+		if($session['admin']['type'] == 1){
+			$where[] = ['channel_no' => $session['admin']['admin_name']];
+		}
 		
         $total = Store::find()->where($where)->count();
         $storeData = Store::find()
