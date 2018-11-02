@@ -72,9 +72,9 @@ class StoreService {
         if ($terminal['use_status'] != 0) {
             return ['code' => 109, 'msg' => '此终端码已被绑定'];
         }
-        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
+        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num'])->where(['machine_code' => $machineCode, 'status' => 1])->asArray()->one();
         if ($machineData) {
-            return ['code' => 109, 'msg' => '该终端码已被激活绑定'];
+            return ['code' => 109, 'msg' => '该机器码已被激活绑定'];
         }
         $validateMachine = self::validateMachine($machineCode);
         if ($validateMachine['code'] != 600) {
@@ -89,16 +89,16 @@ class StoreService {
             if ($storeData['code'] != 1) {
                 return ['code' => 109, 'msg' => $storeData['msg']];
             }
-            $channelNo = array_slice(explode('.', $storeData['cascadeId']),-2,1);
+            $channelNo = array_slice(explode('.', $storeData['data']['cascadeId']),-2,1);
             $store = new Store();
             $store->cust_no = $custNo;
             $store->channel_no = $channelNo;
-            $store->store_name = $storeData['storeName'];
-            $store->user_tel = $storeData['phone'];
-            $store->province = $storeData['province'];
-            $store->city = $storeData['city'];
-            $store->area = $storeData['conuntry'];
-            $store->address = $storeData['address'];
+            $store->store_name = $storeData['data']['storeName'];
+            $store->user_tel = $storeData['data']['phone'];
+            $store->province = $storeData['data']['province'];
+            $store->city = $storeData['data']['city'];
+            $store->area = $storeData['data']['conuntry'];
+            $store->address = $storeData['data']['address'];
             $store->create_time = date('Y-m-d H:i:s');
         } elseif ($store->status == 2) {
             return ['code' => 109, 'msg' => '门店已被禁用停止权限，请联系渠道管理员'];
