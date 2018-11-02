@@ -86,13 +86,19 @@ class StoreService {
         $store = Store::findOne(['cust_no' => $custNo]);
         if (empty($store)) {
             $storeData = self::getStoreData($custNo);
-            if ($storeData['code'] != 0) {
+            if ($storeData['code'] != 1) {
                 return ['code' => 109, 'msg' => $storeData['msg']];
             }
+            $channelNo = array_slice(explode('.', $storeData['cascadeId']),-2,1);
             $store = new Store();
             $store->cust_no = $custNo;
-            $store->channel_no = $storeData['channel_no'];
-            $store->user_tel = $storeData['user_tel'];
+            $store->channel_no = $channelNo;
+            $store->store_name = $storeData['storeName'];
+            $store->user_tel = $storeData['phone'];
+            $store->province = $storeData['province'];
+            $store->city = $storeData['city'];
+            $store->area = $storeData['conuntry'];
+            $store->address = $storeData['address'];
             $store->create_time = date('Y-m-d H:i:s');
         } elseif ($store->status == 2) {
             return ['code' => 109, 'msg' => '门店已被禁用停止权限，请联系渠道管理员'];
