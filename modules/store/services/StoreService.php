@@ -29,7 +29,7 @@ class StoreService {
         $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status'])->where(['terminal_num' => $terminalNum])->asArray()->one();
         if ($custNo) {
             if (empty($machineData)) {
-                $terminal = Terminal::find()->select(['terminal_num'])->where(['terminal_num' => $terminalNum, 'user_status' => 0])->asArray()->one();
+                $terminal = Terminal::find()->select(['terminal_num'])->where(['terminal_num' => $terminalNum, 'use_status' => 0])->asArray()->one();
                 if(empty($terminal)) {
                     return ['code' => 109, 'msg' => '此终端号已被占用'];
                 }
