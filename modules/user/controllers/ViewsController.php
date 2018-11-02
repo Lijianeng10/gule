@@ -71,4 +71,10 @@ class ViewsController extends Controller {
         $lotteryData = Lottery::find()->where(['lottery_id' => $lotteryId])->asArray()->one();
         return $this->render('/usermod/lottery/edit',['lotteryData' => $lotteryData]);
     }
+    /**
+     * 销售明细列表
+     */
+    public function actionToPayrecordList(){
+        return $this->render('/usermod/payrecord/list');
+    }
 }
