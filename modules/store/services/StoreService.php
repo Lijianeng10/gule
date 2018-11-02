@@ -39,7 +39,7 @@ class StoreService {
                     return ['code' => 109, 'msg' => '该机器已被禁用'];
                 }
                 if ($machineData['cust_no'] == $custNo) {
-                    $url = \Yii::$app->params['userDomain'] . '/store.html?ustNo=' . $custNo; // 跳转门店管理页面
+                    $url = \Yii::$app->params['userDomain'] . '/store.html?custNo=' . $custNo; // 跳转门店管理页面
                 } elseif ($machineData['cust_no'] != $custNo) {
                     $url = \Yii::$app->params['userDomain'] . '/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页面
                 }
