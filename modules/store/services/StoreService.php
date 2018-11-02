@@ -131,7 +131,7 @@ class StoreService {
                 throw new Exception($bindingRet['msg']);
             }
             $trans->commit();
-            return ['code' => 600, 'msg' => '激活成功'];
+            return ['code' => 600, 'msg' => '激活成功', 'data' => ['custNo' => $custNo, 'terminalNum' => $terminalNum, 'machineCode' => $machineCode]];
         } catch (Exception $ex) {
             $trans->rollBack();
             return ['code' => 109, 'msg' => $ex->getMessage()];

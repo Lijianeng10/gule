@@ -43,7 +43,7 @@ class StoreController extends Controller {
         if($ret['code'] != 600) {
             return $this->jsonError($ret['code'], $ret['msg']);
         }
-        return $this->jsonResult(600, $ret['msg'], true);
+        return $this->jsonResult(600, $ret['msg'], $ret['data']);
     }
     
     /**
