@@ -301,7 +301,7 @@ function test_create_dialog(){
 
 
 /**
- * 创建一个修改窗口(获取选择id) 不带提交按钮
+ * 创建一个修改窗口(获取选择id) 带提交按钮
  * @author kevi
  */
 function update_dialog(obj, url, posturl, width='', height='') {
@@ -654,5 +654,46 @@ function delData(id, url) {
                 }
             });
         }
+    });
+}
+
+/**
+ * 创建一个修改窗口(获取选择id) 不带提交按钮
+ * @author kevi
+ */
+function update_no_button_dialog(obj,title,url, width='', height='') {
+    create_div(obj);
+    var rows = $('#datagrid').datagrid('getSelections');
+    if (rows.length == 1) {
+        var pid = Object.keys(rows[0])[0];
+        url = url + '?' + pid + '=' + rows[0][pid];
+    } else if (rows.length == 0) {
+        $.messager.alert('警告!', '对不起,请选择一条数据!', 'waring');
+        return;
+    } else if (rows.length > 1) {
+        $.messager.alert('警告!', '对不起,只能选择一条数据进行修改!', 'waring');
+        return;
+    }
+    width = width ? width : 700;
+    height = height ? height : 400;
+    if (width == "100%" || height == "100%") {
+        width = document.body.offsetWidth;
+        height = document.body.offsetHeight - 100;
+    }
+    $('#' + obj).dialog({
+        width: width,
+        height: height,
+        modal: true,
+        href: url,
+        resizable: true,
+        title: title,
+        buttons: [ {
+            text: '取消',
+            iconCls: 'fa fa-close',
+            handler: function () {
+                $('#' + obj).dialog('close').form('clear');
+                $('#datagrid').datagrid('reload');
+            },
+        }],
     });
 }

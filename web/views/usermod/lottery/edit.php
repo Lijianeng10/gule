@@ -18,7 +18,7 @@
                 <?php if ($lotteryData['lottery_img']): ?>
                 <div style="width: 120px;height: 160px; text-align: center;border: 1px solid #BECDD5;position: relative;float: left;margin-left: 100px;"
                      id="pic_up">
-                    <img style="width: 100%; height: 100%"
+                    <img class="productPic" style="width: 100%; height: 100%"
                          src="<?php echo $lotteryData['lottery_img'];?>">
                     <a href="#"
                        style="width:20px;height:20px;position:absolute;top:-5px;right:-5px;border-radius:100%;border:1px solid #fff;background-color:#666;text-align:center;color:#fff;"
@@ -28,7 +28,7 @@
                 <?php endif; ?>
                 <div style="width: 120px;height: 160px; text-align: center;border: 1px solid #BECDD5;position: relative;float: left;margin-left: 100px;<?php if ($lotteryData['lottery_img']): ?>display:none;<?php endif; ?>"
                      id="pic_up">
-                    <img style="width: 100%; height: 100%"
+                    <img  style="width: 100%; height: 100%"
                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAAEsCAMAAAACbCSWAAAAM1BMVEUAAACZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZlkqvaGAAAAEHRSTlMAf0C/EO8g3zDPcGCfUI+v73TYnwAAAnRJREFUeNrszzENACAQADEk4F8tWCBM92kddAEAAAAAAAAAAAAAAAAAwKd9rdEM+wz7DPsM+wz7DPsM+wz7DPsM+wxD9ovk29Awa9LFcCrDPsM+wz7DPsM+wz7DPsM+w775QwAAAAA47NvbrqowFIXhMWdnDxwd7/+0uwgtyMaVdUmz+C5Qg2n4rbXRxMfjDwiacNYrFibyyyECNiK4HaHDidFjocdTKqsQZFeGqF13/Gn8onDgWK+8Eq5UuWu10HGCZh17XQVAqCjHgYrMtVoYGAF+kM/CufFCeQeJjIyy0c/C6LHoGi00T8ViZo/qWCgcTRMGukYKOy0M2cCtsGPCTt6LcqSipzfjYiqnotuQ623CfQiLtcwiqUEyUiqtz1NHnwDJdB/iTHEfQu+KtF2uKk8EwlFEHLX3vRZliBvu81/XYfAcqVb2iiIc1qGwarHwRVlb4GnYHQtLetdk4Ri3lokvfCtUvLkmCzXVloOfC+d7/xPqVFhbBld4+nVXyffj1bvU5VNFQ4XVQJ/2Ob36pOmouPGW/61wmvbA48ym/+bQSDRYaJFOa+AiKKqAbNLyGnQtFiKM5Bj2QAh7wDlkXTQgMB8Xjn2ThYB29HugeW/AyKFuDzNnZBNpdyx0vKS1cCGeUZHVqsBYay1SgeApaLYQwZEvQ4nKXpxq7rTkdox2y8JvSmHR+zVg8oKFvhIAE0M2B2DwCa0VBrXjoy3ADNcMR3qn702Px+PxeDz+sQcHAgAAAABA/q+NoKqqqqqqqirswYEAAAAAAJD/ayOoqqqqqqqqqqqqqqqqqirtwQEJAAAAgKD/r9sRqAAAAAAAAMwFyhc2VqCXau0AAAAASUVORK5CYII=">
                     <input type="file" style="width:100%;height: 100%;opacity: 0;position: absolute;top:0;left:0;"
                            id="uploadPic" name="uploadPic">
