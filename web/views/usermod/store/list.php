@@ -120,11 +120,12 @@
             function optFormatter(value, row) {
                 var str = "";
                 if(row.status == 1){
-                    str += '<a href="#"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.store_id+','+row.status+')">禁用</a>';
+                    str += '<a href="#" name="changeStatus" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.store_id+','+row.status+')">禁用</a>&nbsp';
                 }else{
-                    str += '<a href="#"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.store_id+','+row.status+')">启用</a>';
+                    str += '<a href="#" name="changeStatus" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.store_id+','+row.status+')">启用</a>&nbsp';
                 }
-                 return str;
+				str += '<a href="#" name="storedetail" class="easyui-linkbutton info storedetail" onclick="create_window(\'dlg\',\'彩种库存详情\',\'/usermod/views/to-stock-lottery-details?cust_no='+row.cust_no+'\',900,600)">查看</a>';
+                return str;
             }
         });
 	</script>

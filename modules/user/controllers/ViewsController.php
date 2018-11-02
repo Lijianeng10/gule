@@ -6,6 +6,7 @@ use Yii;
 use yii\db\Query;
 use yii\web\Controller;
 use app\modules\common\models\Lottery;
+use app\modules\common\models\StoreLottery;
 
 
 class ViewsController extends Controller {
@@ -15,6 +16,18 @@ class ViewsController extends Controller {
      */
     public function actionToStoreList(){
         return $this->render('/usermod/store/list',[]);
+    }
+	/**
+     * @return string 网点彩种库存详情
+     */
+    public function actionToStockLotteryDetails(){
+		$request = \Yii::$app->request;
+        $cust_no = $request->get('cust_no');
+        $storeLotteryData = StoreLottery::find()
+							->select(["store_lottery.*","lottery.lottery_name","lottery.lottery_img"])
+							->leftJoin("lottery","lottery.lottery_id = store_lottery.lottery_id")
+							->where(['cust_no' => $cust_no])->asArray()->all();
+        return $this->render('/usermod/store/lottery_details',['storeLotteryData' => $storeLotteryData,'cust_no' => $cust_no]);
     }
     /**
      * 终端号列表

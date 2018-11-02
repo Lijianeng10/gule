@@ -185,9 +185,9 @@
 			var lottery_id = $("#lottery_id" + i).val();//获取彩种的value值
 			var lottery_name_str = $('#lottery_id' + i).combobox('getText');//获取彩种的text值
 			//var sub_value = $("#sub_value" + i).val();//获取彩票面额的值
-			var nums = parseFloat($("#nums" + i).val());//获取购买数量的值
-			var sheet_nums = parseFloat($("#sheet_nums" + i).val());//获取每包张数的值
-			var price = parseFloat($("#price" + i).val());//获取价格的值
+			var nums = $("#nums" + i).val();//获取购买数量的值
+			var sheet_nums = $("#sheet_nums" + i).val();//获取每包张数的值
+			var price = $("#price" + i).val();//获取价格的值
 			if(lottery_id != '' || nums != '' || sheet_nums != '' || price != ''){
 				if(lottery_id == ''){
 					$.messager.show({
@@ -217,8 +217,8 @@
 					});
 					return (false);
 				}
-				order_num = order_num + nums;
-				order_money = order_money + (nums * price);
+				order_num = order_num + parseFloat(nums);
+				order_money = order_money + (parseFloat(nums) * parseFloat(price));
 				
 				lottery_name_str = lottery_name_str.split("-");
 				var lottery_name = lottery_name_str[0];
@@ -228,9 +228,9 @@
 				lArr['lottery_id'] = lottery_id;
 				lArr['lottery_name'] = lottery_name;
 				lArr['sub_value'] = sub_value;
-				lArr['nums'] = nums;
-				lArr['sheet_nums'] = sheet_nums;
-				lArr['price'] = price;
+				lArr['nums'] = parseFloat(nums);
+				lArr['sheet_nums'] = parseFloat(sheet_nums);
+				lArr['price'] = parseFloat(price);
 				content.push(lArr);
 			}
 		}
