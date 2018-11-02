@@ -6,6 +6,7 @@ use yii\web\Controller;
 use Yii;
 use app\modules\common\helpers\Commonfun;
 use app\modules\common\models\Lottery;
+use app\modules\tools\helpers\UploadPic;
 
 class LotteryController extends Controller {
 
@@ -43,13 +44,15 @@ class LotteryController extends Controller {
     public function actionAdd() {
         $request = \Yii::$app->request;
         $lotteryName = $request->post('lottery_name', '');
+        $lotteryValue = $request->post('lottery_value', '');
+        $lotteryPic = $request->post('lottery_pic', '');
         $session = \Yii::$app->session;
-        if (empty($lotteryName) || ctype_space($lotteryName)) {
-            return $this->jsonError(109, '彩种名称不可为空！！');
+        if (empty($lotteryName) || empty($lotteryValue)) {
+            return $this->jsonError(109, '参数缺失！！');
         }
-        $existLottery = Lottery::findOne(['lottery_name' => $lotteryName]);
+        $existLottery = Lottery::findOne(['lottery_name' => $lotteryName,'lottery_value'=>$lotteryValue]);
         if (!empty($existLottery)) {
-            return $this->jsonError(109, '彩种不可重复');
+            return $this->jsonError(109, '彩种面额已存在，请重试');
         }
         $maxCode = Lottery::find()->select(['lottery_code'])->orderBy('lottery_code desc')->asArray()->one();
         if ($maxCode) {
@@ -60,6 +63,8 @@ class LotteryController extends Controller {
         $lottery = new Lottery;
         $lottery->lottery_code = (string) $lotteryCode;
         $lottery->lottery_name = trim($lotteryName);
+        $lottery->lottery_value = trim($lotteryValue);
+        $lottery->lottery_img = $lotteryPic;
         $lottery->admin_code = $session['admin']['admin_name'];
         $lottery->create_time = date('Y-m-d H:i:s');
         if (!$lottery->save()) {
@@ -72,28 +77,24 @@ class LotteryController extends Controller {
         $request = \Yii::$app->request;
         $lotteryName = $request->post('lottery_name');
         $lotteryId = $request->post('lottery_id');
-        if (!$lotteryName) {
+        $lotteryValue = $request->post('lottery_value', '');
+        $lotteryPic = $request->post('lottery_pic', '');
+        if (!$lotteryName||!$lotteryValue) {
             return $this->jsonError(109, '参数缺失');
         }
         $session = \Yii::$app->session;
-        $coreId = $session['admin']['center_id'];
-        if (empty($coreId)) {
-            return $this->jsonError(109, '无权限操作！！');
-        }
-        if (empty($lotteryName)  || ctype_space($lotteryName)) {
-            return $this->jsonError(109, '彩种名称不可为空！！');
-        }
-        $existName = Lottery::find()->where(['core_id' => $coreId, 'lottery_name' => $lotteryName])->andWhere(['!=', 'lottery_id', $lotteryId])->count();
+        $existName = Lottery::find()->where(['lottery_name' => $lotteryName,'lottery_value'=>$lotteryValue])->andWhere(['!=', 'lottery_id', $lotteryId])->count();
         if ($existName) {
             return $this->jsonError(109, '该彩种已存在，请勿重复添加');
         }
-        $lotteryData = Lottery::findOne(['lottery_id' => $lotteryId, 'core_id' => $coreId]);
+        $lotteryData = Lottery::findOne(['lottery_id' => $lotteryId]);
         if (!$lotteryData) {
             return $this->jsonError(109, '该数据不存在，请稍后再试');
         }
         $lotteryData->lottery_name = trim($lotteryName);
-        $lotteryData->opt_name = $session['admin']['admin_name'];
-        $lotteryData->modify_time = date('Y-m-d H:i:s');
+        $lotteryData->lottery_value = trim($lotteryValue);
+        $lotteryData->lottery_img = $lotteryPic;
+        $lotteryData->admin_code = $session['admin']['admin_name'];
         if (!$lotteryData->save()) {
             return $this->jsonError(109, '数据更新失败');
         }
@@ -119,6 +120,30 @@ class LotteryController extends Controller {
         }
         Lottery::updateAll(['status' => $status], ['lottery_id' => $parmas['id']]);
         return $this->jsonResult(600, '修改成功', true);
+    }
+    /**
+     * 上传彩种图片
+     */
+    public function actionUploadPic() {
+        if (isset($_FILES['uploadPic'])) {
+            $file = $_FILES['uploadPic'];
+            $check = UploadPic::check_upload_pic($file);
+            if ($check['code'] != 600) {
+                return $this->jsonError($check['code'], $check['msg']);
+            }
+            $saveDir = '/lotteryImg/';
+            $str = substr(strrchr($file['name'], '.'), 1);
+            $name = rand(0,99).'.' . $str;
+            $pathJson = UploadPic::pic_host_upload($file, $saveDir,$name);
+            $pathArr = json_decode($pathJson, true);
+            if ($pathArr['code'] != 600) {
+                return $this->jsonError($pathArr['code'], $pathArr['msg']);
+            }
+            $path = $pathArr['result']['ret_path'];
+            return $this->jsonResult(600, '上传成功', $path);
+        } else {
+            return $this->jsonError(100, '未上传图片');
+        }
     }
 
 }

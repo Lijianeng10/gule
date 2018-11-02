@@ -196,7 +196,7 @@
 				if(row.pay_status == 1 && row.order_status == 1){
 					str += "<a href='#' name='sure_send' class='easyui-linkbutton info courieradd' onclick=\"courier_add('"+row.order_code+"','"+row.order_id+"')\"></a>&nbsp";
 				}
-                str += '<a href="#" name="read_user" class="easyui-linkbutton info orderdetail" onclick="create_window(\'orderdetail\',\'订单详情\',\'/ordersmod/views/to-orders-details?order_id='+row.order_id+'\',900,600)"></a>';
+                str += '<a href="#" name="read_user" class="easyui-linkbutton info orderdetail" onclick="create_window(\'dlg\',\'订单详情\',\'/ordersmod/views/to-orders-details?order_id='+row.order_id+'\',900,600)"></a>';
                 return str;
             }
         });

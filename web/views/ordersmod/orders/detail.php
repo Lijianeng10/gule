@@ -35,6 +35,7 @@
         <div class="form-item" style="width:100%;">
             <table id="value_table" border='1px' cellspacing="0" style="width:80%;text-align:center;margin-left: 100px;">
                 <tr>
+					<td style="width:15%">彩种图片</td>
                     <td style="width:15%">彩种</td>
                     <td style="width:15%">彩票面额</td>
                     <td style="width:17%">购买数量(包)</td>
@@ -45,6 +46,9 @@
 				foreach($orderDetailData as $key => $val){
 				?>
 				<tr>
+					<td style="width:15%">
+						<img style="height:30px;width:30px;" src="<?php echo $val['lottery_img'];?>"/>
+					</td>
 					<td style="width:15%">
 						<?php echo $val['lottery_name'];?>
 					</td>
