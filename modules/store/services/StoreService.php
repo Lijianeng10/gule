@@ -552,7 +552,7 @@ class StoreService {
      * @return type
      */
     public static function bindingServer($terminalNum, $machineCode) {
-        $url = \Yii::$app->params['machine_service'] . '/binding';
+        $url = \Yii::$app->params['machine_service'] . 'binding';
         $md5Code = $terminalNum . $machineCode;
         $sign = Commonfun::getSign($md5Code);
         $postData = ['cust_no' => $terminalNum, 'machine_no' => $machineCode, 'sign' => $sign];
@@ -589,7 +589,7 @@ class StoreService {
                 throw new Exception($machineUnBind['msg']);
             }
             $trans->commit();
-            return ['code' => 109, 'msg' => '解绑成功'];
+            return ['code' => 600, 'msg' => '解绑成功'];
         } catch (Exception $ex) {
             $trans->rollBack();
             return ['code' => 109, 'msg' => $ex->getMessage()];
@@ -603,7 +603,7 @@ class StoreService {
      * @return type
      */
     public static function unBindingServer($terminalNum, $machineCode) {
-        $url = \Yii::$app->params['machine_service'] . '/un_binding';
+        $url = \Yii::$app->params['machine_service'] . 'un_binding';
         $md5Code = $terminalNum . $machineCode;
         $sign = Commonfun::getSign($md5Code);
         $postData = ['cust_no' => $terminalNum, 'machine_no' => $machineCode, 'sign' => $sign];
