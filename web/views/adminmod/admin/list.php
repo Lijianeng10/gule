@@ -97,7 +97,8 @@
                 // },
                 onLoadSuccess:function(data){
                     controlBtn();
-
+					$("a[name='up']").linkbutton({text:'启用',iconCls:'fa fa-edit'});
+                    $("a[name='down']").linkbutton({text:'禁用',iconCls:'fa fa-edit'});
                 }
             });
             function typeFormatter(value,row){
@@ -118,9 +119,9 @@
             function optFormatter(value, row) {
                 var str = "";
                 if(row.status ==0){
-                    str += '<a href="#"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.admin_id+','+row.status+')">启用</a>';
+                    str += '<a href="#" name="up" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" onclick="change_status('+row.admin_id+','+row.status+')"></a>';
                 }else if(row.status == 1){
-                    str += '<a href="#"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.admin_id+','+row.status+')">禁用</a>';
+                    str += '<a href="#" name="down" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" onclick="change_status('+row.admin_id+','+row.status+')"></a>';
                 }
                  return str;
             }
