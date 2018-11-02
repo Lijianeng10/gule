@@ -5,6 +5,7 @@ namespace app\modules\user\controllers;
 use Yii;
 use yii\db\Query;
 use yii\web\Controller;
+use app\modules\common\models\Lottery;
 
 
 class ViewsController extends Controller {
@@ -50,5 +51,11 @@ class ViewsController extends Controller {
     }
     public function actionToLotteryAdd(){
         return $this->render('/usermod/lottery/add');
+    }
+    public function actionToLotteryEdit(){
+        $request = \Yii::$app->request;
+        $lotteryId = $request->get('lottery_id');
+        $lotteryData = Lottery::find()->where(['lottery_id' => $lotteryId])->asArray()->one();
+        return $this->render('/usermod/lottery/edit',['lotteryData' => $lotteryData]);
     }
 }

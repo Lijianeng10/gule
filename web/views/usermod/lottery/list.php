@@ -49,20 +49,19 @@
                         width: 50,
                         align: 'center',
                         sortable: true
+                    },{
+                        field: 'lottery_value',
+                        title: '彩种面额',
+                        width: 50,
+                        align: 'center',
+                        sortable: true
+                    },{
+                        field: 'logo',
+                        title: '彩种图片',
+                        width: 50,
+                        align: 'center',
+                        formatter: logoFormatter
                     },
-                    //     {
-                    //     field: 'center_name',
-                    //     title: '所属中心',
-                    //     width: 50,
-                    //     align: 'center',
-                    //     sortable: true
-                    // }, {
-                    //     field: 'area',
-                    //     title: '省市',
-                    //     width: 50,
-                    //     align: 'center',
-                    //     formatter:areaFormatter
-                    // },
                         {
                         field: 'status',
                         title: '状态',
@@ -110,8 +109,14 @@
 //                str += '<a href="#" name="del" style="margin-left: 5px" class="easyui-linkbutton success" onclick="delete('+ row.producr_id +')">删除</a>';
                 return str;
             }
-
-            $('#centerlist').combobox('reload', '/centermod/center/get-center-list-options');
+            function logoFormatter(value, row) {
+                var info = '';
+                if (row.lottery_img) {
+                    info = '<img style="height:40px;width:40px;" src="' + row.lottery_img + '"/>'
+                }
+                return info;
+            }
+            // $('#centerlist').combobox('reload', '/centermod/center/get-center-list-options');
         });
 
 	</script>
@@ -125,8 +130,8 @@
 	<div id="tb" style="padding:5px;">
         <div class="tb_menu">
             <a href="#" class="easyui-linkbutton primary auth lotterySearch" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
-            <a href="#" class="easyui-linkbutton info auth productLotteryAdd" iconCls="fa fa-plus"  onclick="add_dialog('dlg','/usermod/views/to-lottery-add','/usermod/lottery/add', 'datagrid',500,300);">新增</a>
-            <a href="#" class="easyui-linkbutton info auth productLotteryEdit" iconCls="fa fa-edit"  onclick="update_dialog('dlg','/productmod/views/to-lottery-edit','/productmod/lottery/update', 'datagrid', 400,300);">修改</a>
+            <a href="#" class="easyui-linkbutton info auth productLotteryAdd" iconCls="fa fa-plus"  onclick="create_window('dlg','新增彩种','/usermod/views/to-lottery-add',500,500);">新增</a>
+            <a href="#" class="easyui-linkbutton info auth productLotteryEdit" iconCls="fa fa-edit"  onclick="update_dialog('dlg','/usermod/views/to-lottery-edit','/usermod/lottery/update', 500,500);">修改</a>
             <a href="#" id="remove" class="easyui-linkbutton error auth productLotteryDelete" iconCls="fa fa-remove" plain="true" onclick="deleteAll('/productmod/lottery/delete');">删除</a>
         </div>
         <div class="tb-column">
