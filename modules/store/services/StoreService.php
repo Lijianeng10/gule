@@ -26,7 +26,7 @@ class StoreService {
      * @return type
      */
     public static function toJumpPage($custNo, $terminalNum) {
-        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status'])->where(['terminal_num' => $terminalNum])->asArray()->one();
+        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
         if ($custNo) {
             if (empty($machineData)) {
                 $terminal = Terminal::find()->select(['terminal_num'])->where(['terminal_num' => $terminalNum, 'use_status' => 0])->asArray()->one();
@@ -35,9 +35,9 @@ class StoreService {
                 }
                 $url = \Yii::$app->params['userDomain'] . '/h5_ggc/activate.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo; // 跳转激活页面
             } else {
-                if ($machineData['status'] != 1) {
-                    return ['code' => 109, 'msg' => '该机器已被禁用'];
-                }
+//                if ($machineData['status'] != 1) {
+//                    return ['code' => 109, 'msg' => '该机器已被禁用'];
+//                }
                 if ($machineData['cust_no'] == $custNo) {
                     $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo; // 跳转门店管理页面
                 } elseif ($machineData['cust_no'] != $custNo) {
