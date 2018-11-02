@@ -194,29 +194,29 @@ class AdminController extends Controller {
      */
     public function actionUpdate() {
         $post = \Yii::$app->request->post();
-        $admin_name = trim($post['admin_name_new']);
+        //$admin_name = trim($post['admin_name_new']);
 		$admin_name_old = trim($post['admin_name_old']);
         $nickname = $post['nickname'];
         $admin_pwd = $post['admin_pwd'];
         $admin_tel = $post['admin_tel'];
         $admin_type = $post['admin_type'];
 		
-		if($admin_name_old != $admin_name){
+		/*if($admin_name_old != $admin_name){
 			$admin_count = Admin::find()->Where(['admin_name' => $admin_name])->count();//判断该用户是否已存在
 			if($admin_count > 0){
 				return $this->jsonError(109, '该用户已存在，不能重复添加！');
 			}
-		}
+		}*/
 		
         $status = $post['status'];
         $admin = Admin::find()->where(['admin_id' => $post['admin_id']])->one();
         if (!$admin) {
             return $this->jsonError(100, '没有该条数据，请重试');
         }
-        $admin->admin_name = $admin_name;
+        //$admin->admin_name = $admin_name;
         $admin->nickname = $nickname;
         if ($admin_pwd != '********') {
-            $admin->password = md5($admin_name.$admin_pwd);
+            $admin->password = md5($admin_name_old.$admin_pwd);
         }
         $admin->admin_tel = $admin_tel;
         $admin->type = $admin_type;
