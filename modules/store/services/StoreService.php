@@ -64,7 +64,7 @@ class StoreService {
      * @param type $sellValue
      * @return type
      */
-    public static function activeMachine($custNo, $terminalNum, $machineCode, $sellValue) {
+    public static function activeMachine($custNo, $terminalNum, $machineCode) {
         $terminal = Terminal::find()->select(['terminal_id', 'use_status'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
         if (empty($terminal)) {
             return ['code' => 109, 'msg' => '此终端码已被禁用'];
@@ -111,7 +111,7 @@ class StoreService {
             $machine->machine_code = $machineCode;
             $machine->cust_no = $custNo;
             $machine->channel_no = $store->channel_no;
-            $machine->lottery_value = $sellValue;
+//            $machine->lottery_value = $sellValue;
             $machine->ac_status = 1;
             $machine->online_status = 1;
             $machine->create_time = date('Y-m-d H:i:s');
@@ -584,7 +584,7 @@ class StoreService {
             if($upTerminal === false) {
                 throw new Exception('解绑失败-终端');
             }
-            $machineUnBind = self::unBindingServer($custNo, $terminalNum, $machineCode);
+            $machineUnBind = self::unBindingServer($terminalNum, $machineCode);
             if($machineUnBind['code'] != 600) {
                 throw new Exception($machineUnBind['msg']);
             }
