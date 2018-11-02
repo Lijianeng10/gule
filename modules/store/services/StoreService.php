@@ -29,22 +29,26 @@ class StoreService {
         $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status'])->where(['terminal_num' => $terminalNum])->asArray()->one();
         if ($custNo) {
             if (empty($machineData)) {
-                $url = 'https://www.baidu.com';
+                $terminal = Terminal::find()->select(['terminal_num'])->where(['terminal_num' => $terminalNum, 'user_status' => 0])->asArray()->one();
+                if(empty($terminal)) {
+                    return ['code' => 109, 'msg' => '此终端号已被占用'];
+                }
+                $url = \Yii::$app->params['userDomain'] . '/activate.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo; // 跳转激活页面
             } else {
-                if ($machineData['status'] == 0) {
+                if ($machineData['status'] != 1) {
                     return ['code' => 109, 'msg' => '该机器已被禁用'];
                 }
                 if ($machineData['cust_no'] == $custNo) {
-                    $url = 'https://www.baidu.com'; // 跳转
+                    $url = \Yii::$app->params['userDomain'] . '/store.html?ustNo=' . $custNo; // 跳转门店管理页面
                 } elseif ($machineData['cust_no'] != $custNo) {
-                    $url = 'https://www.baidu.com'; // 跳转
+                    $url = \Yii::$app->params['userDomain'] . '/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页面
                 }
             }
         } else {
             if (empty($machineData)) {
                 return ['code' => 109, 'msg' => '该机器未激活！请联系店主'];
             } elseif ($machineData['status'] == 1) {
-                $url = '';
+                $url = \Yii::$app->params['userDomain'] . '/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页
             } elseif ($machineData['status'] == 0) {
                 return ['code' => 109, 'msg' => '该机器已被禁用！请联系店主'];
             }
