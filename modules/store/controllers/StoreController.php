@@ -72,7 +72,7 @@ class StoreController extends Controller {
         $custNo = $request->post('custNo', '');
         $terminalNum = $request->post('terminalNum', '');
         $machineCode = $request->post('machineCode', '868926033601029000000000');
-        $lottery = $request->post('lottery', '');
+        $lottery = $request->post('lotteryId', '');
         $lotteryValue = $request->post('lotteryValue', '');
         if(empty($custNo) || empty($terminalNum) || empty($lottery) || empty($lotteryValue) || empty($machineCode)) {
             return $this->jsonError(100, '参数缺失');
@@ -123,7 +123,7 @@ class StoreController extends Controller {
     public function actionGetSaleList() {
         $request = \Yii::$app->request;
         $custNo = $request->post('custNo', '');
-        $page = $request->post('page_nums', 0);
+        $page = $request->post('pageNums', 0);
         $size = $request->post('size', 10);
         $ret = StoreService::getSaleList($custNo, $page, $size);
         return $this->jsonResult(600, '获取成功', $ret);
@@ -133,10 +133,10 @@ class StoreController extends Controller {
      * 获取进货记录列表
      * @return type
      */
-    public function actionGetOrderList() {
+    public function actionGetStockList() {
         $request = \Yii::$app->request;
         $custNo = $request->post('custNo', '');
-        $page = $request->post('page_nums', 0);
+        $page = $request->post('pageNums', 0);
         $size = $request->post('size', 10);
         $ret = StoreService::getStockList($custNo, $page, $size);
         return $this->jsonResult(600, '获取成功', $ret);

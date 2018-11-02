@@ -65,7 +65,7 @@ class StoreService {
         if (empty($terminal)) {
             return ['code' => 109, 'msg' => '此终端码已被禁用'];
         }
-        if($terminal['use_status'] != 0) {
+        if ($terminal['use_status'] != 0) {
             return ['code' => 109, 'msg' => '此终端码已被绑定'];
         }
         $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
@@ -112,8 +112,8 @@ class StoreService {
             if (!$store->save()) {
                 throw new Exception('门店绑定激活失败！');
             }
-            $ret = Terminal::updateAll(['use_status'=>1],['terminal_num'=>$terminalNum]);
-            if(!$ret){
+            $ret = Terminal::updateAll(['use_status' => 1], ['terminal_num' => $terminalNum]);
+            if (!$ret) {
                 throw new Exception('终端码状态更新失败！');
             }
             $trans->commit();
@@ -225,10 +225,6 @@ class StoreService {
         if (empty($machine)) {
             return ['code' => 109, 'msg' => '请确认此设备已激活'];
         }
-        $store = Store::find()->select(['stock'])->where(['cust_no' => $custNo])->asArray()->one();
-        if ($store['stock'] < $stock) {
-            return ['code' => 109, 'msg' => '门店库存不足'];
-        }
         if ($activeType == 1) {
             $update = ['stock' => new Expression('stock+' . $stock)];
         } else {
@@ -255,10 +251,6 @@ class StoreService {
                 if ($storeLotteryRet === false) {
                     throw new Exception('库存修改失败-门店彩种');
                 }
-                $storeRet = StoreLottery::updateAll($update, ['cust_no' => $custNo]);
-                if ($storeRet === false) {
-                    throw new Exception('库存修改失败-门店');
-                }
             }
             $upMachine = Machine::updateAll($update, ['cust_no' => $custNo, 'machine_code' => $machineCode, 'terminal_num' => $terminalNum]);
             if ($upMachine === false) {
@@ -270,6 +262,8 @@ class StoreService {
                 $payRecord->lottery_id = $machine->lottery_id;
                 $payRecord->lottery_value = $machine->lottery_value;
                 $payRecord->status = 1;
+                $payRecord->pay_money = $prePayMoney;
+                $payRecord->pay_time = date('Y-m-d H:i:s');
                 $payRecord->modify_time = date('Y-m-d H:i:s');
                 if (!$payRecord->save()) {
                     throw new Exception('库存修改失败-记录');
@@ -318,15 +312,15 @@ class StoreService {
         $where = "DATE_FORMAT(p.pay_time,'%Y-%m-%d') = '{$date}'";
         $where1 = "DATE_FORMAT(p.pay_time, '%Y-%m') = '{$month}'";
         $field = ['store.cust_no', 'user_tel', 'channel_no',
-            new Expression("case when store.status = 1 then (select sum(p.pay_money) from pay_record_id where p.store_no = store.cust_no and p.status = 1 and {$where}) end date_sell_amount"),
-            new Expression("case when store.status = 1 then (select sum(p.pay_money) from pay_record_id where p.store_no = store.cust_no and p.status = 1 and {$where1}) end month_sell_amount")];
+            new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where}) end date_sell_amount"),
+            new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where1}) end month_sell_amount")];
         $storeData = Store::find()->select($field)->where(['cust_no' => $custNo, 'store.status' => 1])->asArray()->one();
         if (empty($storeData)) {
             return ['code' => 109, 'msg' => '请先激活绑定'];
         }
-        $field1 = ['terminal_num', 'machine_code', 'lottery_value', 'stock', 'ac_status', 'online_status', 'machine.status', 'l.lottery_name', 'cust_no',
-            new Expression("case when machine.status = 1 then (select sum(p.buy_nums) from pay_record_id where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_count"),
-            new Expression("case when machine.status = 1 then (select sum(p.pay_money) from pay_record_id where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_amount")];
+        $field1 = ['terminal_num', 'machine_code', 'lottery_value', 'stock', 'ac_status', 'online_status', 'machine.status', 'l.lottery_name', 'cust_no', 'l.lottery_img',
+            new Expression("case when machine.status = 1 then (select coalesce(sum(p.buy_nums),0) from pay_record p where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_count"),
+            new Expression("case when machine.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_amount")];
         $machineData = Machine::find()->select($field1)
                 ->leftJoin('lottery l', 'l.lottery_id = machine.lottery_id')
                 ->where(['cust_no' => $custNo, 'machine.status' => 1])
@@ -345,8 +339,8 @@ class StoreService {
      * @return type
      */
     public static function getSaleList($custNo, $page, $size) {
-        $field = ['order_code', 'store_no', 'channel_no', 'terminal_num', 'pay_money', 'buy_nums', 'create_time', 'lottery_value'];
-        $query = PayRecord::find()->select($field)->where(['cust_no' => $custNo, 'status' => 1]);
+        $field = ['order_code', 'store_no', 'channel_no', 'terminal_num', 'pay_money', 'buy_nums', 'create_time', 'lottery_value', 'pay_time'];
+        $query = PayRecord::find()->select($field)->where(['store_no' => $custNo, 'status' => 1]);
         $pn = 1;
         $pages = 1;
         if ($page) {
@@ -381,7 +375,7 @@ class StoreService {
             $offset = ($page - 1) * $size;
             $query = $query->limit($size)->offset($offset);
         }
-        $orderList = $query->orderBy(['create_time desc'])->asArray()->all();
+        $orderList = $query->orderBy('create_time desc')->asArray()->all();
         return ['page' => $pn, 'pages' => $pages, 'size' => count($orderList), 'total' => empty($page) ? count($orderList) : $total, 'data' => $orderList];
     }
 
@@ -393,7 +387,7 @@ class StoreService {
      * @return type
      */
     public static function getMachineGoods($custNo, $terminalNum, $machineCode) {
-        $field = ['terminal_num', 'machine_code', 'cust_no', 'lottery_value', 'stock', 'l.lottery_name'];
+        $field = ['terminal_num', 'machine_code', 'cust_no', 'l.lottery_value', 'stock', 'l.lottery_name', 'l.lottery_img'];
         $goods = Machine::find()->select($field)
                 ->innerJoin('lottery l', 'l.lottery_id = machine.lottery_id')
                 ->where(['machine.status' => 1, 'online_status' => 1, 'ac_status' => 1, 'cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode])
@@ -454,23 +448,30 @@ class StoreService {
         if (bccomp($prePayMoney, $total) != 0) {
             return ['code' => 109, 'msg' => '购买总金额错误'];
         }
-        $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total);
-        if ($createOrder['code'] != 600) {
-            return ['code' => 109, 'msg' => '下单失败-记录'];
-        }
-        $payRecord = PayRecord::findOne(['pay_record_id' => $createOrder['recordId']]);
-        $qbRet = PayTool::createQbThePublic($custNo, $createOrder['orderCode'], $total);
-        if ($qbRet["code"] == 1) {
+        $db = \Yii::$app->db;
+        $trans = $db->beginTransaction();
+        try {
+            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total);
+            if ($createOrder['code'] != 600) {
+                throw new Exception('下单失败-记录');
+            }
+            $payRecord = PayRecord::findOne(['pay_record_id' => $createOrder['recordId']]);
+            $qbRet = PayTool::createQbThePublic($custNo, $createOrder['orderCode'], $total);
+            if ($qbRet["code"] != 1) {
+                $qbMsg = isset($qbRet['msg']) ? $qbRet['msg'] : '';
+                $msg = '下单失败！！' . $qbMsg;
+                throw new Exception($msg);
+            }
             $payRecord->lottery_id = $machine['lottery_id'];
             $payRecord->buy_nums = $buyNums;
             $payRecord->lottery_value = $machine['lottery_value'];
             $payRecord->outer_no = $qbRet['orderNo']; //钱包支付二维码返回的唯一交易单号
             $payRecord->save();
+            $trans->commit();
             return ['code' => 600, 'msg' => '下单成功', 'data' => ['create_time' => $payRecord->create_time, 'order_code' => $payRecord->order_code, 'pay_money' => $total, 'pay_url' => $qbRet['pay_url']]];
-        } else {
-            $qbMsg = isset($qbRet['msg']) ? $qbRet['msg'] : '';
-            $msg = '下单失败！！' . $qbMsg;
-            return ['code' => 109, 'msg' => $msg];
+        } catch (Exception $ex) {
+            $trans->rollBack();
+            return ['code' => 109, 'msg' => $ex->getMessage()];
         }
     }
 
@@ -506,7 +507,7 @@ class StoreService {
         $sign = Commonfun::getSign($md5Code);
         $postData = ['cust_no' => $payRecord->terminal_num, 'order_no' => $payRecord->order_code, 'price' => $payRecord->lottery_value, 'quantity' => $payRecord->buy_nums, 'lottery_length' => $valueLength[$payRecord->value], 'sign' => $sign];
         $ret = \Yii::sendCurlPost($url, $postData);
-        if($ret['code'] != 600) {
+        if ($ret['code'] != 600) {
             return ['code' => 109, 'msg' => $ret['msg']];
         }
         $update = ['stock' => new Expression('stock-' . $payRecord->buy_nums)];
@@ -518,10 +519,6 @@ class StoreService {
             if ($storeLotteryRet === false) {
                 throw new Exception('库存修改失败-门店彩种');
             }
-            $storeRet = StoreLottery::updateAll($update, ['cust_no' => $custNo, 'lottery_id' => $payRecord->lottery_id, 'lottery_value' => $payRecord->lottery_value]);
-            if ($storeRet === false) {
-                throw new Exception('库存修改失败-门店');
-            }
             $upMachine = Machine::updateAll($update, ['cust_no' => $custNo, 'machine_code' => $machine['machine_code'], 'terminal_num' => $machine['terminal_num']]);
             if ($upMachine === false) {
                 throw new Exception('库存修改失败-机器');
@@ -532,7 +529,6 @@ class StoreService {
             $trans->rollBack();
             return ['code' => 109, 'msg' => $ex->getMessage()];
         }
-        
     }
 
 }

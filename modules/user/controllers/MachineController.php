@@ -31,6 +31,12 @@ class MachineController extends Controller {
         if ($status != '') {
             $where[] = ['status' => $status];
         }
+		
+		//判断登陆账号是否为渠道账户
+		if($session['admin']['type'] == 1){
+			$where[] = ['channel_no' => $session['admin']['admin_name']];
+		}
+		
         $total = Machine::find()->where($where)->count();
         $offset = $rows * ($page - 1);
         $lists = Machine::find()

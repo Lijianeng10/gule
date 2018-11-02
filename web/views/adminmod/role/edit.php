@@ -22,7 +22,7 @@
 <!--                </div>-->
         <div class="form-item">
             <label for="" class="label-top">管理员登录名：</label>
-            <input name="role_name" class="easyui-validatebox easyui-textbox" prompt="请输入名称" data-options="required:true,validType:'length[3,10]'" value="<?php echo $role['role_name'];?>">
+            <input name="role_name" class="easyui-validatebox easyui-textbox" prompt="请输入名称" data-options="required:true" value="<?php echo $role['role_name'];?>">
         </div>
         <div class="form-item">
             <label for="" class="label-top">启用状态：</label>
