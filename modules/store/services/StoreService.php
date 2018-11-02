@@ -29,15 +29,15 @@ class StoreService {
         $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status'])->where(['terminal_num' => $terminalNum])->asArray()->one();
         if ($custNo) {
             if (empty($machineData)) {
-                $url = ''; // 跳转
+                $url = 'https://www.baidu.com';
             } else {
                 if ($machineData['status'] == 0) {
                     return ['code' => 109, 'msg' => '该机器已被禁用'];
                 }
                 if ($machineData['cust_no'] == $custNo) {
-                    $url = ''; // 跳转
+                    $url = 'https://www.baidu.com'; // 跳转
                 } elseif ($machineData['cust_no'] != $custNo) {
-                    $url = ''; // 跳转
+                    $url = 'https://www.baidu.com'; // 跳转
                 }
             }
         } else {
@@ -116,6 +116,10 @@ class StoreService {
             if (!$ret) {
                 throw new Exception('终端码状态更新失败！');
             }
+            $bindingRet = self::bindingServer($terminalNum, $machineCode);
+            if ($bindingRet['code'] != 600) {
+                throw new Exception($bindingRet['msg']);
+            }
             $trans->commit();
             return ['code' => 600, 'msg' => '激活成功'];
         } catch (Exception $ex) {
@@ -132,7 +136,7 @@ class StoreService {
     public static function validateMachine($machineCode) {
         $url = \Yii::$app->params['machine_service'] . 'conn_search';
         $sign = Commonfun::getSign($machineCode);
-        $postData = ['machine' => $machineCode, 'sign' => $sign];
+        $postData = ['machine_no' => $machineCode, 'sign' => $sign];
         $ret = \Yii::sendCurlPost($url, $postData);
         return $ret;
     }
@@ -413,7 +417,7 @@ class StoreService {
         }
         $url = \Yii::$app->params['machine_service'] . 'open';
         $sign = Commonfun::getSign($machineCode);
-        $postData = ['machine' => $machineCode, 'sign' => $sign];
+        $postData = ['machine_no' => $machineCode, 'sign' => $sign];
         $ret = \Yii::sendCurlPost($url, $postData);
         if ($ret['code'] != 600) {
             return ['code' => 109, 'msg' => '验签失败，请稍后再试'];
@@ -529,6 +533,72 @@ class StoreService {
             $trans->rollBack();
             return ['code' => 109, 'msg' => $ex->getMessage()];
         }
+    }
+
+    /**
+     * 机器服务层绑定终端号
+     * @param type $terminalNum
+     * @param type $machineCode
+     * @return type
+     */
+    public static function bindingServer($terminalNum, $machineCode) {
+        $url = \Yii::$app->params['machine_service'] . '/binding';
+        $md5Code = $terminalNum . $machineCode;
+        $sign = Commonfun::getSign($md5Code);
+        $postData = ['cust_no' => $terminalNum, 'machine_no' => $machineCode, 'sign' => $sign];
+        $ret = \Yii::sendCurlPost($url, $postData);
+        return $ret;
+    }
+    
+    /**
+     * 终端号与机器码绑定
+     * @param type $custNo
+     * @param type $terminalNum
+     * @param type $machineCode
+     * @return type
+     * @throws Exception
+     */
+    public static function machineUnBinding($custNo, $terminalNum, $machineCode) {
+        $machine = Machine::findOne(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode, 'status' => 1]);
+        if(empty($machine)) {
+            return ['code' => 109, 'msg' => '请确认该机器已激活'];
+        }
+        $db = \Yii::$app->db;
+        $trans = $db->beginTransaction();
+        try {
+            $machine->status = 2;
+            if(!$machine->save()) {
+                throw new Exception('解绑失败-设备');
+            }
+            $upTerminal = Terminal::updateAll(['use_status' => 0], ['terminal_num' => $terminalNum]);
+            if($upTerminal === false) {
+                throw new Exception('解绑失败-终端');
+            }
+            $machineUnBind = self::unBindingServer($custNo, $terminalNum, $machineCode);
+            if($machineUnBind['code'] != 600) {
+                throw new Exception($machineUnBind['msg']);
+            }
+            $trans->commit();
+            return ['code' => 109, 'msg' => '解绑成功'];
+        } catch (Exception $ex) {
+            $trans->rollBack();
+            return ['code' => 109, 'msg' => $ex->getMessage()];
+        }
+    }
+
+    /**
+     * 机器服务层解绑终端号
+     * @param type $terminalNum
+     * @param type $machineCode
+     * @return type
+     */
+    public static function unBindingServer($terminalNum, $machineCode) {
+        $url = \Yii::$app->params['machine_service'] . '/un_binding';
+        $md5Code = $terminalNum . $machineCode;
+        $sign = Commonfun::getSign($md5Code);
+        $postData = ['cust_no' => $terminalNum, 'machine_no' => $machineCode, 'sign' => $sign];
+        $ret = \Yii::sendCurlPost($url, $postData);
+        return $ret;
     }
 
 }

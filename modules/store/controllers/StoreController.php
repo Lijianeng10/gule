@@ -15,9 +15,6 @@ class StoreController extends Controller {
     public function actionToJumpPage() {
         $request = \Yii::$app->request;
         $custNo = $request->get('custNo', '');
-        if($custNo == 'gl00002324'){
-            return $this->redirect('http://caipiao.goodluckchina.net');
-        }
         $terminalNum = $request->get('terminalNum', '');
         if(empty($terminalNum)) {
             return $this->jsonError(100, '参数缺失');
@@ -192,14 +189,16 @@ class StoreController extends Controller {
         return $this->jsonResult(600, $ret['msg'], $ret['data']);
     }
     
-    public function actionTest() {
-        $valueLength = \app\modules\common\helpers\Constants::VALUE_LENGTH;
-        $url = \Yii::$app->params['order_service'] . 'add';
-        $md5Code = 'PS100001' . '201811011601151016943027c';
-        $sign = \app\modules\common\helpers\Commonfun::getSign($md5Code);
-        $postData = ['cust_no' => 'PS100001', 'order_no' => '201811011601151016943027c', 'price' => 5, 'quantity' => 2, 'lottery_length' => $valueLength[5], 'sign' => $sign];
-        $ret = \Yii::sendCurlPost($url, $postData);
-        print_r($ret);
+    public function actionMachineUnBinding() {
+        $request = \Yii::$app->request;
+        $custNo = $request->post('custNo', '');
+        $terminalNum = $request->post('terminalNum', '');
+        $machineCode = $request->post('machineCode', '');
+        $ret = StoreService::machineUnBinding($custNo, $terminalNum, $machineCode);
+        if($ret['code'] != 600) {
+            return $this->jsonError(109, $ret['msg']);
+        }
+        return $this->jsonResult(600, $ret['msg'], true);
     }
     
 }
