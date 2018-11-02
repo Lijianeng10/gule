@@ -48,7 +48,10 @@ class ViewsController extends Controller {
         $order_id = $request->get('order_id');
         $where = ['order_id' => $order_id];
         $ordersData = Order::find()->where($where)->asArray()->one();
-		$orderDetailData = OrderDetail::find()->where($where)->asArray()->all();
+		$orderDetailData = OrderDetail::find()
+						->select(["order_detail.*","lottery.lottery_img"])
+						->leftJoin("lottery","lottery.lottery_id = order_detail.lottery_id")
+						->where($where)->asArray()->all();
         return $this->render('/ordersmod/orders/detail', ['ordersData' => $ordersData,'orderDetailData' => $orderDetailData]);
     }
 

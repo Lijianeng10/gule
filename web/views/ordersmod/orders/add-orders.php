@@ -36,20 +36,20 @@
             <table id="value_table" border='1px' cellspacing="0" style="width:80%;text-align:center;margin-left: 100px;">
                 <tr>
 					<td style="width:15%">行数</td>
-                    <td style="width:15%">彩种</td>
-                    <td style="width:15%">彩票面额</td>
+                    <td style="width:25%">彩种</td>
+                    <!--<td style="width:15%">彩票面额</td>-->
                     <td style="width:17%">购买数量(包)</td>
                     <td style="width:17%">每包张数</td>
                     <td style="width:17%">价格(包)</td>
                 </tr>
 				<tr>
 					<td style="width:15%" style="width:30px">1</td>
-					<td style="width:15%">
-						<input class="easyui-validatebox easyui-combobox" style="width:100px" id="lottery_id1" name="lottery_id1">
+					<td style="width:25%">
+						<input class="easyui-validatebox easyui-combobox" style="width:150px" id="lottery_id1" name="lottery_id1">
 					</td>
-					<td style="width:15%">
+					<!--<td style="width:15%">
 						<input class="easyui-validatebox easyui-combobox" style="width:80px" id="sub_value1" name="sub_value1">
-					</td>
+					</td>-->
 					<td style="width:17%">
 						<input type="text" id="nums1" name="nums1" style="width:100px" class="easyui-textbox" >
 					</td>
@@ -100,14 +100,14 @@
 				panelHeight:'auto',
 				editable:false,//不可编辑，只能选择
 			});
-			//面值下拉框
+			/*//面值下拉框
 			$('#sub_value' + count).combobox({
 				url:'/ordersmod/orders/get-sub-value',
 				valueField:'id',
 				textField:'text',
 				panelHeight:'auto',
 				editable:false,//不可编辑，只能选择
-			});
+			});*/
 			
 		}
 			
@@ -118,8 +118,8 @@
 			var str = '';
 			str = '<tr>';
 			str +='<td style="width:15%" style="width:30px">'+new_count+'</td>'
-			str +='<td style="width:15%"><input class="easyui-validatebox easyui-combobox" style="width:100px" id="lottery_id'+new_count+'" name="lottery_id'+new_count+'"></td>'
-			str +='<td style="width:15%"><input class="easyui-validatebox easyui-combobox" style="width:80px" id="sub_value'+new_count+'" name="sub_value'+new_count+'"></td>'
+			str +='<td style="width:25%"><input class="easyui-validatebox easyui-combobox" style="width:150px" id="lottery_id'+new_count+'" name="lottery_id'+new_count+'"></td>'
+			//str +='<td style="width:15%"><input class="easyui-validatebox easyui-combobox" style="width:80px" id="sub_value'+new_count+'" name="sub_value'+new_count+'"></td>'
 			str +='<td style="width:17%"><input type="text" id="nums'+new_count+'" name="nums'+new_count+'" style="width:100px" class="easyui-textbox" ></td>'
 			str +='<td style="width:17%"><input type="text" id="sheet_nums'+new_count+'" name="sheet_nums'+new_count+'" style="width:100px" class="easyui-textbox" ></td>'
 			str +='<td style="width:17%"><input type="text" id="price'+new_count+'" name="price'+new_count+'" style="width:100px" class="easyui-textbox" ></td>'
@@ -128,61 +128,6 @@
 			$("#count").val(new_count);
 			toAdd();
 		})
-
-
-
-        //彩种面值选择
-        $(".l_value").click(function () {
-
-            if ($(this).is(':checked')) {
-                var l_val = $(this).val();
-                var tr = '';
-                tr = '<tr id="value_' + l_val + '">\n\
-                                                <td>' + l_val + '元</td> <td><input type="number" style="width:80%;border: 0px;" min="0"></td> \n\
-                                                <td><input type="number" class="s_stock" style="width:80%;border: 0px;" min="0"></td>\n\
-                                                <td><input type="text" style="width:80%;border: 0px;" maxlength="25"></td>\n\
-                                            </tr>';
-                $("#value_table").append(tr);
-                $("#value_table").show();
-            } else {
-                var l_val = $(this).val();
-                $("#value_" + l_val).remove();
-            }
-        });
-        $(".l_value").click(function () {
-            var checkedNums = 0;
-            $.each($(".l_value"), function () {
-                if ($(this).is(':checked')) {
-                    checkedNums += 1;
-                }
-            });
-            if (checkedNums == 0) {
-                $("#value_table").hide();
-            }
-            var stockNums = 0;
-            $.each($(".s_stock"), function () {
-                var l_stock = $(this).val();
-                if (l_stock) {
-                    stockNums = stockNums + parseInt(l_stock);
-                }
-            });
-            $("#product_stock").val(stockNums);
-        });
-
-        $("#addLottery").click(function () {
-            $("#addWin").dialog('open');
-        });
-
-        $("#value_table").on('change', '.s_stock', function () {
-            var stockNums = 0;
-            $.each($(".s_stock"), function () {
-                var l_stock = $(this).val();
-                if (l_stock) {
-                    stockNums = stockNums + parseInt(l_stock);
-                }
-            })
-            $("#product_stock").val(stockNums);
-        })
 
     });
     //提交保存信息
@@ -238,23 +183,16 @@
 		var order_money = 0;//用于记录订单总金额
 		for(var i=1;i<=count;i++){
 			var lottery_id = $("#lottery_id" + i).val();//获取彩种的value值
-			var lottery_name = $('#lottery_id' + i).combobox('getText');//获取彩种的text值
-			var sub_value = $("#sub_value" + i).val();//获取彩票面额的值
+			var lottery_name_str = $('#lottery_id' + i).combobox('getText');//获取彩种的text值
+			//var sub_value = $("#sub_value" + i).val();//获取彩票面额的值
 			var nums = parseFloat($("#nums" + i).val());//获取购买数量的值
 			var sheet_nums = parseFloat($("#sheet_nums" + i).val());//获取每包张数的值
 			var price = parseFloat($("#price" + i).val());//获取价格的值
-			if(lottery_id != '' || sub_value != '' || nums != '' || sheet_nums != '' || price != ''){
+			if(lottery_id != '' || nums != '' || sheet_nums != '' || price != ''){
 				if(lottery_id == ''){
 					$.messager.show({
 						title: '提示',
 						msg: "彩票信息-第"+i+"行彩种不能为空！",
-					});
-					return (false);
-				}
-				if(sub_value == ''){
-					$.messager.show({
-						title: '提示',
-						msg: "彩票信息-第"+i+"行彩票面额不能为空！",
 					});
 					return (false);
 				}
@@ -281,6 +219,10 @@
 				}
 				order_num = order_num + nums;
 				order_money = order_money + (nums * price);
+				
+				lottery_name_str = lottery_name_str.split("-");
+				var lottery_name = lottery_name_str[0];
+				var sub_value = lottery_name_str[1].replace("元","");
 				
 				var lArr = {};
 				lArr['lottery_id'] = lottery_id;

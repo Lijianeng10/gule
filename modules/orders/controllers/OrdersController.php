@@ -19,24 +19,13 @@ class OrdersController extends Controller {
      * 获取彩种
      */
     public function actionGetLottery() {
-        $lotteryData = Lottery::find()->select(['lottery_id', 'lottery_name'])->where([ 'status' => 1])->asArray()->all();
+        $lotteryData = Lottery::find()->select(['lottery_id', 'lottery_name','lottery_value'])->where([ 'status' => 1])->asArray()->all();
         $lotteryLists=[];
         foreach($lotteryData as $key => $val){
-            $lotteryLists[] = ['id'=>$val['lottery_id'],'text'=>$val['lottery_name']];
+			$lottery_name_new = $val['lottery_name'] . '-' . $val['lottery_value'] . '元';
+            $lotteryLists[] = ['id'=>$val['lottery_id'],'text'=>$lottery_name_new];
         }
         return json_encode($lotteryLists);
-    }
-	
-	/**
-     * 获取彩票面值
-     */
-    public function actionGetSubValue() {
-        $aub_value_arr = Constants::SUB_VALUE_ARR;//彩票面值
-        $subValueLists=[];
-        foreach($aub_value_arr as $key => $val){
-            $subValueLists[] = ['id'=>$key,'text'=>$val];
-        }
-        return json_encode($subValueLists);
     }
 	
     /**

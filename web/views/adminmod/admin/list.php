@@ -142,7 +142,10 @@
             <a href="#" class="easyui-linkbutton primary auth adminAdminSearch" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
         </div>
     	<div class="tb-column"  id="mySeachFrom">
-            
+            <div class="tb_item">
+                <span>登录名：</span>
+                <input type="text"  name="admin_name" class="textbox" >
+            </div>
             <div class="tb_item">
                 <span>昵称：</span>
                 <input type="text"  name="admin_nickname" class="textbox" >
