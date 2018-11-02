@@ -46,7 +46,7 @@ class Commonfun {
         $redis = \Yii::$app->redis;
         $serialnum = $redis->executeCommand('incr', [$redisStr]);
         $redis->executeCommand('expire', ["{$redisStr}", 7200]);
-        $serialnum = sprintf("%09d", $serialnum);
+        $serialnum = sprintf("%08d", $serialnum);
         return $serialnum;
     }
 

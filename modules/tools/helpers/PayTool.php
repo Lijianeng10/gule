@@ -43,10 +43,10 @@ class PayTool {
      * @return type
      */
     public static function getSign($post_data) {
-        $postData = array_multisort($post_data);
+        array_multisort($post_data);
         $str = '';
         $flag = 1;
-        foreach ($postData as $k => $v) {
+        foreach ($post_data as $k => $v) {
             if (!empty($v)) {
                 if ($flag == 1) {
                     $str .= "{$k}={$v}";
