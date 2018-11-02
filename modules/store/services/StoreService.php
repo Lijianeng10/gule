@@ -29,22 +29,26 @@ class StoreService {
         $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status'])->where(['terminal_num' => $terminalNum])->asArray()->one();
         if ($custNo) {
             if (empty($machineData)) {
-                $url = 'https://www.baidu.com';
+                $terminal = Terminal::find()->select(['terminal_num'])->where(['terminal_num' => $terminalNum, 'user_status' => 0])->asArray()->one();
+                if(empty($terminal)) {
+                    return ['code' => 109, 'msg' => '此终端号已被占用'];
+                }
+                $url = \Yii::$app->params['userDomain'] . '/activate.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo; // 跳转激活页面
             } else {
-                if ($machineData['status'] == 0) {
+                if ($machineData['status'] != 1) {
                     return ['code' => 109, 'msg' => '该机器已被禁用'];
                 }
                 if ($machineData['cust_no'] == $custNo) {
-                    $url = 'https://www.baidu.com'; // 跳转
+                    $url = \Yii::$app->params['userDomain'] . '/store.html?custNo=' . $custNo; // 跳转门店管理页面
                 } elseif ($machineData['cust_no'] != $custNo) {
-                    $url = 'https://www.baidu.com'; // 跳转
+                    $url = \Yii::$app->params['userDomain'] . '/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页面
                 }
             }
         } else {
             if (empty($machineData)) {
                 return ['code' => 109, 'msg' => '该机器未激活！请联系店主'];
             } elseif ($machineData['status'] == 1) {
-                $url = '';
+                $url = \Yii::$app->params['userDomain'] . '/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页
             } elseif ($machineData['status'] == 0) {
                 return ['code' => 109, 'msg' => '该机器已被禁用！请联系店主'];
             }
@@ -82,13 +86,19 @@ class StoreService {
         $store = Store::findOne(['cust_no' => $custNo]);
         if (empty($store)) {
             $storeData = self::getStoreData($custNo);
-            if ($storeData['code'] != 0) {
+            if ($storeData['code'] != 1) {
                 return ['code' => 109, 'msg' => $storeData['msg']];
             }
+            $channelNo = array_slice(explode('.', $storeData['cascadeId']),-2,1);
             $store = new Store();
             $store->cust_no = $custNo;
-            $store->channel_no = $storeData['channel_no'];
-            $store->user_tel = $storeData['user_tel'];
+            $store->channel_no = $channelNo;
+            $store->store_name = $storeData['storeName'];
+            $store->user_tel = $storeData['phone'];
+            $store->province = $storeData['province'];
+            $store->city = $storeData['city'];
+            $store->area = $storeData['conuntry'];
+            $store->address = $storeData['address'];
             $store->create_time = date('Y-m-d H:i:s');
         } elseif ($store->status == 2) {
             return ['code' => 109, 'msg' => '门店已被禁用停止权限，请联系渠道管理员'];
