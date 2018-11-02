@@ -92,7 +92,7 @@ class StoreService {
             $channelNo = array_slice(explode('.', $storeData['data']['cascadeId']),-2,1);
             $store = new Store();
             $store->cust_no = $custNo;
-            $store->channel_no = $channelNo;
+            $store->channel_no = $channelNo[0];
             $store->store_name = $storeData['data']['storeName'];
             $store->user_tel = $storeData['data']['phone'];
             $store->province = $storeData['data']['province'];
