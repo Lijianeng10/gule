@@ -23,6 +23,10 @@ class PayrecordController extends Controller {
         $pay_start_time = $request->post('pay_start_time');
         $pay_end_time = $request->post('pay_end_time');
         $where = ['and'];
+        //渠道用户只能看到自己旗下的交易信息
+        if($session['admin']['type']!=0){
+            $where[] = ['pay_record.channel_no'=>$session['admin']['admin_name']];
+        }
         if(!empty($storeInfo)){
             $where[] = ['or',['like','s.cust_no',$storeInfo],['like','s.user_tel',$storeInfo],['like','s.store_name',$storeInfo]];
         }
