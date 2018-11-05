@@ -349,8 +349,10 @@ class StoreService {
                 ->where(['cust_no' => $custNo, 'machine.status' => 1])
                 ->asArray()
                 ->all();
+        foreach ($machineData as &$machine) {
+            $machine['option'] = false;
+        }
         $storeData['machine_nums'] = count($machineData);
-        $storeData['option'] = false;
         $storeData['machine'] = $machineData;
         return ['code' => 600, 'msg' => '获取成功', 'data' => $storeData];
     }
