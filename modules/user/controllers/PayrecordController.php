@@ -13,8 +13,8 @@ class PayrecordController extends Controller {
         $request = \Yii::$app->request;
         $page = $request->post('page', 1);
         $size = $request->post('size', 15);
-        $sort = $request->post('sort', '');
-        $orderBy = $request->post('order', '');
+        $sort = $request->post('sort', 'desc');
+        $orderBy = $request->post('order', 'pay_record.create_time');
         $lotteryInfo = $request->post('lotteryInfo', '');
         $storeInfo = $request->post('storeInfo', '');
         $status = $request->post('status');
