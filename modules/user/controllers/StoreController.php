@@ -26,7 +26,7 @@ class StoreController extends Controller {
 
         $where = ['and'];
         if (!empty($cust_no)) {
-            $where[] = ['like', 'cust_no', $cust_no];
+            $where[] = ['or',['like', 'cust_no', $cust_no],['like', 'user_tel', $cust_no],['like', 'store_name', $cust_no]];
         }
         if (!empty($status)) {
             $where[] = ['status' => $status];
@@ -55,8 +55,8 @@ class StoreController extends Controller {
 		foreach($storeData as $key => $val){
 			$machineNums = Machine::find()->where(['cust_no' => $val['cust_no']])->count();//统计机器总数
 			$saleMoneys = PayRecord::find()->where(['store_no' => $val['cust_no']])->sum('pay_money');//统计总销量
-			$storeData[$key]['machineNums'] = $machineNums;
-			$storeData[$key]['saleMoneys'] = $saleMoneys;
+			$storeData[$key]['machineNums'] = $machineNums??0;
+			$storeData[$key]['saleMoneys'] = $saleMoneys??'0.00';
 		}
         return \Yii::datagridJson($storeData, $total);
     }
