@@ -200,11 +200,11 @@ class StoreService {
         $lotteryValue = [];
         foreach ($storeLottery as $lottery) {
             $lottData[] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
-            $valueData[] = $lottery['lottery_value'];
+            $valueData[$lottery['lottery_value']] = $lottery['lottery_value'];
             $lotteryValue[$lottery['lottery_value']][] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
         }
         $data['lottery'] = $lottData;
-        $data['value'] = $valueData;
+        $data['value'] = array_values($valueData);
         $data['lotteryValue'] = $lotteryValue;
         return $data;
     }
