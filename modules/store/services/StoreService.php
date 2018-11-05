@@ -26,7 +26,7 @@ class StoreService {
      * @return type
      */
     public static function toJumpPage($custNo, $terminalNum) {
-        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status', 'lottery_id'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
+        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status', 'lottery_id', 'online_status'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
         if ($custNo) {
             if (empty($machineData)) {
                 $terminal = Terminal::find()->select(['terminal_num'])->where(['terminal_num' => $terminalNum, 'use_status' => 0])->asArray()->one();
