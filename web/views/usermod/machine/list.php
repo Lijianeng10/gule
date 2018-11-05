@@ -121,7 +121,7 @@
             });
             function lineStatusFormatter(value,row){
                 var str= "";
-                if(row.status ==1){
+                if(row.online_status ==1){
                     str = "<img style='height: 25px' src='/images/on-line.png'  title='在线'>";
                 } else{
                     str = "<img style='height: 25px' src='/images/off-line.png' title='离线'>";
