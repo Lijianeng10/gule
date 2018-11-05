@@ -37,27 +37,31 @@
                     <td style="width:15%">彩票面额</td>
                     <td style="width:17%">剩余库存</td>
                 </tr>
-				<?php 
-				foreach($machineLotteryData as $key => $val){
+				<?php
+				if(!empty($machineLotteryData)){
+					foreach($machineLotteryData as $key => $val){
 				?>
-				<tr>
-					<td style="width:15%">
-						<img style="height:30px;width:30px;" src="<?php echo $val['lottery_img'];?>"/>
-					</td>
-					<td style="width:15%">
-						<?php echo $val['machine_code'];?>
-					</td>
-					<td style="width:15%">
-						<?php echo $val['lottery_name'];?>
-					</td>
-					<td style="width:15%">
-						<?php echo $val['lottery_value'];?>元
-					</td>
-					<td style="width:17%">
-						<?php echo $val['stock'];?>
-					</td>
-				</tr>
-				<?php 
+						<tr>
+							<td style="width:15%">
+								<img style="height:30px;width:30px;" src="<?php echo $val['lottery_img'];?>"/>
+							</td>
+							<td style="width:15%">
+								<?php echo $val['machine_code'];?>
+							</td>
+							<td style="width:15%">
+								<?php echo $val['lottery_name'];?>
+							</td>
+							<td style="width:15%">
+								<?php echo $val['lottery_value'];?>元
+							</td>
+							<td style="width:17%">
+								<?php echo $val['stock'];?>
+							</td>
+						</tr>
+				<?php
+					}
+				}else{
+					echo '<tr><th colspan="5">暂无在售彩种!!!</th></tr>';
 				}
 				?>
             </table>
@@ -73,24 +77,28 @@
                     <td style="width:15%">彩票面额</td>
                     <td style="width:17%">剩余库存</td>
                 </tr>
-				<?php 
-				foreach($storeLotteryData as $key => $val){
+				<?php
+				if(!empty($storeLotteryData)){
+					foreach($storeLotteryData as $key => $val){
 				?>
-				<tr>
-					<td style="width:15%">
-						<img style="height:30px;width:30px;" src="<?php echo $val['lottery_img'];?>"/>
-					</td>
-					<td style="width:15%">
-						<?php echo $val['lottery_name'];?>
-					</td>
-					<td style="width:15%">
-						<?php echo $val['lottery_value'];?>元
-					</td>
-					<td style="width:17%">
-						<?php echo $val['stock'];?>
-					</td>
-				</tr>
-				<?php 
+						<tr>
+							<td style="width:15%">
+								<img style="height:30px;width:30px;" src="<?php echo $val['lottery_img'];?>"/>
+							</td>
+							<td style="width:15%">
+								<?php echo $val['lottery_name'];?>
+							</td>
+							<td style="width:15%">
+								<?php echo $val['lottery_value'];?>元
+							</td>
+							<td style="width:17%">
+								<?php echo $val['stock'];?>
+							</td>
+						</tr>
+				<?php
+					}				
+				}else{
+					echo '<tr><th colspan="4">暂无可选彩种!!!</th></tr>';
 				}
 				?>
             </table>
