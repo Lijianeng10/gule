@@ -497,7 +497,7 @@ class StoreService {
             $payRecord->lottery_id = $machine['lottery_id'];
             $payRecord->buy_nums = $buyNums;
             $payRecord->lottery_value = $machine['lottery_value'];
-            $payRecord->out = $qbRet['orderNo']; //钱包支付二维码返回的唯一交易单号
+            $payRecord->outer_code = $qbRet['orderNo']; //钱包支付二维码返回的唯一交易单号
             $payRecord->save();
             $trans->commit();
             return ['code' => 600, 'msg' => '下单成功', 'data' => ['create_time' => $payRecord->create_time, 'order_code' => $payRecord->order_code, 'pay_money' => $total, 'pay_url' => $qbRet['pay_url']]];
