@@ -198,7 +198,6 @@ class StoreService {
         $lottData = [];
         $valueData = [];
         $lotteryValue = [];
-        $sku= [];
         foreach ($storeLottery as $lottery) {
             $lottData[] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
             $valueData[] = $lottery['lottery_value'];
