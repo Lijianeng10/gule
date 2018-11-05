@@ -81,7 +81,7 @@ class StoreService {
             return ['code' => 109, 'msg' => '验签失败！请稍后再试'];
         }
         if ($validateMachine['online'] === false) {
-            return ['code' => 110, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
+            return ['code' => 109, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
         }
         $store = Store::findOne(['cust_no' => $custNo]);
         if (empty($store)) {
