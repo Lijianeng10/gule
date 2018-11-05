@@ -89,6 +89,7 @@ class StoreService {
         if ($validateMachine['code'] != 600) {
             return ['code' => 109, 'msg' => '验签失败！请稍后再试'];
         }
+        print_r($validateMachine);die;
         if ($validateMachine['online'] === false) {
             return ['code' => 109, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
         }
@@ -177,26 +178,30 @@ class StoreService {
      * @param type $custNo
      * @return type
      */
-    public static function getLottery($custNo) {
+    public static function getLottery($custNo, $terminalNum, $machineCode) {
         $storeLottery = StoreLottery::find()->select(['l.lottery_id', 'l.lottery_value', 'l.lottery_name'])
                 ->innerJoin('lottery l', 'l.lottery_id = store_lottery.lottery_id')
                 ->where(['store_lottery.cust_no' => $custNo])
                 ->andWhere(['>', 'store_lottery.stock', 0])
                 ->asArray()
                 ->all();
+        if($terminalNum && $machineCode) {
+            $currentLottery = Machine::find()->select(['l.lottery_id', 'l.lottery_value', 'l.lottery_name'])
+                    ->innerJoin('lottery l', 'l.lottery_id = machine.lottery_id')
+                    ->where(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode])
+                    ->asArray()
+                    ->one();
+            if(!empty($currentLottery)) {
+                $data['currentLottery'] = $currentLottery;
+            }
+        }
         $lottData = [];
         $valueData = [];
         $lotteryValue = [];
         foreach ($storeLottery as $lottery) {
             $lottData[] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
             $valueData[] = $lottery['lottery_value'];
-            if (array_key_exists($lottery['lottery_value'], $lotteryValue)) {
-                if (!array_key_exists($lottery['lottery_id'], $lotteryValue['lottery'])) {
-                    $lotteryValue[$lottery['lottery_value']]['lottery'][$lottery['lottery_id']] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
-                }
-            } else {
-                $lotteryValue[$lottery['lottery_value']]['lottery'][$lottery['lottery_id']] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
-            }
+            $lotteryValue[$lottery['lottery_value']][] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
         }
         $data['lottery'] = $lottData;
         $data['value'] = $valueData;
@@ -249,7 +254,7 @@ class StoreService {
             return ['code' => 109, 'msg' => '请确认此设备已激活'];
         }
         if ($activeType == 1) {
-            $update = ['stock' => $stock];
+            $update = ['stock' => new Expression('stock+' . $stock)];
         } else {
             if ($stock > $machine->stock) {
                 return ['code' => 109, 'msg' => '机箱内的库存不足扣除量'];
@@ -261,7 +266,7 @@ class StoreService {
         $trans = $db->beginTransaction();
         try {
             $storeLottery = StoreLottery::find()->select(['stock'])->where(['lottery_id' => $machine->lottery_id, 'lottery_value' => $machine->lottery_value, 'cust_no' => $custNo])->asArray()->one();
-            if ($storeLottery['stock'] < $stock) {
+            if ($storeLottery['stock'] < bcadd($stock, $machine->stock)) {
                 throw new Exception('门店此彩种库存不足');
             }
             if ($activeType == 2) {
@@ -492,7 +497,7 @@ class StoreService {
             $payRecord->lottery_id = $machine['lottery_id'];
             $payRecord->buy_nums = $buyNums;
             $payRecord->lottery_value = $machine['lottery_value'];
-            $payRecord->outer_code = $qbRet['orderNo']; //钱包支付二维码返回的唯一交易单号
+            $payRecord->out = $qbRet['orderNo']; //钱包支付二维码返回的唯一交易单号
             $payRecord->save();
             $trans->commit();
             return ['code' => 600, 'msg' => '下单成功', 'data' => ['create_time' => $payRecord->create_time, 'order_code' => $payRecord->order_code, 'pay_money' => $total, 'pay_url' => $qbRet['pay_url']]];
