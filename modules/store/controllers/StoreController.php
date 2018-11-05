@@ -53,10 +53,12 @@ class StoreController extends Controller {
     public function actionGetLottery() {
         $request = \Yii::$app->request;
         $custNo = $request->post('custNo', '');
+        $terminalNum = $request->post('terminalNum', '');
+        $machineCode = $request->post('machineCode', '');
         if(empty($custNo)) {
             return $this->jsonError(100, '参数缺失');
         }
-        $ret = StoreService::getLottery($custNo);
+        $ret = StoreService::getLottery($custNo, $terminalNum, $machineCode);
         return $this->jsonResult(600, '获取成功', $ret);
     }
     
