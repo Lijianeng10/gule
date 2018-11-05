@@ -127,7 +127,7 @@
                 }else{
                     str += '<a href="#" name="up" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" onclick="change_status('+row.store_id+','+row.status+')"></a>&nbsp';
                 }
-				str += '<a href="#" name="storedetail" class="easyui-linkbutton info storedetail" onclick="create_window(\'dlg\',\'彩种库存详情\',\'/usermod/views/to-stock-lottery-details?cust_no='+row.cust_no+'\',900,600)"></a>';
+				str += '<a href="#" name="storedetail" class="easyui-linkbutton info storedetail" onclick="create_window(\'dlg\',\'网点彩种详情\',\'/usermod/views/to-stock-lottery-details?cust_no='+row.cust_no+'\',900,600)"></a>';
                 return str;
             }
         });

@@ -7,6 +7,7 @@ use yii\db\Query;
 use yii\web\Controller;
 use app\modules\common\models\Lottery;
 use app\modules\common\models\StoreLottery;
+use app\modules\common\models\Machine;
 
 
 class ViewsController extends Controller {
@@ -23,11 +24,19 @@ class ViewsController extends Controller {
     public function actionToStockLotteryDetails(){
 		$request = \Yii::$app->request;
         $cust_no = $request->get('cust_no');
+		
+		//在售彩种信息
+		$machineLotteryData = Machine::find()
+							->select(["machine.*","lottery.lottery_name","lottery.lottery_img"])
+							->leftJoin("lottery","lottery.lottery_id = machine.lottery_id")
+							->where(['machine.cust_no' => $cust_no])->asArray()->all();
+							
+		//可选彩种信息
         $storeLotteryData = StoreLottery::find()
 							->select(["store_lottery.*","lottery.lottery_name","lottery.lottery_img"])
 							->leftJoin("lottery","lottery.lottery_id = store_lottery.lottery_id")
-							->where(['cust_no' => $cust_no])->asArray()->all();
-        return $this->render('/usermod/store/lottery_details',['storeLotteryData' => $storeLotteryData,'cust_no' => $cust_no]);
+							->where(['store_lottery.cust_no' => $cust_no])->asArray()->all();
+        return $this->render('/usermod/store/lottery_details',['storeLotteryData' => $storeLotteryData,'machineLotteryData' => $machineLotteryData,'cust_no' => $cust_no]);
     }
     /**
      * 终端号列表

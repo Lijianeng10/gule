@@ -341,7 +341,7 @@ class StoreService {
         if (empty($storeData)) {
             return ['code' => 109, 'msg' => '请先激活绑定'];
         }
-        $field1 = ['terminal_num', 'machine_code', 'l.lottery_value', 'stock', 'ac_status', 'online_status', 'machine.status', 'l.lottery_name', 'cust_no', 'l.lottery_img',
+        $field1 = ['terminal_num', 'machine_code', 'l.lottery_value', 'stock', 'ac_status', 'online_status', 'machine.status', 'l.lottery_name', 'cust_no', 'l.lottery_img', 'sum(machine.stock * machine.lottery_value) sum_amount',
             new Expression("case when machine.status = 1 then (select coalesce(sum(p.buy_nums),0) from pay_record p where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_count"),
             new Expression("case when machine.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_amount")];
         $machineData = Machine::find()->select($field1)
@@ -350,6 +350,7 @@ class StoreService {
                 ->asArray()
                 ->all();
         $storeData['machine_nums'] = count($machineData);
+        $storeData['option'] = false;
         $storeData['machine'] = $machineData;
         return ['code' => 600, 'msg' => '获取成功', 'data' => $storeData];
     }
