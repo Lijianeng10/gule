@@ -13,7 +13,7 @@ use app\modules\common\models\Machine;
 
 class MachineController extends Controller {
     /**
-     * 获取终端号列表
+     * 获取机器列表
      */
     public function actionGetMachineList() {
         $session = \Yii::$app->session;
@@ -24,22 +24,27 @@ class MachineController extends Controller {
         $order = $request->post('order');
         $terminal_num = $request->post('terminal_num', '');
         $status = $request->post('status', '');
+        $onlineStatus = $request->post('online_status', '');
         $where = ['and'];
         if ($terminal_num) {
-            $where[] = ['like', 'terminal_num', $terminal_num];
+            $where[] = ['like', 'machine.terminal_num', $terminal_num];
         }
         if ($status != '') {
-            $where[] = ['status' => $status];
+            $where[] = ['machine.status' => $status];
         }
-		
+        if ($onlineStatus != '') {
+            $where[] = ['machine.online_status' => $onlineStatus];
+        }
 		//判断登陆账号是否为渠道账户
 		if($session['admin']['type'] == 1){
-			$where[] = ['channel_no' => $session['admin']['admin_name']];
+			$where[] = ['machine.channel_no' => $session['admin']['admin_name']];
 		}
 		
-        $total = Machine::find()->where($where)->count();
+        $total = Machine::find()->leftJoin('lottery as l','l.lottery_id = machine.lottery_id')->where($where)->count();
         $offset = $rows * ($page - 1);
         $lists = Machine::find()
+            ->select(['machine.*','l.lottery_name'])
+            ->leftJoin('lottery as l','l.lottery_id = machine.lottery_id')
             ->where($where)
             ->offset($offset)
             ->limit($rows)

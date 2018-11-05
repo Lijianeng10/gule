@@ -26,6 +26,7 @@
                     $('#datagrid').datagrid('load', {
                         'terminal_num': $.trim($('input[name="terminal_num"]').val()),
                         'status': $.trim($('input[name="status"]').val()),
+                        'online_status': $.trim($('input[name="online_status"]').val()),
                     });
                 },
             };
@@ -72,6 +73,11 @@
                         sortable: true,
                         formatter: lineStatusFormatter
                     },{
+                        field: 'lottery_name',
+                        title: '销售彩种',
+                        width: 80,
+                        align: 'center'
+                    },{
                         field: 'lottery_value',
                         title: '销售面额',
                         width: 50,
@@ -115,7 +121,7 @@
             });
             function lineStatusFormatter(value,row){
                 var str= "";
-                if(row.status ==1){
+                if(row.online_status ==1){
                     str = "<img style='height: 25px' src='/images/on-line.png'  title='在线'>";
                 } else{
                     str = "<img style='height: 25px' src='/images/off-line.png' title='离线'>";
@@ -126,7 +132,9 @@
                 var str= "";
                 if(row.status ==1){
                     str ="正常"
-                } else{
+                }else if(row.status ==2){
+                    str ="解绑"
+                }else{
                     str ="禁用"
                 }
                 return str;
@@ -160,8 +168,17 @@
                 <span>状态：</span>
                 <select class="easyui-combobox" name="status" style="width: 100px" data-options="editable:false">
                     <option value="" selected>全部</option>
+                    <option value="0">禁用</option>
                     <option value="1">正常</option>
-                    <option value="2">禁用</option>
+                    <option value="2">解绑</option>
+                </select>
+            </div>
+            <div class="tb_item">
+                <span>在线状态：</span>
+                <select class="easyui-combobox" name="online_status" style="width: 100px" data-options="editable:false">
+                    <option value="" selected>全部</option>
+                    <option value="0">离线</option>
+                    <option value="1">在线</option>
                 </select>
             </div>
         </div>
