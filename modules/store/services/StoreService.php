@@ -35,9 +35,9 @@ class StoreService {
                 }
                 $url = \Yii::$app->params['userDomain'] . '/h5_ggc/activate.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo; // 跳转激活页面
             } else {
-//                if ($machineData['status'] != 1) {
-//                    return ['code' => 109, 'msg' => '该机器已被禁用'];
-//                }
+                if ($machineData['online_status'] != 1) {
+                    return ['code' => 109, 'msg' => '请确认该设备已接通电源'];
+                }
                 if ($machineData['cust_no'] == $custNo) {
                     $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo; // 跳转门店管理页面
                 } elseif ($machineData['cust_no'] != $custNo) {
@@ -51,6 +51,9 @@ class StoreService {
             if (empty($machineData)) {
                 return ['code' => 109, 'msg' => '该机器未激活！请联系店主'];
             } elseif ($machineData['status'] == 1) {
+                if ($machineData['online_status'] != 1) {
+                    return ['code' => 109, 'msg' => '请确认该设备已接通电源'];
+                }
                 if (empty($machineData['lottery_id'])) {
                     return ['code' => 109, 'msg' => '该设备还未确定出售彩种！请联系店主'];
                 }
@@ -457,7 +460,7 @@ class StoreService {
      * @return type
      */
     public static function playOrder($custNo, $terminalNum, $machineCode, $buyNums, $total) {
-        $machine = Machine::find()->select(['machine_code', 'lottery_id', 'lottery_value', 'stock', 'channel_no'])->where(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode, 'machine.status' => 1, 'ac_status' => 1])->asArray()->one();
+        $machine = Machine::find()->select(['machine_code', 'lottery_id', 'lottery_value', 'stock', 'channel_no'])->where(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode, 'machine.status' => 1, 'ac_status' => 1, 'online_status' => 1, 'status' => 1])->asArray()->one();
         if (empty($machine)) {
             return ['code' => 109, 'msg' => '设备故障！请联系店主'];
         }
