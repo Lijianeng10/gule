@@ -55,6 +55,16 @@
                         width: 50,
                         align: 'center',
                     },{
+                        field: 'store_name',
+                        title: '网点名称',
+                        width: 50,
+                        align: 'center',
+                    },{
+                        field: 'channel_no',
+                        title: '所属渠道',
+                        width: 50,
+                        align: 'center',
+                    },{
                         field: 'code',
                         title: '代销证编号',
                         width: 50,
@@ -64,6 +74,7 @@
                         title: '所属区域',
                         width: 70,
                         align: 'center',
+                        formatter:areaFormatter
                     },{
                         field: 'agents',
                         title: '区域经理信息',
@@ -108,7 +119,12 @@
 					$("a[name='storedetail']").linkbutton({text:'查看',iconCls:'fa fa-search'});
                 }
             });
-
+            function areaFormatter(value, row) {
+                if(row.province!=null && row.city!=null && row.area!=null){
+                    return "<span>" +row.province+'-'+row.city + '-' + row.area + "</span>";
+                }
+                return '';
+            }
             function statusFormatter(value,row){
                 var str= "";
                 if(value ==1){
@@ -142,8 +158,8 @@
         </div>
         <div class="tb-column">
             <div class="tb_item">
-                <span>门店编号：</span>
-                <input type="text"  name="cust_no" class="easyui-textbox">
+                <span>网点信息：</span>
+                <input type="text"  name="cust_no" class="easyui-textbox" prompt="网点编号、手机号、网点名称">
             </div>
             <div class="tb_item">
                 <span>状态：</span>

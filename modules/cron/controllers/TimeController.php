@@ -14,9 +14,9 @@ class TimeController extends Controller {
         $url = Yii::$app->params['machine_service'] . 'getOnLineMachine';
         $postData = ['sign' => 'getOnLineMachine'];
         $ret = Yii::sendCurlPost($url, $postData);
+        Machine::updateAll(['online_status'=>0]);
         if(!empty($ret['data'])){
             $upStr= '';
-            Machine::updateAll(['online_status'=>0]);
             foreach ($ret['data'] as $k=>$v){
                 $upStr .= "update machine set online_status = 1 where machine_code = {$v['machine_no']} and status in (0,1);";
             }
