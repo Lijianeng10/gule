@@ -96,13 +96,16 @@
                         field: 'opt',
                         title: '操作',
                         width: 100,
-                        align: 'left',
+                        align: 'center',
                         formatter: optFormatter,
                     }
                     ]
                 ],
                 onLoadSuccess:function(data){
                     controlBtn();
+					$("a[name='up']").linkbutton({text:'启用',iconCls:'fa fa-edit'});
+                    $("a[name='down']").linkbutton({text:'禁用',iconCls:'fa fa-edit'});
+					$("a[name='storedetail']").linkbutton({text:'查看',iconCls:'fa fa-search'});
                 }
             });
 
@@ -120,11 +123,11 @@
             function optFormatter(value, row) {
                 var str = "";
                 if(row.status == 1){
-                    str += '<a href="#" name="changeStatus" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.store_id+','+row.status+')">禁用</a>&nbsp';
+                    str += '<a href="#" name="down" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" onclick="change_status('+row.store_id+','+row.status+')"></a>&nbsp';
                 }else{
-                    str += '<a href="#" name="changeStatus" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.store_id+','+row.status+')">启用</a>&nbsp';
+                    str += '<a href="#" name="up" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" onclick="change_status('+row.store_id+','+row.status+')"></a>&nbsp';
                 }
-				str += '<a href="#" name="storedetail" class="easyui-linkbutton info storedetail" onclick="create_window(\'dlg\',\'彩种库存详情\',\'/usermod/views/to-stock-lottery-details?cust_no='+row.cust_no+'\',900,600)">查看</a>';
+				str += '<a href="#" name="storedetail" class="easyui-linkbutton info storedetail" onclick="create_window(\'dlg\',\'彩种库存详情\',\'/usermod/views/to-stock-lottery-details?cust_no='+row.cust_no+'\',900,600)"></a>';
                 return str;
             }
         });

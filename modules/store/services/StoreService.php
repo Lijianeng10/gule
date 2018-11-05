@@ -26,31 +26,37 @@ class StoreService {
      * @return type
      */
     public static function toJumpPage($custNo, $terminalNum) {
-        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status'])->where(['terminal_num' => $terminalNum])->asArray()->one();
+        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status', 'lottery_id'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
         if ($custNo) {
             if (empty($machineData)) {
-                $terminal = Terminal::find()->select(['terminal_num'])->where(['terminal_num' => $terminalNum, 'user_status' => 0])->asArray()->one();
-                if(empty($terminal)) {
+                $terminal = Terminal::find()->select(['terminal_num'])->where(['terminal_num' => $terminalNum, 'use_status' => 0])->asArray()->one();
+                if (empty($terminal)) {
                     return ['code' => 109, 'msg' => '此终端号已被占用'];
                 }
-                $url = \Yii::$app->params['userDomain'] . '/activate.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo; // 跳转激活页面
+                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/activate.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo; // 跳转激活页面
             } else {
-                if ($machineData['status'] != 1) {
-                    return ['code' => 109, 'msg' => '该机器已被禁用'];
-                }
+//                if ($machineData['status'] != 1) {
+//                    return ['code' => 109, 'msg' => '该机器已被禁用'];
+//                }
                 if ($machineData['cust_no'] == $custNo) {
-                    $url = \Yii::$app->params['userDomain'] . '/store.html?custNo=' . $custNo; // 跳转门店管理页面
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo; // 跳转门店管理页面
                 } elseif ($machineData['cust_no'] != $custNo) {
-                    $url = \Yii::$app->params['userDomain'] . '/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页面
+                    if (empty($machineData['lottery_id'])) {
+                        return ['code' => 109, 'msg' => '该设备还未确定出售彩种！请联系店主'];
+                    }
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页面
                 }
             }
         } else {
             if (empty($machineData)) {
                 return ['code' => 109, 'msg' => '该机器未激活！请联系店主'];
             } elseif ($machineData['status'] == 1) {
-                $url = \Yii::$app->params['userDomain'] . '/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页
-            } elseif ($machineData['status'] == 0) {
-                return ['code' => 109, 'msg' => '该机器已被禁用！请联系店主'];
+                if (empty($machineData['lottery_id'])) {
+                    return ['code' => 109, 'msg' => '该设备还未确定出售彩种！请联系店主'];
+                }
+                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页
+            } elseif ($machineData['status'] != 1) {
+                return ['code' => 109, 'msg' => '该设备已被禁用！请联系店主'];
             }
         }
         return ['code' => 600, 'msg' => '获取成功', 'data' => $url];
@@ -64,7 +70,7 @@ class StoreService {
      * @param type $sellValue
      * @return type
      */
-    public static function activeMachine($custNo, $terminalNum, $machineCode, $sellValue) {
+    public static function activeMachine($custNo, $terminalNum, $machineCode) {
         $terminal = Terminal::find()->select(['terminal_id', 'use_status'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
         if (empty($terminal)) {
             return ['code' => 109, 'msg' => '此终端码已被禁用'];
@@ -72,16 +78,16 @@ class StoreService {
         if ($terminal['use_status'] != 0) {
             return ['code' => 109, 'msg' => '此终端码已被绑定'];
         }
-        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
+        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num'])->where(['machine_code' => $machineCode, 'status' => 1])->asArray()->one();
         if ($machineData) {
-            return ['code' => 109, 'msg' => '该终端码已被激活绑定'];
+            return ['code' => 109, 'msg' => '该机器码已被激活绑定'];
         }
         $validateMachine = self::validateMachine($machineCode);
         if ($validateMachine['code'] != 600) {
             return ['code' => 109, 'msg' => '验签失败！请稍后再试'];
         }
         if ($validateMachine['online'] === false) {
-            return ['code' => 110, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
+            return ['code' => 109, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
         }
         $store = Store::findOne(['cust_no' => $custNo]);
         if (empty($store)) {
@@ -89,16 +95,16 @@ class StoreService {
             if ($storeData['code'] != 1) {
                 return ['code' => 109, 'msg' => $storeData['msg']];
             }
-            $channelNo = array_slice(explode('.', $storeData['cascadeId']),-2,1);
+            $channelNo = array_slice(explode('.', $storeData['data']['cascadeId']), -2, 1);
             $store = new Store();
             $store->cust_no = $custNo;
-            $store->channel_no = $channelNo;
-            $store->store_name = $storeData['storeName'];
-            $store->user_tel = $storeData['phone'];
-            $store->province = $storeData['province'];
-            $store->city = $storeData['city'];
-            $store->area = $storeData['conuntry'];
-            $store->address = $storeData['address'];
+            $store->channel_no = $channelNo[0];
+            $store->store_name = $storeData['data']['storeName'];
+            $store->user_tel = $storeData['data']['phone'];
+            $store->province = $storeData['data']['province'];
+            $store->city = $storeData['data']['city'];
+            $store->area = $storeData['data']['conuntry'];
+            $store->address = $storeData['data']['address'];
             $store->create_time = date('Y-m-d H:i:s');
         } elseif ($store->status == 2) {
             return ['code' => 109, 'msg' => '门店已被禁用停止权限，请联系渠道管理员'];
@@ -111,7 +117,7 @@ class StoreService {
             $machine->machine_code = $machineCode;
             $machine->cust_no = $custNo;
             $machine->channel_no = $store->channel_no;
-            $machine->lottery_value = $sellValue;
+//            $machine->lottery_value = $sellValue;
             $machine->ac_status = 1;
             $machine->online_status = 1;
             $machine->create_time = date('Y-m-d H:i:s');
@@ -131,7 +137,7 @@ class StoreService {
                 throw new Exception($bindingRet['msg']);
             }
             $trans->commit();
-            return ['code' => 600, 'msg' => '激活成功'];
+            return ['code' => 600, 'msg' => '激活成功', 'data' => ['custNo' => $custNo, 'terminalNum' => $terminalNum, 'machineCode' => $machineCode]];
         } catch (Exception $ex) {
             $trans->rollBack();
             return ['code' => 109, 'msg' => $ex->getMessage()];
@@ -552,14 +558,14 @@ class StoreService {
      * @return type
      */
     public static function bindingServer($terminalNum, $machineCode) {
-        $url = \Yii::$app->params['machine_service'] . '/binding';
+        $url = \Yii::$app->params['machine_service'] . 'binding';
         $md5Code = $terminalNum . $machineCode;
         $sign = Commonfun::getSign($md5Code);
         $postData = ['cust_no' => $terminalNum, 'machine_no' => $machineCode, 'sign' => $sign];
         $ret = \Yii::sendCurlPost($url, $postData);
         return $ret;
     }
-    
+
     /**
      * 终端号与机器码绑定
      * @param type $custNo
@@ -570,26 +576,26 @@ class StoreService {
      */
     public static function machineUnBinding($custNo, $terminalNum, $machineCode) {
         $machine = Machine::findOne(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode, 'status' => 1]);
-        if(empty($machine)) {
+        if (empty($machine)) {
             return ['code' => 109, 'msg' => '请确认该机器已激活'];
         }
         $db = \Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
             $machine->status = 2;
-            if(!$machine->save()) {
+            if (!$machine->save()) {
                 throw new Exception('解绑失败-设备');
             }
             $upTerminal = Terminal::updateAll(['use_status' => 0], ['terminal_num' => $terminalNum]);
-            if($upTerminal === false) {
+            if ($upTerminal === false) {
                 throw new Exception('解绑失败-终端');
             }
-            $machineUnBind = self::unBindingServer($custNo, $terminalNum, $machineCode);
-            if($machineUnBind['code'] != 600) {
+            $machineUnBind = self::unBindingServer($terminalNum, $machineCode);
+            if ($machineUnBind['code'] != 600) {
                 throw new Exception($machineUnBind['msg']);
             }
             $trans->commit();
-            return ['code' => 109, 'msg' => '解绑成功'];
+            return ['code' => 600, 'msg' => '解绑成功'];
         } catch (Exception $ex) {
             $trans->rollBack();
             return ['code' => 109, 'msg' => $ex->getMessage()];
@@ -603,7 +609,7 @@ class StoreService {
      * @return type
      */
     public static function unBindingServer($terminalNum, $machineCode) {
-        $url = \Yii::$app->params['machine_service'] . '/un_binding';
+        $url = \Yii::$app->params['machine_service'] . 'un_binding';
         $md5Code = $terminalNum . $machineCode;
         $sign = Commonfun::getSign($md5Code);
         $postData = ['cust_no' => $terminalNum, 'machine_no' => $machineCode, 'sign' => $sign];

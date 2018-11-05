@@ -14,7 +14,7 @@ class StoreController extends Controller {
      */
     public function actionToJumpPage() {
         $request = \Yii::$app->request;
-        $custNo = $request->get('custNo', '');
+        $custNo = $request->get('myCustNo', '');
         $terminalNum = $request->get('terminalNum', '');
         if(empty($terminalNum)) {
             return $this->jsonError(100, '参数缺失');
@@ -35,15 +35,15 @@ class StoreController extends Controller {
         $custNo = $request->post('custNo', '');
         $terminalNum = $request->post('terminalNum', '');
         $machineCode = $request->post('machineCode', '868926033601029000000000');
-        $sellValue = $request->post('sellValue', '');
-        if(empty($custNo) || empty($terminalNum) || empty($machineCode) || empty($sellValue)) {
+//        $sellValue = $request->post('sellValue', '');
+        if(empty($custNo) || empty($terminalNum) || empty($machineCode)) {
             return $this->jsonError(100, '参数缺失');
         }
-        $ret = StoreService::activeMachine($custNo, $terminalNum, $machineCode, $sellValue);
+        $ret = StoreService::activeMachine($custNo, $terminalNum, $machineCode);
         if($ret['code'] != 600) {
             return $this->jsonError($ret['code'], $ret['msg']);
         }
-        return $this->jsonResult(600, $ret['msg'], true);
+        return $this->jsonResult(600, $ret['msg'], $ret['data']);
     }
     
     /**

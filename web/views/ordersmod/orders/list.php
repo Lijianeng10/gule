@@ -63,8 +63,7 @@
                 rownumbers: true,
                 loadMsg: '数据加载中...',
                 toolbar: '#tb',
-                columns: [
-                    [ {
+				frozenColumns:[[{
                         field:'order_code',
                         title: '订单编号',
                         width: 160,
@@ -76,7 +75,10 @@
                         width: 70,
                         align: 'center',
                         sortable: true
-                    }, {
+                    }]
+				],
+                columns: [
+                    [ {
                         field:'order_num',
                         title: '商品总数',
                         width: 70,
@@ -149,14 +151,14 @@
                     }, {
                         field: 'opt',
                         title: '操作',
-                        width: 130,
+                        width: 160,
                         align: 'center',
                         formatter: optFormatter
                     }]
                 ],
                 onLoadSuccess:function(data){
-                    $("a[name='sure_send']").linkbutton({text:'发货'});
-					$("a[name='read_user']").linkbutton({text:'查看'});
+                    $("a[name='sure_send']").linkbutton({text:'发货',iconCls:'fa fa-edit'});
+					$("a[name='read_user']").linkbutton({text:'查看',iconCls:'fa fa-search'});
                 }
             });
 			
