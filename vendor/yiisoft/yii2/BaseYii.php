@@ -550,7 +550,8 @@ class BaseYii
         curl_setopt($ch, CURLOPT_URL, $surl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
-    
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);//超时
+
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         //执行并获取HTML文档内容
         $output = curl_exec($ch);

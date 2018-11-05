@@ -59,7 +59,7 @@
                 pagination: true,
                 pageSize: 20,
                 singleSelect:true,
-                fitColumns: true,
+                // fitColumns: true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
                 toolbar: '#tb',

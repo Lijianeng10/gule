@@ -15,7 +15,7 @@
                     <span style="font-size: 18px;color:blue">终端号：<?php echo $num;?></span>
                 </td>
                 <td style="padding-left: 50px;">
-                    <div><a href="#" class="easyui-linkbutton info" onclick="dwn();">下载保存</a></div>
+                    <div><a href="#" class="easyui-linkbutton primary" onclick="dwn();">下载保存</a></div>
                 </td>
             </tr>
         </tbody>
