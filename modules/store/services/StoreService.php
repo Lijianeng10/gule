@@ -202,20 +202,11 @@ class StoreService {
         foreach ($storeLottery as $lottery) {
             $lottData[] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
             $valueData[] = $lottery['lottery_value'];
-            if (array_key_exists($lottery['lottery_value'], $lotteryValue)) {
-                if (!array_key_exists($lottery['lottery_id'], $lotteryValue['lottery'])) {
-                    $lotteryValue[$lottery['lottery_value']]['lottery'][$lottery['lottery_id']] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
-                }
-            } else {
-                $lotteryValue[$lottery['lottery_value']]['lottery'][$lottery['lottery_id']] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
-            }
-        }
-        foreach ($lotteryValue as $k => $value) {
-            $sku[$k] = array_values($value['lottery']); 
+            $lotteryValue[$lottery['lottery_value']][] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
         }
         $data['lottery'] = $lottData;
         $data['value'] = $valueData;
-        $data['lotteryValue'] = $sku;
+        $data['lotteryValue'] = $lotteryValue;
         return $data;
     }
 
