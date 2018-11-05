@@ -23,6 +23,9 @@ class StoreController extends Controller {
         $status = $request->post('status');
 		$start_time = $request->post('start_time');
 		$end_time = $request->post('end_time');
+        $province = $request->post('province');
+        $city = $request->post('city');
+        $area = $request->post('area');
 
         $where = ['and'];
         if (!empty($cust_no)) {
@@ -37,7 +40,15 @@ class StoreController extends Controller {
 		if(!empty($end_time)){
             $where[] = ['<=','create_time',$end_time];
         }
-		
+        if(!empty($province)){
+            $where[] = ['province' => $province];
+        }
+        if(!empty($city)){
+            $where[] = ['city' => $city];
+        }
+        if(!empty($area)){
+            $where[] = ['area' => $area];
+        }
 		//判断登陆账号是否为渠道账户
 		if($session['admin']['type'] == 1){
 			$where[] = ['channel_no' => $session['admin']['admin_name']];

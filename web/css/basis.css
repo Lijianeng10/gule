@@ -81,6 +81,14 @@ a.buttomspan:hover{
 .tb-column .tb_item .easyui-datetimebox {
     width: 150px;
 }
+/**
+省市区筛选框样式
+ */
+#element_id select{
+    width: 120px;!important;
+    height: 26px;!important;
+    border-radius: 0;!important;
+}
 
 
 

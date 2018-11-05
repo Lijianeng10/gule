@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="/js/kindeditor/themes/default/default.css" />
         <script charset="utf-8" src="/js/kindeditor/kindeditor-all.js"></script>
         <script charset="utf-8" src="/js/kindeditor/lang/zh_CN.js"></script>
+        <script charset="utf-8" src="/js/jquery.cxselect.min.js"></script>
 	</head>
 <body style="height: 100%;">
     <script type="text/javascript">
@@ -28,6 +29,9 @@
                         'status': $.trim($('input[name="status"]').val()),
                         'start_time': $.trim($('input[name="start_time"]').val()),
                         'end_time': $.trim($('input[name="end_time"]').val()),
+                        'province': $.trim($('select[name="province"]').val()),
+                        'city': $.trim($('select[name="city"]').val()),
+                        'area': $.trim($('select[name="area"]').val()),
                     });
                 },
             };
@@ -176,11 +180,22 @@
                 -
                 <input type="text" name="end_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s');?>">
             </div>
+            <div class="tb_item" id="element_id">
+                <span>所属区域：</span>
+                <select class="province" name="province"></select>
+                <select class="city" name="city"></select>
+                <select class="area" name="area"></select>
+            </div>
         </div>
 
     </div>
     <div id="dlg"></div>
     <script>
+        $('#element_id').cxSelect({
+            url: '/js/cityData.min.json',
+            selects: ['province', 'city', 'area'],
+            emptyStyle: 'none'
+        });
         function change_status(store_id,status){
             var statusStr = "启用";
             if(status==1){
