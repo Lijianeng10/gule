@@ -18,9 +18,10 @@ class TimeController extends Controller {
             $upStr= '';
             Machine::updateAll(['online_status'=>0]);
             foreach ($ret['data'] as $k=>$v){
-                $upStr .= "update machine set online_status = 1 where machine_code = {$v['machine_no']};";
+                $upStr .= "update machine set online_status = 1 where machine_code = {$v['machine_no']} and status in (0,1);";
             }
             $db =  Yii::$app->db->createCommand($upStr)->execute();
+            return $this->jsonResult(600,'执行成功'.$db.'条');
         }
         return $this->jsonResult(600,'执行成功');
     }
