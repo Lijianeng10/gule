@@ -261,7 +261,7 @@ class StoreService {
         $trans = $db->beginTransaction();
         try {
             $storeLottery = StoreLottery::find()->select(['stock'])->where(['lottery_id' => $machine->lottery_id, 'lottery_value' => $machine->lottery_value, 'cust_no' => $custNo])->asArray()->one();
-            if ($storeLottery['stock'] < $stock) {
+            if ($storeLottery['stock'] < bcadd($stock, $machine->stock)) {
                 throw new Exception('门店此彩种库存不足');
             }
             if ($activeType == 2) {
@@ -492,7 +492,7 @@ class StoreService {
             $payRecord->lottery_id = $machine['lottery_id'];
             $payRecord->buy_nums = $buyNums;
             $payRecord->lottery_value = $machine['lottery_value'];
-            $payRecord->outer_no = $qbRet['orderNo']; //钱包支付二维码返回的唯一交易单号
+            $payRecord->outer_code = $qbRet['orderNo']; //钱包支付二维码返回的唯一交易单号
             $payRecord->save();
             $trans->commit();
             return ['code' => 600, 'msg' => '下单成功', 'data' => ['create_time' => $payRecord->create_time, 'order_code' => $payRecord->order_code, 'pay_money' => $total, 'pay_url' => $qbRet['pay_url']]];
@@ -620,6 +620,21 @@ class StoreService {
         $md5Code = $terminalNum . $machineCode;
         $sign = Commonfun::getSign($md5Code);
         $postData = ['cust_no' => $terminalNum, 'machine_no' => $machineCode, 'sign' => $sign];
+        $ret = \Yii::sendCurlPost($url, $postData);
+        return $ret;
+    }
+    
+    /**
+     * 校验终端码跟设备机器码的绑定关系
+     * @param type $terminalNum
+     * @param type $machineCode
+     * @return type
+     */
+    public static function bindingCheck($terminalNum, $machineCode) {
+        $url = \Yii::$app->params['machine_service'] . '/binding_check';
+        $md5Code = $terminalNum . $machineCode;
+        $sign = Commonfun::getSign($md5Code);
+        $psotData = ['machine_no' => $machineCode, 'cust_no' => $terminalNum, 'sign' => $sign];
         $ret = \Yii::sendCurlPost($url, $postData);
         return $ret;
     }
