@@ -178,7 +178,7 @@ class StoreService {
      * @return type
      */
     public static function getLottery($custNo) {
-        $storeLottery = StoreLottery::find()->select(['l.lottery_id', 'lottery_value', 'l.lottery_name'])
+        $storeLottery = StoreLottery::find()->select(['l.lottery_id', 'l.lottery_value', 'l.lottery_name'])
                 ->innerJoin('lottery l', 'l.lottery_id = store_lottery.lottery_id')
                 ->where(['store_lottery.cust_no' => $custNo])
                 ->andWhere(['>', 'store_lottery.stock', 0])
