@@ -27,6 +27,7 @@ class PayTool {
             'custNo' => $custNo,
             'money' => $money,
             'attach' => $attach,
+            'mchOrderNo' => $attach,
             'model' => '00',
             'expireTime' => '5',
             'returnType' => '2',
@@ -43,7 +44,7 @@ class PayTool {
      * @return type
      */
     public static function getSign($post_data) {
-        array_multisort($post_data);
+        ksort($post_data);
         $str = '';
         $flag = 1;
         foreach ($post_data as $k => $v) {

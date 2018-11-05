@@ -25,11 +25,15 @@ class ViewsController extends Controller {
 		$request = \Yii::$app->request;
         $cust_no = $request->get('cust_no');
 		
+		$where_machine = ['and'];
+		$where_machine[] = ['machine.cust_no' => $cust_no];
+		$where_machine[] = ['machine.status' => 1];
+		
 		//在售彩种信息
 		$machineLotteryData = Machine::find()
 							->select(["machine.*","lottery.lottery_name","lottery.lottery_img"])
 							->leftJoin("lottery","lottery.lottery_id = machine.lottery_id")
-							->where(['machine.cust_no' => $cust_no])->asArray()->all();
+							->where($where_machine)->asArray()->all();
 							
 		//可选彩种信息
         $storeLotteryData = StoreLottery::find()

@@ -543,15 +543,15 @@ class BaseYii
     }
     
     public static function sendCurlPost($surl,$post_data){
-    
         //初始化
         $ch = curl_init();
         //设置选项，包括URL
         curl_setopt($ch, CURLOPT_URL, $surl);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);//超时
-
+        $post_data = !is_array($post_data) ? $post_data : http_build_query($post_data);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         //执行并获取HTML文档内容
         $output = curl_exec($ch);
