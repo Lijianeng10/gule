@@ -26,7 +26,7 @@ class StoreService {
      * @return type
      */
     public static function toJumpPage($custNo, $terminalNum) {
-        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
+        $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status', 'lottery_id'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
         if ($custNo) {
             if (empty($machineData)) {
                 $terminal = Terminal::find()->select(['terminal_num'])->where(['terminal_num' => $terminalNum, 'use_status' => 0])->asArray()->one();
@@ -48,9 +48,12 @@ class StoreService {
             if (empty($machineData)) {
                 return ['code' => 109, 'msg' => '该机器未激活！请联系店主'];
             } elseif ($machineData['status'] == 1) {
+                if(empty($machineData['lottery_id'])) {
+                    return ['code' => 109, 'msg' => '该设备还未确定出售彩种！请联系店主'];
+                }
                 $url = \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页
-            } elseif ($machineData['status'] == 0) {
-                return ['code' => 109, 'msg' => '该机器已被禁用！请联系店主'];
+            } elseif ($machineData['status'] != 1) {
+                return ['code' => 109, 'msg' => '该设备已被禁用！请联系店主'];
             }
         }
         return ['code' => 600, 'msg' => '获取成功', 'data' => $url];
