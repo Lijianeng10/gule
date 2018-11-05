@@ -25,9 +25,7 @@ class ViewsController extends Controller {
 		$request = \Yii::$app->request;
         $cust_no = $request->get('cust_no');
 		
-		$where_machine = ['and'];
-		$where_machine[] = ['machine.cust_no' => $cust_no];
-		$where_machine[] = ['machine.status' => 1];
+		$where_machine = ['and',['machine.cust_no' => $cust_no],['machine.status' => 1]];
 		
 		//在售彩种信息
 		$machineLotteryData = Machine::find()
