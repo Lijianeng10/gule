@@ -30,6 +30,9 @@ $config = [
         ],
         'store' => [
             'class' => 'app\modules\store\store',
+        ],
+        'cron' => [
+            'class' => 'app\modules\cron\cron',
         ]
     ],
     'components' => [
