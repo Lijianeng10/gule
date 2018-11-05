@@ -191,6 +191,10 @@ class StoreController extends Controller {
         return $this->jsonResult(600, $ret['msg'], $ret['data']);
     }
     
+    /**
+     * 解绑
+     * @return type
+     */
     public function actionMachineUnBinding() {
         $request = \Yii::$app->request;
         $custNo = $request->post('custNo', '');
@@ -201,6 +205,17 @@ class StoreController extends Controller {
             return $this->jsonError(109, $ret['msg']);
         }
         return $this->jsonResult(600, $ret['msg'], true);
+    }
+    
+    /**
+     * 获取广告列表
+     * @return type
+     */
+    public function actionGetBanner() {
+        $request = \Yii::$app->request;
+        $size = $request->post('size', 10);
+        $bannerData = StoreService::getBanner($size);
+        return $this->jsonResult(600, '获取成功', $bannerData);
     }
     
 }

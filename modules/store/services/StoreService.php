@@ -16,6 +16,7 @@ use app\modules\common\models\Order;
 use app\modules\common\models\OrderDetail;
 use app\modules\tools\helpers\PayTool;
 use app\modules\common\helpers\Constants;
+use app\modules\common\models\Banner;
 
 class StoreService {
 
@@ -642,6 +643,16 @@ class StoreService {
         $psotData = ['machine_no' => $machineCode, 'cust_no' => $terminalNum, 'sign' => $sign];
         $ret = \Yii::sendCurlPost($url, $postData);
         return $ret;
+    }
+    
+    /**
+     * 获取广告页
+     * @return type
+     */
+    public static function getBanner($size) {
+        $field = ['banner_id', 'pic_name', 'pic_url', 'jump_type', 'jump_url','jump_title'];
+        $bananerData = Banner::find()->select($field)->where(['type' => 1, 'status' => 1])->limit($size)->orderBy('create_time desc')->asArray()->all();
+        return $bananerData;
     }
 
 }
