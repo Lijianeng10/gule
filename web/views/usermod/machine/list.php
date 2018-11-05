@@ -36,7 +36,7 @@
                 fit: true,
                 pagination: true,
                 pageSize: 20,
-                // singleSelect:true,
+                singleSelect:true,
                 fitColumns: true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
@@ -51,7 +51,7 @@
                     },{
                         field: 'machine_code',
                         title: '机器设备号',
-                        width: 80,
+                        width: 120,
                         sortable: true,
                         align: 'center'
                     },{
@@ -68,7 +68,7 @@
                     },{
                         field: 'online_status',
                         title: '机器状态',
-                        width: 40,
+                        width: 50,
                         align: 'center',
                         sortable: true,
                         formatter: lineStatusFormatter
@@ -80,13 +80,13 @@
                     },{
                         field: 'lottery_value',
                         title: '销售面额',
-                        width: 80,
+                        width: 50,
                         sortable: true,
                         align: 'center'
                     },{
                         field: 'stock',
                         title: '剩余库存',
-                        width: 80,
+                        width: 50,
                         sortable: true,
                         align: 'center'
                     },{
@@ -121,10 +121,10 @@
             });
             function lineStatusFormatter(value,row){
                 var str= "";
-                if(row.online_status ==1){
-                    str ="在线"
+                if(row.status ==1){
+                    str = "<img style='height: 25px' src='/images/on-line.png'  title='在线'>";
                 } else{
-                    str ="离线"
+                    str = "<img style='height: 25px' src='/images/off-line.png' title='离线'>";
                 }
                 return str;
             }

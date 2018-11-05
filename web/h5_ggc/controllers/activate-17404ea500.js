@@ -1,0 +1,1 @@
+"use strict";$(function(){var n=functions.getQueryString("terminalNum"),e=functions.getQueryString("custNo");$(".page-activate > button").click(function(){var t=$(".code > input").val();network.request({url:network.api.activeMachine,data:{custNo:e,terminalNum:n,machineCode:t}}).then(function(t){functions.toast("激活成功")})})});
