@@ -413,10 +413,11 @@ class StoreService {
      * @return type
      */
     public static function getMachineGoods($custNo, $terminalNum, $machineCode) {
-        $field = ['terminal_num', 'machine_code', 'cust_no', 'l.lottery_value', 'stock', 'l.lottery_name', 'l.lottery_img'];
+        $field = ['terminal_num', 'machine_code', 'machine.cust_no', 'l.lottery_value', 'machine.stock', 'l.lottery_name', 'l.lottery_img', 'sl.stock all_stock'];
         $goods = Machine::find()->select($field)
                 ->innerJoin('lottery l', 'l.lottery_id = machine.lottery_id')
-                ->where(['machine.status' => 1, 'online_status' => 1, 'ac_status' => 1, 'cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode])
+                ->innerJoin('store_lottery sl', 'sl.lottery_id = machine.lottery_id and sl.cust_no = machine.cust_no')
+                ->where(['machine.status' => 1, 'online_status' => 1, 'ac_status' => 1, 'machine.cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode])
                 ->asArray()
                 ->one();
         if (empty($goods)) {
