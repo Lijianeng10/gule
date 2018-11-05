@@ -249,7 +249,7 @@ class StoreService {
             return ['code' => 109, 'msg' => '请确认此设备已激活'];
         }
         if ($activeType == 1) {
-            $update = ['stock' => new Expression('stock+' . $stock)];
+            $update = ['stock' => $stock];
         } else {
             if ($stock > $machine->stock) {
                 return ['code' => 109, 'msg' => '机箱内的库存不足扣除量'];
@@ -261,7 +261,7 @@ class StoreService {
         $trans = $db->beginTransaction();
         try {
             $storeLottery = StoreLottery::find()->select(['stock'])->where(['lottery_id' => $machine->lottery_id, 'lottery_value' => $machine->lottery_value, 'cust_no' => $custNo])->asArray()->one();
-            if ($storeLottery['stock'] < bcadd($stock, $machine->stock)) {
+            if ($storeLottery['stock'] < $stock) {
                 throw new Exception('门店此彩种库存不足');
             }
             if ($activeType == 2) {
