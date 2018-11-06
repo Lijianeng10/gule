@@ -164,9 +164,11 @@ class AdminController extends Controller {
             if (isset($post[$k])) {
                 if ($k == 'password') {
                     $admin->$k = md5($post['admin_name_new'].$post[$k]);
-                } elseif ($k != 'admin_role') {
+                }elseif ($k != 'admin_role') {
                     $admin->$k = $post[$k];
                 }
+            }elseif($k == 'admin_name'){
+                $admin->$k = $post['admin_name_new'];
             }
         }
         $admin->create_time = date('Y-m-d H:i:s');
