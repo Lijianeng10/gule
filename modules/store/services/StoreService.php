@@ -36,8 +36,12 @@ class StoreService {
                 }
                 $url = \Yii::$app->params['userDomain'] . '/h5_ggc/activate.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo; // 跳转激活页面
             } else {
-                if ($machineData['online_status'] != 1) {
-                    return ['code' => 109, 'msg' => '请确认该设备已接通电源'];
+                $onlineStatus = self::validateMachine($machineData['machine_code']);
+                if ($validateMachine['code'] != 600) {
+                    return ['code' => 109, 'msg' => '验签失败！请稍后再试'];
+                }
+                if ($validateMachine['online'] === false) {
+                    return ['code' => 109, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
                 }
                 if ($machineData['cust_no'] == $custNo) {
                     $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo; // 跳转门店管理页面
@@ -52,8 +56,12 @@ class StoreService {
             if (empty($machineData)) {
                 return ['code' => 109, 'msg' => '该机器未激活！请联系店主'];
             } elseif ($machineData['status'] == 1) {
-                if ($machineData['online_status'] != 1) {
-                    return ['code' => 109, 'msg' => '请确认该设备已接通电源'];
+                $onlineStatus = self::validateMachine($machineData['machine_code']);
+                if ($validateMachine['code'] != 600) {
+                    return ['code' => 109, 'msg' => '验签失败！请稍后再试'];
+                }
+                if ($validateMachine['online'] === false) {
+                    return ['code' => 109, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
                 }
                 if (empty($machineData['lottery_id'])) {
                     return ['code' => 109, 'msg' => '该设备还未确定出售彩种！请联系店主'];
@@ -90,7 +98,6 @@ class StoreService {
         if ($validateMachine['code'] != 600) {
             return ['code' => 109, 'msg' => '验签失败！请稍后再试'];
         }
-        print_r($validateMachine);die;
         if ($validateMachine['online'] === false) {
             return ['code' => 109, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
         }
@@ -186,13 +193,13 @@ class StoreService {
                 ->andWhere(['>', 'store_lottery.stock', 0])
                 ->asArray()
                 ->all();
-        if($terminalNum && $machineCode) {
+        if ($terminalNum && $machineCode) {
             $currentLottery = Machine::find()->select(['l.lottery_id', 'l.lottery_value', 'l.lottery_name'])
                     ->innerJoin('lottery l', 'l.lottery_id = machine.lottery_id')
                     ->where(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode])
                     ->asArray()
                     ->one();
-            if(!empty($currentLottery)) {
+            if (!empty($currentLottery)) {
                 $data['currentLottery'] = $currentLottery;
             }
         }
@@ -419,15 +426,18 @@ class StoreService {
      * @return type
      */
     public static function getMachineGoods($custNo, $terminalNum, $machineCode) {
-        $field = ['terminal_num', 'machine_code', 'machine.cust_no', 'l.lottery_value', 'machine.stock', 'l.lottery_name', 'l.lottery_img', 'sl.stock all_stock'];
+        $field = ['terminal_num', 'machine_code', 'machine.cust_no', 'l.lottery_value', 'machine.stock', 'l.lottery_name', 'l.lottery_img', 'sl.stock all_stock', 'online_status'];
         $goods = Machine::find()->select($field)
                 ->innerJoin('lottery l', 'l.lottery_id = machine.lottery_id')
                 ->innerJoin('store_lottery sl', 'sl.lottery_id = machine.lottery_id and sl.cust_no = machine.cust_no')
-                ->where(['machine.status' => 1, 'online_status' => 1, 'ac_status' => 1, 'machine.cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode])
+                ->where(['machine.status' => 1, 'ac_status' => 1, 'machine.cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode])
                 ->asArray()
                 ->one();
         if (empty($goods)) {
             return ['code' => 109, 'msg' => '该设备可能还未激活！请联系店主'];
+        }
+        if($goods['online_status'] != 1) {
+            return ['code' => 109, 'msg' => '该设备未接通电源！请联系店主'];
         }
         return ['code' => 600, 'msg' => '获取成功', 'data' => $goods];
     }
@@ -629,7 +639,7 @@ class StoreService {
         $ret = \Yii::sendCurlPost($url, $postData);
         return $ret;
     }
-    
+
     /**
      * 校验终端码跟设备机器码的绑定关系
      * @param type $terminalNum
@@ -644,13 +654,13 @@ class StoreService {
         $ret = \Yii::sendCurlPost($url, $postData);
         return $ret;
     }
-    
+
     /**
      * 获取广告页
      * @return type
      */
     public static function getBanner($size) {
-        $field = ['banner_id', 'pic_name', 'pic_url', 'jump_type', 'jump_url','jump_title'];
+        $field = ['banner_id', 'pic_name', 'pic_url', 'jump_type', 'jump_url', 'jump_title'];
         $bananerData = Banner::find()->select($field)->where(['type' => 1, 'status' => 1])->limit($size)->orderBy('create_time desc')->asArray()->all();
         return $bananerData;
     }
