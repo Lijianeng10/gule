@@ -57,7 +57,7 @@ class OrdersController extends Controller {
         $format = date('Y-m-d H:i:s');
         //新增订单主表数据 默认已支付
         $order = new Order();
-        $order->order_code = 'GGC'.date('YmdHis').rand(10,99);
+        $order->order_code = $this->getOrderCode();
         $order->cust_no = $store->cust_no;
         $order->order_num = $order_num;
         $order->order_money = $order_money;
@@ -241,5 +241,15 @@ class OrdersController extends Controller {
         }
 
         return $this->jsonResult(600, '操作成功', true);
+    }
+    /**
+     * 获取订单code
+     */
+    public function getOrderCode(){
+        $code = 'GGC'.date('YmdHis').rand(1000,9999);
+        while (Order::findOne(['order_code'=>$code])){
+           $this->getOrderCode();
+        }
+        return $code;
     }
 }
