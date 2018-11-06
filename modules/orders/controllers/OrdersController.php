@@ -44,7 +44,7 @@ class OrdersController extends Controller {
         $order_num = $request->post('order_num');
         $order_money = $request->post('order_money');
         if(empty($custNo)||empty($consignee_name)||empty($consignee_tel)||empty($consignee_address)){
-            return $this->jsonError(109,'参数缺失');
+            return $this->jsonError(109,'网点数据或收货人信息缺失');
         }
         if(empty($content)){
             return $this->jsonError(109,'请选择有效的彩种数据');

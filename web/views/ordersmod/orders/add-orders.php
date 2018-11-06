@@ -26,7 +26,7 @@
         </div>
         <div class="form-item" style="width:80%">
             <label for="" class="label-top">网点信息：</label>
-            <input type="text" name="cust_no_new" class="easyui-textbox" prompt="请输入网点编号、手机号" style="width:60%">
+            <input type="text" name="cust_no_new" class="easyui-textbox" prompt="请输入网点编号、手机号" style="width:60%" data-options="required:true">
         </div>
         <div class="form-item" style="width:80%">
             <label for="" class="label-top" style="font-size:16px;font-weight: bold">彩票信息</label>
@@ -45,19 +45,19 @@
 				<tr>
 					<td style="width:15%" style="width:30px">1</td>
 					<td style="width:25%">
-						<input class="easyui-validatebox easyui-combobox" style="width:150px" id="lottery_id1" name="lottery_id1">
+						<input class="easyui-validatebox easyui-combobox" style="width:150px" id="lottery_id1" name="lottery_id1" data-options="required:true">
 					</td>
 					<!--<td style="width:15%">
 						<input class="easyui-validatebox easyui-combobox" style="width:80px" id="sub_value1" name="sub_value1">
 					</td>-->
 					<td style="width:17%">
-						<input type="text" id="nums1" name="nums1" style="width:100px" class="easyui-textbox" >
+						<input type="text" id="nums1" name="nums1" style="width:100px" class="easyui-textbox" data-options="required:true" >
 					</td>
 					<td style="width:17%">
-						<input type="text" id="sheet_nums1" style="width:100px" name="sheet_nums1" class="easyui-textbox" >
+						<input type="text" id="sheet_nums1" style="width:100px" name="sheet_nums1" class="easyui-textbox" data-options="required:true" >
 					</td>
 					<td style="width:17%">
-						<input type="text" id="price1" name="price1" style="width:100px" class="easyui-textbox" >
+						<input type="text" id="price1" name="price1" style="width:100px" class="easyui-textbox" data-options="required:true">
 					</td>
 				</tr>
             </table>
@@ -67,15 +67,15 @@
         </div>
         <div class="form-item" style="width:80%">
             <label for="" class="label-top">收货人：</label>
-            <input type="text" name="consignee_name" class="easyui-textbox" prompt="请输入收货人姓名" style="width:60%">
+            <input type="text" name="consignee_name" class="easyui-textbox" prompt="请输入收货人姓名" style="width:60%" data-options="required:true">
         </div>
         <div class="form-item" style="width:80%">
             <label for="" class="label-top">手机号：</label>
-            <input type="text" name="consignee_tel" class="easyui-textbox" prompt="请输入收货人手机号" style="width:60%">
+            <input type="text" name="consignee_tel" class="easyui-textbox" prompt="请输入收货人手机号" style="width:60%" data-options="required:true">
         </div>
         <div class="form-item" style="width:80%">
             <label for="" class="label-top">收货地址：</label>
-            <input type="text" name="consignee_address" class="easyui-textbox" prompt="请输入收货地址" style="width:60%">
+            <input type="text" name="consignee_address" class="easyui-textbox" prompt="请输入收货地址" style="width:60%" data-options="required:true">
         </div>
         <div class="form-item">
             <button class="easyui-linkbutton primary" style="margin-left: 10px;" id="sureBtn">提 交</button>
