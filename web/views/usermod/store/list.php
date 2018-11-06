@@ -41,76 +41,67 @@
                 fit: true,
                 pagination: true,
                 pageSize: 20,
-                // singleSelect:true,
-                fitColumns: true,
+                singleSelect:true,
+                // fitColumns: true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
                 toolbar: '#tb',
                 columns: [
                     [{
                         field: 'cust_no',
-                        title: '网点编号',
-                        width: 50,
+                        title: '网点信息',
+                        width: 150,
                         align: 'center',
-                        sortable: true
-                    }, {
-                        field: 'user_tel',
-                        title: '手机号',
-                        width: 50,
-                        align: 'center',
-                    },{
-                        field: 'store_name',
-                        title: '网点名称',
-                        width: 50,
-                        align: 'center',
+                        formatter:infoFormatter
                     },{
                         field: 'channel_no',
                         title: '所属渠道',
-                        width: 50,
+                        width: 100,
                         align: 'center',
                     },{
                         field: 'code',
                         title: '代销证编号',
-                        width: 50,
+                        width: 200,
                         align: 'center',
+                        hidden:true
                     },{
                         field: 'area',
                         title: '所属区域',
-                        width: 70,
+                        width: 200,
                         align: 'center',
                         formatter:areaFormatter
                     },{
                         field: 'agents',
                         title: '区域经理信息',
-                        width: 70,
+                        width: 200,
                         align: 'center',
                     },{
                         field: 'machineNums',
-                        title: '机器总数',
-                        width: 50,
-                        sortable: true,
+                        title: '总机器数',
+                        width: 60,
+                        // sortable: true,
                         align: 'center',
                     },{
                         field: 'saleMoneys',
                         title: '总销量(元)',
-                        width: 50,
+                        width: 80,
                         sortable: true,
                         align: 'center',
                     },{
                         field: 'status',
                         title: '状态',
-                        width: 50,
+                        width: 60,
                         align: 'center',
                         formatter: statusFormatter
                     },{
                         field: 'create_time',
                         title: '开户时间',
-                        width: 70,
+                        width: 150,
                         align: 'center',
                     },{
                         field: 'opt',
                         title: '操作',
-                        width: 100,
+                        width: 200,
                         align: 'center',
                         formatter: optFormatter,
                     }
@@ -123,6 +114,12 @@
 					$("a[name='storedetail']").linkbutton({text:'查看',iconCls:'fa fa-search'});
                 }
             });
+            function infoFormatter(value, row) {
+                str = '';
+                str+= row.store_name+'<br>'+row.cust_no+'<br>'+row.user_tel;
+                return str;
+            }
+
             function areaFormatter(value, row) {
                 if(row.province!=null && row.city!=null && row.area!=null){
                     return "<span>" +row.province+'-'+row.city + '-' + row.area + "</span>";
