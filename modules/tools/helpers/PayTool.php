@@ -14,7 +14,7 @@ class PayTool {
      * @param type $money
      * @return boolean
      */
-    public static function createQbThePublic($custNo, $orderCode, $money) {
+    public static function createQbThePublic($custNo, $orderCode, $money, $terminalNum, $machineCode) {
         $surl = 'https://open.goodluckchina.net/open/pay/buildPayCode';
         $attach = $orderCode;
         $qbAppId = \Yii::$app->params['java_appId'];
@@ -32,6 +32,7 @@ class PayTool {
             'expireTime' => '5',
             'returnType' => '2',
             'callBackUrl' => $qbCallBack,
+            'returnUrl' => \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo . '&machineCode=' . $machineCode,
         ];
         $post_data['sign'] = self::getSign($post_data);
         $qbret = \Yii::sendCurlPost($surl, $post_data);

@@ -48,7 +48,7 @@ class StoreService {
                     return $url;
                 }
                 if ($machineData['cust_no'] == $custNo) {
-                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?myCustNo=' . $custNo; // 跳转门店管理页面
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo; // 跳转门店管理页面
                     return $url;
                 } elseif ($machineData['cust_no'] != $custNo) {
                     if (empty($machineData['lottery_id'])) {
@@ -509,7 +509,7 @@ class StoreService {
         $db = \Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
-            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total);
+            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total, $terminalNum, $machineCode);
             if ($createOrder['code'] != 600) {
                 throw new Exception('下单失败-记录');
             }
