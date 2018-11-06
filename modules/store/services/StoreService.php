@@ -344,6 +344,7 @@ class StoreService {
         $payRecord->create_time = date('Y-m-d H:i:s');
         $payRecord->pay_type = $payType;
         if (!$payRecord->save()) {
+            print_r($payRecord->getErrors());die;
             return ['code' => 109, 'msg' => '交易记录生成失败'];
         }
         return ['code' => 600, 'msg' => '交易记录生成成功', 'recordId' => $payRecord->pay_record_id, 'orderCode' => $payRecord->order_code];
@@ -509,12 +510,13 @@ class StoreService {
         $db = \Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
-            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total, $terminalNum, $machineCode);
+            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total);
             if ($createOrder['code'] != 600) {
+                
                 throw new Exception('下单失败-记录');
             }
             $payRecord = PayRecord::findOne(['pay_record_id' => $createOrder['recordId']]);
-            $qbRet = PayTool::createQbThePublic($custNo, $createOrder['orderCode'], $total);
+            $qbRet = PayTool::createQbThePublic($custNo, $createOrder['orderCode'], $total, $terminalNum, $machineCode);
             if ($qbRet["code"] != 1) {
                 $qbMsg = isset($qbRet['msg']) ? $qbRet['msg'] : '';
                 $msg = '下单失败！！' . $qbMsg;
