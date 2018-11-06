@@ -82,6 +82,7 @@
         </div>
 		
 		<input type="hidden" name="count" id="count" value="1">
+		<input type="hidden" name="lottery_id_str" id="lottery_id_str" value="">
     </form>
 </div>
 <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
@@ -91,15 +92,53 @@
 		toAdd();
 		function toAdd(){
 			var count = parseFloat($("#count").val());
+			var lottery_id_str = $("#lottery_id_str").val();
 				
 			//彩种下拉框
 			$('#lottery_id' + count).combobox({
-				url:'/ordersmod/orders/get-lottery',
+				url:'/ordersmod/orders/get-lottery?lottery_id_str='+lottery_id_str,
 				valueField:'id',
 				textField:'text',
 				panelHeight:'auto',
 				editable:false,//不可编辑，只能选择
+				onSelect: function (row) {
+					if (row.id != '') {
+						var lottery_id_str = $("#lottery_id_str").val();
+						var lottery_id = $("#lottery_id" + count).val();
+						if(lottery_id != ''){
+							var lottery_id_str_new='';
+							lottery_id_str=lottery_id_str.substring(0,lottery_id_str.length-1)
+							var arr = lottery_id_str.split(',');
+							for(var i in arr){
+								if(arr[i]!=lottery_id){
+									lottery_id_str_new+=arr[i]+",";
+								}
+							}
+							lottery_id_str_new = lottery_id_str_new + row.id + ',';
+							$("#lottery_id_str").val(lottery_id_str_new);
+						}else{
+							var lottery_id_str_new = lottery_id_str + row.id + ',';
+							$("#lottery_id_str").val(lottery_id_str_new);
+						}
+					}
+				},
+				onChange:function (n,o) {
+					var count_now = parseFloat($("#count").val());
+					var lottery_id_str = $("#lottery_id_str").val();
+					for(var i=1;i<=count_now;i++){
+						if(i != count){
+							var lottery_id = $("#lottery_id" + i).val();
+							if(lottery_id != ''){
+								var lottery_id_new = lottery_id_str.replace(lottery_id+',','');
+							}else{
+								var lottery_id_new = lottery_id_str;
+							}
+							$('#lottery_id' + i).combobox('reload', '/ordersmod/orders/get-lottery?lottery_id_str='+lottery_id_new);
+						}
+					}
+				},
 			});
+			
 			/*//面值下拉框
 			$('#sub_value' + count).combobox({
 				url:'/ordersmod/orders/get-sub-value',
@@ -127,13 +166,22 @@
 			var str = '';
 			str = '<tr>';
 			str +='<td style="width:15%" style="width:30px">'+new_count+'</td>'
-			str +='<td style="width:25%"><input class="easyui-validatebox easyui-combobox" style="width:150px" id="lottery_id'+new_count+'" name="lottery_id'+new_count+'"></td>'
+			str +='<td style="width:25%"><input class="easyui-validatebox easyui-combobox" style="width:150px" id="lottery_id'+new_count+'" name="lottery_id'+new_count+'" data-options="required:true"></td>'
 			//str +='<td style="width:15%"><input class="easyui-validatebox easyui-combobox" style="width:80px" id="sub_value'+new_count+'" name="sub_value'+new_count+'"></td>'
-			str +='<td style="width:17%"><input type="text" id="nums'+new_count+'" name="nums'+new_count+'" style="width:100px" class="easyui-textbox" ></td>'
-			str +='<td style="width:17%"><input type="text" id="sheet_nums'+new_count+'" name="sheet_nums'+new_count+'" style="width:100px" class="easyui-textbox" ></td>'
-			str +='<td style="width:17%"><input type="text" id="price'+new_count+'" name="price'+new_count+'" style="width:100px" class="easyui-textbox" ></td>'
+			str +='<td style="width:17%"><input type="text" id="nums'+new_count+'" name="nums'+new_count+'" style="width:100px" class="easyui-textbox" data-options="required:true"></td>'
+			str +='<td style="width:17%"><input type="text" id="sheet_nums'+new_count+'" name="sheet_nums'+new_count+'" style="width:100px" class="easyui-textbox" data-options="required:true"></td>'
+			str +='<td style="width:17%"><input type="text" id="price'+new_count+'" name="price'+new_count+'" style="width:100px" class="easyui-textbox" data-options="required:true"></td>'
 			str +='</tr>'
 			$("#value_table").append(str);
+			$('input[name="nums'+new_count+'"]',$("#value_table")).each(function(){  
+				$(this).textbox();  
+			});
+			$('input[name="sheet_nums'+new_count+'"]',$("#value_table")).each(function(){  
+				$(this).textbox();  
+			});
+			$('input[name="price'+new_count+'"]',$("#value_table")).each(function(){  
+				$(this).textbox();  
+			});
 			$("#count").val(new_count);
 			toAdd();
 		})

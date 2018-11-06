@@ -20,7 +20,17 @@ class OrdersController extends Controller {
      * 获取彩种
      */
     public function actionGetLottery() {
-        $lotteryData = Lottery::find()->select(['lottery_id', 'lottery_name','lottery_value'])->where([ 'status' => 1])->asArray()->all();
+		$request = \Yii::$app->request;
+		$lottery_id_str = $request->get('lottery_id_str','');
+		$lottery_id_str = trim($lottery_id_str,',');
+		
+		$where = ['and'];
+		$where[] = [ 'status' => 1];
+		if($lottery_id_str != ''){
+			$lottery_id_arr = explode(',',$lottery_id_str);
+			$where[] = ['not in','lottery_id',$lottery_id_arr];
+		}
+        $lotteryData = Lottery::find()->select(['lottery_id', 'lottery_name','lottery_value'])->where($where)->orderBy("lottery_name asc")->asArray()->all();
         $lotteryLists=[];
         foreach($lotteryData as $key => $val){
 			$lottery_name_new = $val['lottery_name'] . '-' . $val['lottery_value'] . '元';
