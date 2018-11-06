@@ -33,7 +33,10 @@ $config = [
         ],
         'cron' => [
             'class' => 'app\modules\cron\cron',
-        ]
+        ],
+        'websitemod' => [//网站管理模块
+            'class' => 'app\modules\website\website',
+        ],
     ],
     'components' => [
         'request' => [
