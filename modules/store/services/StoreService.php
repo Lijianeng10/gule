@@ -48,7 +48,7 @@ class StoreService {
                     return $url;
                 }
                 if ($machineData['cust_no'] == $custNo) {
-                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo; // 跳转门店管理页面
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?myCustNo=' . $custNo; // 跳转门店管理页面
                     return $url;
                 } elseif ($machineData['cust_no'] != $custNo) {
                     if (empty($machineData['lottery_id'])) {
