@@ -274,7 +274,7 @@ class StoreService {
             return ['code' => 109, 'msg' => '请确认此设备已激活'];
         }
         if ($activeType == 1) {
-            $update = ['stock' => new Expression('stock+' . $stock)];
+            $update = ['stock' => $stock];
         } else {
             if ($stock > $machine->stock) {
                 return ['code' => 109, 'msg' => '机箱内的库存不足扣除量'];
