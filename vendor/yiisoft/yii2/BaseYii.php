@@ -659,7 +659,7 @@ class BaseYii
         $redis2 = \yii::$app->redis;
         $redis2->database = 1;
         $ret = $redis2->setex($key,604800, $val);//设置过期时间7天
-        $redis2->database = 0;
+        $redis2->database = 10;
         return $ret;
     }
 
@@ -670,7 +670,7 @@ class BaseYii
         if(!empty($redisToken)){
             $redis2->expire($key,604800);//更新过期时间7天
         }
-        $redis2->database = 0;
+        $redis2->database = 10;
         return $redisToken;
     }
 
@@ -678,13 +678,13 @@ class BaseYii
         $redis2 = \yii::$app->redis;
         $redis2->database = 1;
         $ret = $redis2->del($key);
-        $redis2->database = 0;
+        $redis2->database = 10;
         return $ret;
     }
     //自定义redis Incr 数值递增
     public static function redisIncr($key) {
         $redis = \yii::$app->redis;
-        $redis->database = 0;
+        $redis->database = 10;
         $ret = $redis->executeCommand('Incr', ["{$key}"]);
         if($ret < 100000){
             $maxNo =Terminal::find("terminal_num")->orderBy("terminal_id desc")->asArray()->one();
