@@ -24,9 +24,9 @@ class QbPayController extends Controller {
         $payChannel = $request->post('pay_channel'); //01支付宝，02微信
         $orderId = $request->post('order_id'); //支付订单id(钱包的)
         $redisData = ['attach' => $attach, 'orderId' => $orderId, 'money' => $money, 'payTime' => $payTime, 'custNo' => $custNo, 'payChannel' => $payChannel];
+            \Yii::redisSet('call-back', json_decode($redisData), 600);
         if ($payStatus == "success") {
             PayTool::notify($attach, $orderId, $money, $payTime, $custNo, $payChannel);
-            \Yii::redisSet('call-back', json_decode($redisData), 600);
         } else {
 //            $payRecord = PayRecord::find()->select('*')->where(['order_code' => $attach, 'status' => 0])->asArray()->one();
             //订单取消
