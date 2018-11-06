@@ -29,6 +29,33 @@ class OrdersController extends Controller {
         return json_encode($lotteryLists);
     }
 	
+	/**
+     * 获取网点
+     */
+    public function actionGetStore() {
+		$session = \Yii::$app->session;
+		$where = ['and'];
+		$where[] = ['status' => 1];
+		
+		//判断登陆账号是否为渠道账户
+		if($session['admin']['type'] == 1){
+			$where[] = ['channel_no' => $session['admin']['admin_name']];
+		}
+		
+        $storeData = Store::find()->select(['cust_no', 'store_name'])->where($where)->orderBy("create_time desc")->asArray()->all();
+        $storeLists=[];
+		$storeLists=[['id'=>'','text'=>'请选择...']];
+        foreach($storeData as $key => $val){
+			if($val['store_name'] != ''){
+				$store_name_new = $val['cust_no'] . '-' . $val['store_name'];
+			}else{
+				$store_name_new = $val['cust_no'];
+			}
+            $storeLists[] = ['id'=>$val['cust_no'],'text'=>$store_name_new];
+        }
+        return json_encode($storeLists);
+    }
+	
     /**
      * 新增网点订单
      */
