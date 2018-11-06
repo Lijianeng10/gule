@@ -20,6 +20,7 @@
                 editRow: undefined,
                 search: function () {
                     $('#datagrid').datagrid('load', {
+                        'orderInfo': $.trim($('input[name="orderInfo"]').val()),
                         'storeInfo': $.trim($('input[name="storeInfo"]').val()),
                         'lotteryInfo': $.trim($('input[name="lotteryInfo"]').val()),
                         'status': $.trim($('input[name="status"]').val()),
@@ -42,6 +43,12 @@
                 toolbar: '#tb',
                 columns: [
                     [{
+                        field: 'order_code',
+                        title: '订单编号',
+                        width: 100,
+                        align: 'center',
+                        sortable: true
+                    },{
                         field: 'cust_no',
                         title: '网点编号',
                         width: 50,
@@ -61,7 +68,7 @@
                     }, {
                         field: 'area',
                         title: '所属区域',
-                        width: 50,
+                        width: 80,
                         align: 'center',
                         formatter: areaFormatter
                     },{
@@ -88,6 +95,12 @@
                         align: 'center',
                         sortable: true
                     },{
+                        field: 'pre_pay_money',
+                        title: '预付金额',
+                        width: 50,
+                        align: 'center',
+                        sortable: true
+                    },{
                         field: 'pay_money',
                         title: '实付金额',
                         width: 50,
@@ -102,11 +115,11 @@
                     }, {
                         field: 'create_time',
                         title: '创建时间',
-                        width: 60,
+                        width: 70,
                     },{
                         field: 'pay_time',
                         title: '支付时间',
-                        width: 60,
+                        width: 70,
                     },
                     //     {
                     //     field: 'opt',
@@ -174,8 +187,12 @@
         </div>
         <div class="tb-column">
             <div class="tb_item">
+                <span>订单信息：</span>
+                <input type="text"  name="orderInfo" class="easyui-textbox" prompt="请输入订单编号">
+            </div>
+            <div class="tb_item">
                 <span>网点信息：</span>
-                <input type="text"  name="storeInfo" class="easyui-textbox" >
+                <input type="text"  name="storeInfo" class="easyui-textbox" prompt="请输入网点编号、手机号、网点名称">
             </div>
             <div class="tb_item">
                 <span>彩种信息：</span>
