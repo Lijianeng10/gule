@@ -685,7 +685,7 @@ class StoreService {
      * @param $id
      */
     public static function getBannerContent($id) {
-        $banner = Banner::find()->where(['banner_id' => $id])->asArray()->all();
+        $banner = Banner::find()->where(['banner_id' => $id])->asArray()->one();
         return $banner;
     }
 
