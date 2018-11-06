@@ -227,4 +227,24 @@ class StoreController extends Controller {
         return $this->jsonResult(600, '获取成功', $banner);
     }
     
+    /**
+     * 设备实际出票情况
+     * @return type
+     */
+    public function actionIssueTicket() {
+        $request = Yii::$app->request;
+        $orderCode = $request->post('orderCode', '');
+        $terminalNum = $request->post('terminalNum', '');
+        $outStatus = $request->post('outStatus', '');
+        $outNums = $request->post('outNums', 0);
+        if(empty($orderCode) || empty($terminalNum)) {
+            return $this->jsonError(109, '参数缺失');
+        }
+        $ret = StoreService::issueTicket($orderCode, $terminalNum, $outStatus, $outNums);
+        if($ret['code'] != 600) {
+            return $this->jsonError($ret['code'], $ret['msg']);
+        }
+        return $this->jsonResult(600, '成功', true);
+        
+    }
 }

@@ -497,6 +497,12 @@ class StoreService {
      * @return type
      */
     public static function playOrder($custNo, $terminalNum, $machineCode, $buyNums, $total) {
+        $key = 'lockMachine:' . $terminalNum;
+        if (\Yii::redisGet($key)) {
+            return ['code' => 109, 'msg' => '设备正在出票中！！请稍等'];
+        } else {
+            \Yii::redisSet($key, $machineCode, 300);
+        }
         $machine = Machine::find()->select(['machine_code', 'lottery_id', 'lottery_value', 'stock', 'channel_no', 'online_status'])->where(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode, 'machine.status' => 1, 'ac_status' => 1, 'status' => 1])->asArray()->one();
         if (empty($machine)) {
             return ['code' => 109, 'msg' => '设备故障！请联系店主'];
@@ -583,7 +589,7 @@ class StoreService {
             if ($storeLotteryRet === false) {
                 throw new Exception('库存修改失败-门店彩种');
             }
-            $upMachine = Machine::updateAll($update, ['cust_no' => $custNo, 'machine_code' => $machine['machine_code'], 'terminal_num' => $machine['terminal_num']]);
+            $upMachine = Machine::updateAll($update, ['cust_no' => $custNo, 'machine_code' => $machine['machine_code'], 'terminal_num' => $machine['terminal_num'], 'status' => 1]);
             if ($upMachine === false) {
                 throw new Exception('库存修改失败-机器');
             }
@@ -693,6 +699,22 @@ class StoreService {
     public static function getBannerContent($id) {
         $banner = Banner::find()->where(['banner_id' => $id])->asArray()->one();
         return $banner;
+    }
+
+    public static function issueTicket($orderCode, $terminalNum, $outStatus, $outNums) {
+        $payRecord = PayRecord::findOne(['order_code' => $orderCode, 'terminal_num' => $terminalNum]);
+        if (empty($payRecord)) {
+            return ['code' => 109, 'msg' => '订单不存在'];
+        }
+        $payRecord->out_status = $outStatus;
+        $payRecord->out_nums = $outNums;
+        $payRecord->modify_time = date('Y-m-d H:i:s');
+        if (!$payRecord->save()) {
+            return ['code' => 109, 'msg' => '保存失败'];
+        }
+        $key = 'lockMachine:' . $terminalNum;
+        \Yii::redisDel($key);
+        return ['code' => 600, 'msg' => '保存成功'];
     }
 
 }
