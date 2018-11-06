@@ -78,7 +78,7 @@ h2 {
 
 </style>
 	<div class="header">
-		<h2>咕啦-商城管理系统</h2>
+		<h2>咕啦-刮刮彩管理系统</h2>
 		<div class="box">
 			<div class="user">
 				<img class="user-img" src="http://osk6t6jhb.bkt.clouddn.com/img/user/user_pic/gl00002324/180321141249.jpg" alt="" title="">

@@ -15,7 +15,8 @@
 
 	</head>
 	<body id="main" class="easyui-layout">
-		<div data-options="region:'north',border:true" class="super-north" style="background: url(/images/link-bg.png) center no-repeat;border: none;">
+<!--    background: url(/images/link-bg.png) center no-repeat;-->
+		<div data-options="region:'north',border:true" class="super-north" style="border: none;">
             <?php include("head.php");?>
 		</div>
 		<div data-options="region:'west',border:false,split:true"  style="width: 200px;background: #3C3F41; font-size: 14px">
