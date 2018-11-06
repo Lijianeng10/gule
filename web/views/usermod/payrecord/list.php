@@ -37,7 +37,7 @@
                 fit: true,
                 pagination: true,
                 singleSelect:true,
-                fitColumns: true,
+                striped:true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
                 toolbar: '#tb',
@@ -45,47 +45,34 @@
                     [{
                         field: 'order_code',
                         title: '订单编号',
-                        width: 100,
+                        width: 200,
                         align: 'center',
-                        sortable: true
                     },{
                         field: 'cust_no',
-                        title: '网点编号',
-                        width: 50,
+                        title: '网点信息',
+                        width: 100,
                         align: 'center',
-                        sortable: true
+                        formatter: mainFormatter
                     },{
-                        field: 'store_name',
-                        title: '网点名称',
-                        width: 50,
-                        align: 'center',
-                    },{
-                        field: 'user_tel',
-                        title: '手机号',
-                        width: 50,
-                        align: 'center',
-                        sortable: true
-                    }, {
                         field: 'terminal_num',
                         title: '终端号',
-                        width: 50,
+                        width: 80,
                         align: 'center',
                     },{
                         field: 'buy_nums',
                         title: '购买数量',
-                        width: 50,
+                        width: 80,
                         align: 'center',
                         sortable: true
                     },{
                         field: 'pre_pay_money',
                         title: '预付金额',
-                        width: 50,
+                        width: 80,
                         align: 'center',
-                        sortable: true
                     },{
                         field: 'pay_money',
                         title: '实付金额',
-                        width: 50,
+                        width: 80,
                         align: 'center',
                         sortable: true
                     },{
@@ -97,29 +84,29 @@
                     }, {
                         field: 'lottery_name',
                         title: '彩种名称',
-                        width: 50,
+                        width: 80,
                         align: 'center',
-                        sortable: true
                     },{
                         field: 'lottery_value',
                         title: '彩种面额',
-                        width: 50,
+                        width: 80,
                         align: 'center',
-                        sortable: true
                     },{
                         field: 'area',
                         title: '所属区域',
-                        width: 80,
+                        width: 200,
                         align: 'center',
                         formatter: areaFormatter
                     },{
                         field: 'create_time',
                         title: '创建时间',
-                        width: 70,
+                        width: 130,
+                        align: 'center',
                     },{
                         field: 'pay_time',
                         title: '支付时间',
-                        width: 70,
+                        width: 130,
+                        align: 'center',
                     },
                     //     {
                     //     field: 'opt',
@@ -138,7 +125,14 @@
 //                    $("a[name='del']").linkbutton({text:'删除',iconCls:'fa fa-delete'});
                 }
             });
-            
+
+
+            function mainFormatter(value,row){
+                str = '';
+                str = row.store_name+'<br>'+row.cust_no+'<br>'+row.user_tel;
+                return str;
+            }
+
             function statusFormatter(value,row){
                 if(value==1){
                     return "<span>已支付<span>";

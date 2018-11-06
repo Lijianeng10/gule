@@ -68,7 +68,6 @@
                         title: '订单编号',
                         width: 180,
                         align: 'center',
-                        sortable: true
                     },{
                         field:'cust_no',
                         title: '门店编号',

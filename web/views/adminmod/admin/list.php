@@ -34,7 +34,6 @@
             $('#datagrid').datagrid({
                 url: '/adminmod/admin/get-admin-list',
                 fit: true,
-                // cache:false,
                 pagination: true,
                 pageSize: 20,
                 singleSelect:true,

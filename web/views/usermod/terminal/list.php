@@ -37,7 +37,7 @@
                 fit: true,
                 pagination: true,
                 pageSize: 20,
-                // singleSelect:true,
+                singleSelect:true,
                 fitColumns: true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
