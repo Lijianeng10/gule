@@ -668,4 +668,13 @@ class StoreService {
         return $bananerData;
     }
 
+    /**
+     * 获取banner 内容
+     * @param $id
+     */
+    public static function getBannerContent($id) {
+        $banner = Banner::find()->where(['banner_id'=>$id])->asArray()->all();
+        return $banner;
+    }
+
 }

@@ -217,5 +217,17 @@ class StoreController extends Controller {
         $bannerData = StoreService::getBanner($size);
         return $this->jsonResult(600, '获取成功', $bannerData);
     }
+    /**
+     * 获取广告内容
+     */
+    public function actionGetBannerContent() {
+        $request = Yii::$app->request;
+        $id = $request->post('id', '');
+        if (empty($id)) {
+            return $this->jsonError(109, '参数缺失');
+        }
+        $banner = StoreService::getBannerContent($id);
+        return $this->jsonResult(600, '获取成功', $banner);
+    }
     
 }
