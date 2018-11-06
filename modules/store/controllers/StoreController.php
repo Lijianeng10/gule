@@ -104,7 +104,7 @@ class StoreController extends Controller {
      */
     public function actionGetStoreDetail() {
        $request = \Yii::$app->request;
-       $custNo = $request->post('custNo', '');
+       $custNo = $request->post('myCustNo', '');
        $ret = StoreService::getStoreDetail($custNo);
        if($ret['code'] != 600) {
            return $this->jsonError(109, $ret['msg']);
