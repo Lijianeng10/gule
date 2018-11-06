@@ -66,13 +66,13 @@
 				frozenColumns:[[{
                         field:'order_code',
                         title: '订单编号',
-                        width: 160,
+                        width: 180,
                         align: 'center',
                         sortable: true
                     },{
                         field:'cust_no',
                         title: '门店编号',
-                        width: 70,
+                        width: 100,
                         align: 'center',
                         sortable: true
                     }]
