@@ -509,7 +509,7 @@ class StoreService {
         $db = \Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
-            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total);
+            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total, $terminalNum, $machineCode);
             if ($createOrder['code'] != 600) {
                 throw new Exception('下单失败-记录');
             }
