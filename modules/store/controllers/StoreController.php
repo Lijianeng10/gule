@@ -237,6 +237,7 @@ class StoreController extends Controller {
         $terminalNum = $request->post('terminalNum', '');
         $outStatus = $request->post('outStatus', '');
         $outNums = $request->post('outNums', 0);
+        \Yii::redisSet('aa', $request->post());
         if(empty($orderCode) || empty($terminalNum)) {
             return $this->jsonError(109, '参数缺失');
         }
