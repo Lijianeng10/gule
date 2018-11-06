@@ -128,8 +128,8 @@
 
 	<div id="tb" >
         <div class="tb_menu">
+            <a href="#" class="easyui-linkbutton info" iconCls="fa fa-plus" onclick="add()"> 新 增 </a>
             <a href="#" class="easyui-linkbutton primary" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
-            <a href="#" class="easyui-linkbutton primary" iconCls="fa fa-search" onclick="add()"> 新 增 </a>
         </div>
         <div class="tb-column">
             <div class="tb_item">
