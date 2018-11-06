@@ -66,28 +66,10 @@
                         align: 'center',
                         sortable: true
                     }, {
-                        field: 'area',
-                        title: '所属区域',
-                        width: 80,
-                        align: 'center',
-                        formatter: areaFormatter
-                    },{
                         field: 'terminal_num',
                         title: '终端号',
                         width: 50,
                         align: 'center',
-                    },{
-                        field: 'lottery_name',
-                        title: '彩种名称',
-                        width: 50,
-                        align: 'center',
-                        sortable: true
-                    },{
-                        field: 'lottery_value',
-                        title: '彩种面额',
-                        width: 50,
-                        align: 'center',
-                        sortable: true
                     },{
                         field: 'buy_nums',
                         title: '购买数量',
@@ -113,6 +95,24 @@
                         align: 'center',
                         formatter: statusFormatter
                     }, {
+                        field: 'lottery_name',
+                        title: '彩种名称',
+                        width: 50,
+                        align: 'center',
+                        sortable: true
+                    },{
+                        field: 'lottery_value',
+                        title: '彩种面额',
+                        width: 50,
+                        align: 'center',
+                        sortable: true
+                    },{
+                        field: 'area',
+                        title: '所属区域',
+                        width: 80,
+                        align: 'center',
+                        formatter: areaFormatter
+                    },{
                         field: 'create_time',
                         title: '创建时间',
                         width: 70,
