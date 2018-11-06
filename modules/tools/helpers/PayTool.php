@@ -18,7 +18,7 @@ class PayTool {
         $surl = 'https://open.goodluckchina.net/open/pay/buildPayCode';
         $attach = $orderCode;
         $qbAppId = \Yii::$app->params['java_appId'];
-        $qbCallBack = \Yii::$app->params["userDomain"] . '/pay/qb-pay/qb-callback';
+        $qbCallBack = \Yii::$app->params["userDomain"] . '/tools/qb-pay/qb-callback';
         if ($money < 2) {
             return false;
         }
