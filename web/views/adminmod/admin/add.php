@@ -15,7 +15,7 @@
         </div>
         <div class="form-item">
             <label for="" class="label-top">管理员手机号：</label>
-            <input name="admin_tel" class="easyui-validatebox easyui-textbox"  data-options="required:true,validType:'length[3,15]'" value="">
+            <input name="admin_tel" class="easyui-validatebox easyui-textbox"  value="">
         </div>
         <div class="form-item">
             <label for="" class="label-top">所属角色：</label>
