@@ -129,10 +129,10 @@
 
 	<div id="tb" style="padding:5px;">
         <div class="tb_menu">
-            <a href="#" class="easyui-linkbutton primary auth lotterySearch" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
             <a href="#" class="easyui-linkbutton info auth productLotteryAdd" iconCls="fa fa-plus"  onclick="create_window('dlg','新增彩种','/usermod/views/to-lottery-add',500,500);">新增</a>
             <a href="#" class="easyui-linkbutton info auth productLotteryEdit" iconCls="fa fa-edit"  onclick="update_no_button_dialog('dlg','编辑彩种','/usermod/views/to-lottery-edit', 500,500);">修改</a>
             <a href="#" id="remove" class="easyui-linkbutton error auth productLotteryDelete" iconCls="fa fa-remove" plain="true" onclick="deleteAll('/productmod/lottery/delete');">删除</a>
+            <a href="#" class="easyui-linkbutton primary auth lotterySearch" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
         </div>
         <div class="tb-column">
             <div class="tb_item">

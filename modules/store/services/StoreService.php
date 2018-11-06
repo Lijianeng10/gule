@@ -344,6 +344,7 @@ class StoreService {
         $payRecord->create_time = date('Y-m-d H:i:s');
         $payRecord->pay_type = $payType;
         if (!$payRecord->save()) {
+            print_r($payRecord->getErrors());die;
             return ['code' => 109, 'msg' => '交易记录生成失败'];
         }
         return ['code' => 600, 'msg' => '交易记录生成成功', 'recordId' => $payRecord->pay_record_id, 'orderCode' => $payRecord->order_code];
@@ -363,9 +364,9 @@ class StoreService {
             new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where}) end date_sell_amount"),
             new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where1}) end month_sell_amount")];
         $storeData = Store::find()->select($field)->where(['cust_no' => $custNo, 'store.status' => 1])->asArray()->one();
-        if (empty($storeData)) {
-            return ['code' => 109, 'msg' => '请先激活绑定'];
-        }
+//        if (empty($storeData)) {
+//            return ['code' => 109, 'msg' => '请先激活绑定'];
+//        }
         $field1 = ['terminal_num', 'machine_code', 'l.lottery_value', 'stock', 'ac_status', 'online_status', 'machine.status', 'l.lottery_name', 'cust_no', 'l.lottery_img', 'sum(machine.stock * machine.lottery_value) sum_amount',
             new Expression("case when machine.status = 1 then (select coalesce(sum(p.buy_nums),0) from pay_record p where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_count"),
             new Expression("case when machine.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_amount")];
@@ -509,12 +510,13 @@ class StoreService {
         $db = \Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
-            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total, $terminalNum, $machineCode);
+            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total);
             if ($createOrder['code'] != 600) {
+                
                 throw new Exception('下单失败-记录');
             }
             $payRecord = PayRecord::findOne(['pay_record_id' => $createOrder['recordId']]);
-            $qbRet = PayTool::createQbThePublic($custNo, $createOrder['orderCode'], $total);
+            $qbRet = PayTool::createQbThePublic($custNo, $createOrder['orderCode'], $total, $terminalNum, $machineCode);
             if ($qbRet["code"] != 1) {
                 $qbMsg = isset($qbRet['msg']) ? $qbRet['msg'] : '';
                 $msg = '下单失败！！' . $qbMsg;
