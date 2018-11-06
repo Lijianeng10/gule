@@ -453,9 +453,9 @@ class StoreService {
         if (empty($goods)) {
             return ['code' => 109, 'msg' => '该设备可能还未激活！请联系店主'];
         }
-        if ($goods['online_status'] != 1) {
-            return ['code' => 109, 'msg' => '该设备未接通电源！请联系店主'];
-        }
+//        if ($goods['online_status'] != 1) {
+//            return ['code' => 109, 'msg' => '该设备未接通电源！请联系店主'];
+//        }
         return ['code' => 600, 'msg' => '获取成功', 'data' => $goods];
     }
 
