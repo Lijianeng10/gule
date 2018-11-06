@@ -621,7 +621,7 @@ class StoreService {
         $trans = $db->beginTransaction();
         try {
             $del = Machine::deleteAll(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode, 'status' => 1]);
-            if (!$del === false) {
+            if ($del === false) {
                 throw new Exception('解绑失败-设备');
             }
             $upTerminal = Terminal::updateAll(['use_status' => 0], ['terminal_num' => $terminalNum]);
