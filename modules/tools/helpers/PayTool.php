@@ -71,14 +71,14 @@ class PayTool {
      * @param type $payTime 交易时间
      * @return type
      */
-    public function notify($orderCode, $outerNo, $totalAmount = 0, $payTime,  $custNo, $payChannel) {
+    public static function notify($orderCode, $outerNo, $totalAmount = 0, $payTime,  $custNo, $payChannel) {
         $key = 'confrimNotify:' . $orderCode;
         if (!\Yii::$app->redis->set($key, '1', "nx", "ex", 5)) {
             return ['code' => 2, 'msg' => '请稍后再试'];
         }
         $payTime = empty($payTime) ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', strtotime($payTime));
         
-        $info = PayRecord::find()->select(['pay_record_id', 'pay_type'])->where(['order_code' => $orderCode, 'status' => 0, 'cust_no' => $custNo])->asArray()->one();
+        $info = PayRecord::find()->select(['pay_record_id', 'pay_type'])->where(['order_code' => $orderCode, 'status' => 0, 'store_no' => $custNo])->asArray()->one();
         if (empty($info)) {
             return ['code' => 109, 'msg' => '没有该交易记录'];
         }
