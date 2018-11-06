@@ -32,46 +32,58 @@ class StoreService {
             if (empty($machineData)) {
                 $terminal = Terminal::find()->select(['terminal_num'])->where(['terminal_num' => $terminalNum, 'use_status' => 0])->asArray()->one();
                 if (empty($terminal)) {
-                    return ['code' => 109, 'msg' => '此终端号已被占用'];
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=此终端号已被占用';
+                    return $url;
                 }
                 $url = \Yii::$app->params['userDomain'] . '/h5_ggc/activate.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo; // 跳转激活页面
+                return $url;
             } else {
                 $onlineStatus = self::validateMachine($machineData['machine_code']);
                 if ($onlineStatus['code'] != 600) {
-                    return ['code' => 109, 'msg' => '验签失败！请稍后再试'];
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=验签失败！请稍后再试';
+                    return $url;
                 }
                 if ($onlineStatus['online'] === false) {
-                    return ['code' => 109, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请确认机器电源已接通并输入正确的机器码';
+                    return $url;
                 }
                 if ($machineData['cust_no'] == $custNo) {
                     $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo; // 跳转门店管理页面
+                    return $url;
                 } elseif ($machineData['cust_no'] != $custNo) {
                     if (empty($machineData['lottery_id'])) {
-                        return ['code' => 109, 'msg' => '该设备还未确定出售彩种！请联系店主'];
+                        $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备还未确定出售彩种！请联系店主';
+                        return $url;
                     }
                     $url = \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页面
+                    return $url;
                 }
             }
         } else {
             if (empty($machineData)) {
-                return ['code' => 109, 'msg' => '该机器未激活！请联系店主'];
+                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该机器未激活！请联系店主';
+                return $url;
             } elseif ($machineData['status'] == 1) {
                 $onlineStatus = self::validateMachine($machineData['machine_code']);
                 if ($onlineStatus['code'] != 600) {
-                    return ['code' => 109, 'msg' => '验签失败！请稍后再试'];
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=验签失败！请稍后再试';
+                    return $url;
                 }
                 if ($onlineStatus['online'] === false) {
-                    return ['code' => 109, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请确认机器电源已接通并输入正确的机器码';
+                    return $url;
                 }
                 if (empty($machineData['lottery_id'])) {
-                    return ['code' => 109, 'msg' => '该设备还未确定出售彩种！请联系店主'];
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备还未确定出售彩种！请联系店主';
+                    return $url;
                 }
                 $url = \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页
+                return $url;
             } elseif ($machineData['status'] != 1) {
-                return ['code' => 109, 'msg' => '该设备已被禁用！请联系店主'];
+                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备已被禁用！请联系店主';
+                return $url;
             }
         }
-        return ['code' => 600, 'msg' => '获取成功', 'data' => $url];
     }
 
     /**
@@ -436,7 +448,7 @@ class StoreService {
         if (empty($goods)) {
             return ['code' => 109, 'msg' => '该设备可能还未激活！请联系店主'];
         }
-        if($goods['online_status'] != 1) {
+        if ($goods['online_status'] != 1) {
             return ['code' => 109, 'msg' => '该设备未接通电源！请联系店主'];
         }
         return ['code' => 600, 'msg' => '获取成功', 'data' => $goods];
@@ -484,7 +496,7 @@ class StoreService {
         if (empty($machine)) {
             return ['code' => 109, 'msg' => '设备故障！请联系店主'];
         }
-        if($machine['online_status'] != 1) {
+        if ($machine['online_status'] != 1) {
             return ['code' => 109, 'msg' => '该设备还未接通电源！为确保正常出票。请联系店主'];
         }
         if (bccomp($buyNums, $machine['stock']) == 1) {
@@ -673,7 +685,7 @@ class StoreService {
      * @param $id
      */
     public static function getBannerContent($id) {
-        $banner = Banner::find()->where(['banner_id'=>$id])->asArray()->all();
+        $banner = Banner::find()->where(['banner_id' => $id])->asArray()->all();
         return $banner;
     }
 

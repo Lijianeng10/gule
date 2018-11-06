@@ -20,10 +20,7 @@ class StoreController extends Controller {
             return $this->jsonError(100, '参数缺失');
         }
         $ret = StoreService::toJumpPage($custNo, $terminalNum);
-        if($ret['code'] != 600) {
-            return $this->jsonError(109, $ret['msg']);
-        }
-        return $this->redirect($ret['data']);
+        return $this->redirect($ret);
     }
     
     /**
