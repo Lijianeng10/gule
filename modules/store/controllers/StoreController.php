@@ -233,12 +233,10 @@ class StoreController extends Controller {
      */
     public function actionIssueTicket() {
         $request = Yii::$app->request;
-        $orderCode = $request->post('orderCode', '');
-        $terminalNum = $request->post('terminalNum', '');
-        $outStatus = $request->post('outStatus', '');
-        $outNums = $request->post('outNums', 0);
-        \Yii::redisSet('aa', $request->post());
-        \Yii::redisSet('aa', $request->get());
+        $orderCode = $request->get('orderCode', '');
+        $terminalNum = $request->get('terminalNum', '');
+        $outStatus = $request->get('outStatus', '');
+        $outNums = $request->get('outNums', 0);
         if(empty($orderCode) || empty($terminalNum)) {
             return $this->jsonError(109, '参数缺失');
         }
