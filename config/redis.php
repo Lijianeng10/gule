@@ -5,7 +5,7 @@ if(YII_ENV_DEV){
         'hostname' => '114.115.148.102',
         'password' => 'goodluck',
         'port' => 63790,
-        'database' => 0,
+        'database' => 10,
     ];
 }else{
 //    return [
