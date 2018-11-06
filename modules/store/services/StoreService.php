@@ -480,9 +480,12 @@ class StoreService {
      * @return type
      */
     public static function playOrder($custNo, $terminalNum, $machineCode, $buyNums, $total) {
-        $machine = Machine::find()->select(['machine_code', 'lottery_id', 'lottery_value', 'stock', 'channel_no'])->where(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode, 'machine.status' => 1, 'ac_status' => 1, 'online_status' => 1, 'status' => 1])->asArray()->one();
+        $machine = Machine::find()->select(['machine_code', 'lottery_id', 'lottery_value', 'stock', 'channel_no', 'online_status'])->where(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode, 'machine.status' => 1, 'ac_status' => 1, 'status' => 1])->asArray()->one();
         if (empty($machine)) {
             return ['code' => 109, 'msg' => '设备故障！请联系店主'];
+        }
+        if($machine['online_status'] != 1) {
+            return ['code' => 109, 'msg' => '该设备还未接通电源！为确保正常出票。请联系店主'];
         }
         if (bccomp($buyNums, $machine['stock']) == 1) {
             return ['code' => 109, 'msg' => '购买张数大于机箱内库存'];
