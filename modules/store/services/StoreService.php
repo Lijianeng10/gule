@@ -37,10 +37,10 @@ class StoreService {
                 $url = \Yii::$app->params['userDomain'] . '/h5_ggc/activate.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo; // 跳转激活页面
             } else {
                 $onlineStatus = self::validateMachine($machineData['machine_code']);
-                if ($validateMachine['code'] != 600) {
+                if ($onlineStatus['code'] != 600) {
                     return ['code' => 109, 'msg' => '验签失败！请稍后再试'];
                 }
-                if ($validateMachine['online'] === false) {
+                if ($onlineStatus['online'] === false) {
                     return ['code' => 109, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
                 }
                 if ($machineData['cust_no'] == $custNo) {
@@ -57,10 +57,10 @@ class StoreService {
                 return ['code' => 109, 'msg' => '该机器未激活！请联系店主'];
             } elseif ($machineData['status'] == 1) {
                 $onlineStatus = self::validateMachine($machineData['machine_code']);
-                if ($validateMachine['code'] != 600) {
+                if ($onlineStatus['code'] != 600) {
                     return ['code' => 109, 'msg' => '验签失败！请稍后再试'];
                 }
-                if ($validateMachine['online'] === false) {
+                if ($onlineStatus['online'] === false) {
                     return ['code' => 109, 'msg' => '请确认机器电源已接通并输入正确的机器码'];
                 }
                 if (empty($machineData['lottery_id'])) {
