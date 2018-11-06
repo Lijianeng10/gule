@@ -239,7 +239,7 @@ class StoreService {
      * @return type
      */
     public static function changeMachineLottery($custNo, $terminalNum, $lottery, $lotteryValue, $machineCode) {
-        $machine = Machine::findOne(['cust_no' => $custNo, 'machine_code' => $machineCode, 'terminal_num' => $terminalNum]);
+        $machine = Machine::findOne(['cust_no' => $custNo, 'machine_code' => $machineCode, 'terminal_num' => $terminalNum, 'status' => 1]);
         if (empty($machine)) {
             return ['code' => 109, 'msg' => '请确认此设备已激活'];
         }
@@ -269,7 +269,7 @@ class StoreService {
      * @throws Exception
      */
     public static function changeMachineStock($custNo, $terminalNum, $machineCode, $activeType, $stock) {
-        $machine = Machine::findOne(['cust_no' => $custNo, 'machine_code' => $machineCode, 'terminal_num' => $terminalNum]);
+        $machine = Machine::findOne(['cust_no' => $custNo, 'machine_code' => $machineCode, 'terminal_num' => $terminalNum, 'status' => 1]);
         if (empty($machine)) {
             return ['code' => 109, 'msg' => '请确认此设备已激活'];
         }
@@ -620,8 +620,8 @@ class StoreService {
         $db = \Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
-            $machine->status = 2;
-            if (!$machine->save()) {
+            $del = Machine::deleteAll(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode, 'status' => 1]);
+            if (!$del === false) {
                 throw new Exception('解绑失败-设备');
             }
             $upTerminal = Terminal::updateAll(['use_status' => 0], ['terminal_num' => $terminalNum]);
@@ -666,7 +666,7 @@ class StoreService {
         $md5Code = $terminalNum . $machineCode;
         $sign = Commonfun::getSign($md5Code);
         $psotData = ['machine_no' => $machineCode, 'cust_no' => $terminalNum, 'sign' => $sign];
-        $ret = \Yii::sendCurlPost($url, $postData);
+        $ret = \Yii::sendCurlPost($url, $psotData);
         return $ret;
     }
 
