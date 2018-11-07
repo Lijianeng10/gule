@@ -42,8 +42,8 @@ for(function(a){
                 width:256,
                 height:256,
                 //这里是图片的高度和宽度
-                imgWidth:b.width/4.7,
-                imgHeight:b.height/4,
+                imgWidth:b.width/3.5,
+                imgHeight:b.height/3.5,
                 typeNumber:-1,
                 correctLevel:QRErrorCorrectLevel.H,
                 background:"#ffffff",

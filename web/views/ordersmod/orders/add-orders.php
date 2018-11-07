@@ -51,13 +51,13 @@
 						<input class="easyui-validatebox easyui-combobox" style="width:80px" id="sub_value1" name="sub_value1">
 					</td>-->
 					<td style="width:17%">
-						<input type="text" id="nums1" name="nums1" style="width:100px" class="easyui-textbox" data-options="required:true" >
+						<input type="text" id="nums1" name="nums1" style="width:100px" class="easyui-numberbox" data-options="required:true,min:0" >
 					</td>
 					<td style="width:17%">
-						<input type="text" id="sheet_nums1" style="width:100px" name="sheet_nums1" class="easyui-textbox" data-options="required:true" >
+						<input type="text" id="sheet_nums1" style="width:100px" name="sheet_nums1" class="easyui-numberbox" data-options="required:true,min:0" >
 					</td>
 					<td style="width:17%">
-						<input type="text" id="price1" name="price1" style="width:100px" class="easyui-textbox" data-options="required:true">
+						<input type="text" id="price1" name="price1" style="width:100px" class="easyui-numberbox" data-options="required:true,min:0,precision:2">
 					</td>
 				</tr>
             </table>
@@ -168,19 +168,19 @@
 			str +='<td style="width:15%" style="width:30px">'+new_count+'</td>'
 			str +='<td style="width:25%"><input class="easyui-validatebox easyui-combobox" style="width:150px" id="lottery_id'+new_count+'" name="lottery_id'+new_count+'" data-options="required:true"></td>'
 			//str +='<td style="width:15%"><input class="easyui-validatebox easyui-combobox" style="width:80px" id="sub_value'+new_count+'" name="sub_value'+new_count+'"></td>'
-			str +='<td style="width:17%"><input type="text" id="nums'+new_count+'" name="nums'+new_count+'" style="width:100px" class="easyui-textbox" data-options="required:true"></td>'
-			str +='<td style="width:17%"><input type="text" id="sheet_nums'+new_count+'" name="sheet_nums'+new_count+'" style="width:100px" class="easyui-textbox" data-options="required:true"></td>'
-			str +='<td style="width:17%"><input type="text" id="price'+new_count+'" name="price'+new_count+'" style="width:100px" class="easyui-textbox" data-options="required:true"></td>'
+			str +='<td style="width:17%"><input type="text" id="nums'+new_count+'" name="nums'+new_count+'" style="width:100px" class="easyui-numberbox" data-options="required:true,min:0"></td>'
+			str +='<td style="width:17%"><input type="text" id="sheet_nums'+new_count+'" name="sheet_nums'+new_count+'" style="width:100px" class="easyui-numberbox" data-options="required:true,min:0"></td>'
+			str +='<td style="width:17%"><input type="text" id="price'+new_count+'" name="price'+new_count+'" style="width:100px" class="easyui-numberbox" data-options="required:true,min:0,precision:2"></td>'
 			str +='</tr>'
 			$("#value_table").append(str);
 			$('input[name="nums'+new_count+'"]',$("#value_table")).each(function(){  
-				$(this).textbox();  
+				$(this).numberbox();  
 			});
 			$('input[name="sheet_nums'+new_count+'"]',$("#value_table")).each(function(){  
-				$(this).textbox();  
+				$(this).numberbox();  
 			});
 			$('input[name="price'+new_count+'"]',$("#value_table")).each(function(){  
-				$(this).textbox();  
+				$(this).numberbox();  
 			});
 			$("#count").val(new_count);
 			toAdd();

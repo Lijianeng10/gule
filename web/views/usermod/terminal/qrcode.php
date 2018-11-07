@@ -32,7 +32,7 @@
             height : "200",              //二维码的高度
             background : "#ffffff",       //二维码的后景色
             foreground : "#000000",        //二维码的前景色
-            src: '/images/logo.png'             //二维码中间的图片
+            src: '/images/logo.jpg'             //二维码中间的图片
         });
         // setTimeout(function() {
         //     var canvas= $('#qrcode canvas')[0]
@@ -67,7 +67,6 @@
 
     /*下载二维码*/
     function dwn(){
-
         var oldcanvas= $('#qrcode canvas')[0]
         var src = oldcanvas.toDataURL("image/png")
         var oImg = new Image();
