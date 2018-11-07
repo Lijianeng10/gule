@@ -177,7 +177,7 @@
          * 查看二维码
          */
         function read(url) {
-            create_window('win','机器二维码','/usermod/views/to-terminal-qrcode?url='+url,500,300);
+            create_window('win','机器二维码','/usermod/views/to-terminal-qrcode?url='+url,550,400);
         }
     </script>
 </body>
