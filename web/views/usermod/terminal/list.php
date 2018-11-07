@@ -16,7 +16,9 @@
         <link rel="stylesheet" href="/js/kindeditor/themes/default/default.css" />
         <script charset="utf-8" src="/js/kindeditor/kindeditor-all.js"></script>
         <script charset="utf-8" src="/js/kindeditor/lang/zh_CN.js"></script>
-        <script charset="utf-8" src="/js/qrcode.min.js"></script>
+<!--        <script charset="utf-8" src="/js/qrcode.min.js"></script>-->
+        <script charset="utf-8" src="/js/jquery.qrcode.js"></script>
+        <script charset="utf-8" src="/js/utf.js"></script>
 	</head>
 <body style="height: 100%;">
     <script type="text/javascript">
