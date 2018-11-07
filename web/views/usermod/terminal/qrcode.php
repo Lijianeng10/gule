@@ -30,7 +30,7 @@
             height : "200",              //二维码的高度
             background : "#ffffff",       //二维码的后景色
             foreground : "#000000",        //二维码的前景色
-            src: '/images/logo.png'             //二维码中间的图片
+            src: '/images/logo.jpg'             //二维码中间的图片
         });
     });
     // function createQRcode() {
@@ -45,8 +45,8 @@
 
     /*下载二维码*/
     function dwn(){
-        var type = 'png';
-        var dataurl =$("canvas").get(0).toDataURL('image/png').replace("image/png", "image/octet-stream");
+        var type = 'jpg';
+        var dataurl =$("canvas").get(0).toDataURL('image/jpg').replace("image/jpg", "image/octet-stream");
         var filename = '<?php echo $num;?>' + '.' + type;
         saveFile(dataurl,filename);
     }
