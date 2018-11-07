@@ -23,6 +23,11 @@ class ViewsController extends Controller {
      * 新增门店订单
      */
     public function actionToAddOrders(){
+        $session = \Yii::$app->session;
+        $type = $session['admin']['type'];
+        if($type!=1){
+            return '<span style="text-align: center;font-size: 16px;display: inline-block;width: 100%;">不是渠道用户无该操作权限！</span>';
+        }
         return $this->render('/ordersmod/orders/add-orders');
     }
 	

@@ -3,6 +3,7 @@
 namespace app\modules\orders\controllers;
 
 use Yii;
+use yii\db\Query;
 use yii\web\Controller;
 use app\modules\common\models\Lottery;
 use app\modules\common\models\Order;
@@ -114,8 +115,6 @@ class OrdersController extends Controller {
             $upStr = '';
             foreach ($content as $k => $v){
                 $inVal[] = [$order->order_id,$order->order_code,$v['lottery_id'],$v['lottery_name'],$v['sub_value'],$v['nums'],$v['sheet_nums'],$v['price'],$v['nums']*$v['price'],$format];
-                //更新门店彩种表数据
-                $this->updateStoreLottery($custNo,$channel,$v['lottery_id'],$v['sub_value'],$v['nums']*$v['sheet_nums']);
             }
             $ret = $db->createCommand()->batchInsert('order_detail', $field, $inVal)->execute();
             if($ret === false) {
@@ -136,7 +135,7 @@ class OrdersController extends Controller {
         $info = StoreLottery::find()->where($where)->one();
         if(!empty($info)){
             $newNums = $info->stock + $nums;
-            $res = StoreLottery::updateAll(["stock"=>$newNums],$where);
+            StoreLottery::updateAll(["stock"=>$newNums],$where);
         }else{
             //新增门店彩种表数据
             $storeLottery = new StoreLottery();
@@ -262,22 +261,39 @@ class OrdersController extends Controller {
 		$session = \Yii::$app->session;
 		$parmas_get = \Yii::$app->request->get();
         $parmas_post = \Yii::$app->request->post();
-		$db = \Yii::$app->db;
 		$now_times = date('Y-m-d H:i:s',time());
 		
-		$order = Order::find()->where(['order_id' => $parmas_get['order_id']])->one();
+		$order = (new Query())->select(['order.*','s.channel_no'])
+            ->from('order')
+            ->leftJoin('store as s','s.cust_no = order.cust_no')
+            ->where(['order.order_id' => $parmas_get['order_id']])
+            ->one();
         if (!$order) {
             return $this->jsonError(100, '没有该条数据，请刷新重试');
         }
-		$order->order_status = 2;
-        $order->courier_name = $parmas_post['courier_name'];
-        $order->courier_code = $parmas_post['courier_code'];
-		$order->send_time = $now_times;
-        if (!$order->save()) {
-            return $this->jsonError(109,$order->errors);
+//		$order->order_status = 2;
+//        $order->courier_name = $parmas_post['courier_name'];
+//        $order->courier_code = $parmas_post['courier_code'];
+//		$order->send_time = $now_times;
+		//发货保存数据并更新门店彩种
+        $db = \Yii::$app->db;
+        $trans = $db->beginTransaction();
+        try{
+            $ret = Order::updateAll(['order_status'=>2,'courier_name'=>$parmas_post['courier_name'],'courier_code'=>$parmas_post['courier_code'],'send_time'=>$now_times],['order_id'=>$parmas_get['order_id']]);
+            if (!$ret) {
+                throw new Exception('发货失败');
+            }
+            $orderDetail = OrderDetail::find()->where(['order_id'=>$parmas_get['order_id']])->asArray()->all();
+            //更新门店彩种表数据
+            foreach ($orderDetail as $k => $v){
+                $this->updateStoreLottery($order['cust_no'],$order['channel_no'],$v['lottery_id'],$v['sub_value'],$v['nums']*$v['sheet_nums']);
+            }
+            $trans->commit();
+            return $this->jsonResult(600, '操作成功', true);
+        }catch (Exception $ex) {
+            $trans->rollBack();
+            return $this->jsonError(109,$ex->getMessage());
         }
-
-        return $this->jsonResult(600, '操作成功', true);
     }
     /**
      * 获取订单code
