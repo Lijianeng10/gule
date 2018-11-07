@@ -200,7 +200,7 @@ class StoreService {
      */
     public static function getLottery($custNo, $terminalNum, $machineCode) {
         $storeLottery = StoreLottery::find()->select(['l.lottery_id', 'l.lottery_value', 'l.lottery_name'])
-                ->innerJoin('store s', 's.channel_no = store_lottery.channel_no')
+                ->innerJoin('store s', 's.channel_no = store_lottery.channel_no and s.cust_no = store_lottery.cust_no')
                 ->innerJoin('lottery l', 'l.lottery_id = store_lottery.lottery_id')
                 ->where(['store_lottery.cust_no' => $custNo])
                 ->andWhere(['>', 'store_lottery.stock', 0])
@@ -447,7 +447,7 @@ class StoreService {
         $field = ['terminal_num', 'machine_code', 'machine.cust_no', 'l.lottery_value', 'machine.stock', 'l.lottery_name', 'l.lottery_img', 'sl.stock all_stock', 'online_status'];
         $goods = Machine::find()->select($field)
                 ->innerJoin('lottery l', 'l.lottery_id = machine.lottery_id')
-                ->innerJoin('store_lottery sl', 'sl.lottery_id = machine.lottery_id and sl.cust_no = machine.cust_no')
+                ->innerJoin('store_lottery sl', 'sl.lottery_id = machine.lottery_id and sl.cust_no = machine.cust_no and sl.channel_no = machine.channel_no')
                 ->where(['machine.status' => 1, 'ac_status' => 1, 'machine.cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode])
                 ->asArray()
                 ->one();
