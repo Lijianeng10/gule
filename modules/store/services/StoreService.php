@@ -334,9 +334,10 @@ class StoreService {
         $where1 = "DATE_FORMAT(p.pay_time, '%Y-%m') = '{$month}'";
         $field = ['store.cust_no', 'user_tel', 'channel_no',
             new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where}) end date_sell_amount"),
-            new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where1}) end month_sell_amount")];
+            new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where1}) end month_sell_amount"),
+            new Expression("case when store.status = 1 then (select coalesce(sum(machine_id), 0) from machine m where m.cust_no = store.cust_no and m.status = 1) end machine_nums")];
         $storeData = Store::find()->select($field)->where(['cust_no' => $custNo, 'store.status' => 1])->asArray()->one();
-        if (!empty($storeData)) {
+        if (!empty($storeData) && $storeData['machine_nums'] != 0) {
             $field1 = ['terminal_num', 'machine_code', 'l.lottery_value', 'stock', 'ac_status', 'online_status', 'machine.status', 'l.lottery_name', 'cust_no', 'l.lottery_img', 'sum(machine.stock * machine.lottery_value) sum_amount',
                 new Expression("case when machine.status = 1 then (select coalesce(sum(p.buy_nums),0) from pay_record p where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_count"),
                 new Expression("case when machine.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_amount")];
