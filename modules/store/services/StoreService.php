@@ -274,15 +274,15 @@ class StoreService {
         if (empty($machine)) {
             return ['code' => 109, 'msg' => '请确认此设备已激活'];
         }
-        if ($activeType == 1) {
+//        if (empty($activeType)) {
             $update = ['stock' => $stock];
-        } else {
-            if ($stock > $machine->stock) {
-                return ['code' => 109, 'msg' => '机箱内的库存不足扣除量'];
-            }
-            $update = ['stock' => new Expression('stock-' . $stock)];
-            $prePayMoney = $stock * $machine->lottery_value;
-        }
+//        } else {
+//            if ($stock > $machine->stock && $activeType == 1) {
+//                return ['code' => 109, 'msg' => '机箱内的库存不足扣除量'];
+//            }
+//            $update = ['stock' => new Expression('stock-' . $stock)];
+//            $prePayMoney = $stock * $machine->lottery_value;
+//        }
         $db = \Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
@@ -290,34 +290,34 @@ class StoreService {
             if ($storeLottery['stock'] < $stock) {
                 throw new Exception('门店此彩种库存不足');
             }
-            if ($activeType == 2) {
-                $payCreate = self::createPayRecord($custNo, $terminalNum, $machine->channel_no, $prePayMoney);
-                if ($payCreate['code'] != 600) {
-                    throw new Exception($payCreate['msg']);
-                }
-//                $storeUp = ['stock' => new Expression('stock-' . $stock)];
-                $storeLotteryRet = StoreLottery::updateAll($update, ['cust_no' => $custNo, 'lottery_id' => $machine->lottery_id, 'lottery_value' => $machine->lottery_value]);
-                if ($storeLotteryRet === false) {
-                    throw new Exception('库存修改失败-门店彩种');
-                }
-            }
+//            if (!$activeType) { // 机箱库存扣除
+//                $payCreate = self::createPayRecord($custNo, $terminalNum, $machine->channel_no, $prePayMoney);
+//                if ($payCreate['code'] != 600) {
+//                    throw new Exception($payCreate['msg']);
+//                }
+////                $storeUp = ['stock' => new Expression('stock-' . $stock)];
+//                $storeLotteryRet = StoreLottery::updateAll($update, ['cust_no' => $custNo, 'lottery_id' => $machine->lottery_id, 'lottery_value' => $machine->lottery_value]);
+//                if ($storeLotteryRet === false) {
+//                    throw new Exception('库存修改失败-门店彩种');
+//                }
+//            }
             $upMachine = Machine::updateAll($update, ['cust_no' => $custNo, 'machine_code' => $machineCode, 'terminal_num' => $terminalNum]);
             if ($upMachine === false) {
                 throw new Exception('库存修改失败-机器');
             }
-            if ($activeType == 2) {
-                $payRecord = PayRecord::findOne(['pay_record_id' => $payCreate['recordId']]);
-                $payRecord->buy_nums = $stock;
-                $payRecord->lottery_id = $machine->lottery_id;
-                $payRecord->lottery_value = $machine->lottery_value;
-                $payRecord->status = 1;
-                $payRecord->pay_money = $prePayMoney;
-                $payRecord->pay_time = date('Y-m-d H:i:s');
-                $payRecord->modify_time = date('Y-m-d H:i:s');
-                if (!$payRecord->save()) {
-                    throw new Exception('库存修改失败-记录');
-                }
-            }
+//            if ($activeType == 2) {
+//                $payRecord = PayRecord::findOne(['pay_record_id' => $payCreate['recordId']]);
+//                $payRecord->buy_nums = $stock;
+//                $payRecord->lottery_id = $machine->lottery_id;
+//                $payRecord->lottery_value = $machine->lottery_value;
+//                $payRecord->status = 1;
+//                $payRecord->pay_money = $prePayMoney;
+//                $payRecord->pay_time = date('Y-m-d H:i:s');
+//                $payRecord->modify_time = date('Y-m-d H:i:s');
+//                if (!$payRecord->save()) {
+//                    throw new Exception('库存修改失败-记录');
+//                }
+//            }
             $trans->commit();
             return ['code' => 600, 'msg' => '库存修改成功'];
         } catch (Exception $ex) {

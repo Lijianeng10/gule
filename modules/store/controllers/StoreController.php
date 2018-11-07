@@ -90,7 +90,7 @@ class StoreController extends Controller {
         $terminalNum = $request->post('terminalNum', '');
         $machineCode = $request->post('machineCode', '868926033601029000000000');
         $stock = $request->post('nums', '');
-        $activeType = $request->post('activeType', ''); // 1：库存补给 2：库存扣除
+        $activeType = $request->post('activeType', ''); // 1：机箱库存扣除 2：总库存扣除
         $ret = StoreService::changeMachineStock($custNo, $terminalNum, $machineCode, $activeType, $stock);
         if($ret['code'] != 600) {
             return $this->jsonError(109, $ret['msg']);
