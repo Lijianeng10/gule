@@ -18,6 +18,7 @@ class StoreController extends Controller {
 //        echo $agent;die;
         $request = \Yii::$app->request;
         $custNo = $request->get('myCustNo', '');
+        $statusBarHeight = $request->get('statusBarHeight', '');
         if (!$custNo) {
             if (strpos($_SERVER['HTTP_USER_AGENT'], 'AlipayClient') === false) {
                 //非支付宝 返回错误提示
@@ -26,7 +27,6 @@ class StoreController extends Controller {
             }
         }
         $terminalNum = $request->get('terminalNum', '');
-        $statusBarHeight = $request->get('statusBarHeight', '');
         if (empty($terminalNum)) {
             $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=参数缺失' . '&statusBarHeight=' . $statusBarHeight;
             return $this->redirect($url);
