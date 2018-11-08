@@ -56,7 +56,10 @@ class StoreController extends Controller {
             return $this->jsonError(100, '参数缺失');
         }
         $ret = StoreService::getLottery($custNo, $terminalNum, $machineCode);
-        return $this->jsonResult(600, '获取成功', $ret);
+        if($ret['code'] != 600) {
+            return $this->jsonError(109, $ret['msg']);
+        }
+        return $this->jsonResult(600, '获取成功', $ret['data']);
     }
     
     /**
@@ -266,4 +269,8 @@ class StoreController extends Controller {
         }
         return $this->jsonResult(600, '操作成功！', true);
     }
+    
+//    public function actionApplyToStock() {
+//        
+//    }
 }

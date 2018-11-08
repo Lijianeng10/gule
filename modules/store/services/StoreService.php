@@ -210,6 +210,9 @@ class StoreService {
                 ->andWhere(['>', 'store_lottery.stock', 0])
                 ->asArray()
                 ->all();
+        if(empty($storeLottery)) {
+            return ['code' => 109, 'msg' => '暂无可售彩种！！可向渠道申请进货'];
+        }
         if ($terminalNum && $machineCode) {
             $currentLottery = Machine::find()->select(['l.lottery_id', 'l.lottery_value', 'l.lottery_name'])
                     ->innerJoin('lottery l', 'l.lottery_id = machine.lottery_id')
@@ -231,7 +234,7 @@ class StoreService {
         $data['lottery'] = $lottData;
         $data['value'] = array_values($valueData);
         $data['lotteryValue'] = $lotteryValue;
-        return $data;
+        return ['code' => 600, 'msg' => '获取成功', 'data' =>$data];
     }
 
     /**
