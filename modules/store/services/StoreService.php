@@ -51,6 +51,10 @@ class StoreService {
                     $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo . '&statusBarHeight=' . $statusBarHeight; // 跳转门店管理页面
                     return $url;
                 } elseif ($machineData['cust_no'] != $custNo) {
+                    if (strpos($_SERVER['HTTP_USER_AGENT'], 'AlipayClient') == false) {
+                        //非支付宝 返回错误提示
+                        $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请使用支付宝客户端扫码购彩' . '&statusBarHeight=' . $statusBarHeight;
+                    }
                     if (empty($machineData['lottery_id'])) {
                         $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备还未确定出售彩种！请联系店主' . '&statusBarHeight=' . $statusBarHeight;
                         return $url;
@@ -120,7 +124,7 @@ class StoreService {
                 return ['code' => 109, 'msg' => $storeData['msg']];
             }
             $addCust = self::bindCustNo($custNo);
-            if($addCust['code'] != 1) {
+            if ($addCust['code'] != 1) {
                 return ['code' => 109, 'msg' => $addCust['msg']];
             }
             $channelNo = array_slice(explode('.', $storeData['data']['cascadeId']), -2, 1);
@@ -210,7 +214,7 @@ class StoreService {
                 ->andWhere(['>', 'store_lottery.stock', 0])
                 ->asArray()
                 ->all();
-        if(empty($storeLottery)) {
+        if (empty($storeLottery)) {
             return ['code' => 109, 'msg' => '暂无可售彩种！！可向渠道申请进货'];
         }
         if ($terminalNum && $machineCode) {
@@ -234,7 +238,7 @@ class StoreService {
         $data['lottery'] = $lottData;
         $data['value'] = array_values($valueData);
         $data['lotteryValue'] = $lotteryValue;
-        return ['code' => 600, 'msg' => '获取成功', 'data' =>$data];
+        return ['code' => 600, 'msg' => '获取成功', 'data' => $data];
     }
 
     /**
@@ -756,7 +760,7 @@ class StoreService {
             return ['code' => 109, 'msg' => $ex->getMessage()];
         }
     }
-    
+
     /**
      * 添加下级商户
      * @param type $custNo
@@ -770,7 +774,7 @@ class StoreService {
         $ret = \Yii::sendCurlPost($url, $postData);
         return $ret;
     }
-    
+
     /**
      * 获取系统彩种
      * @param type $limitArea
@@ -778,19 +782,19 @@ class StoreService {
      */
     public static function getSysLottery($limitArea) {
         $where = ['and', ['status' => 1]];
-        if($limitArea) {
+        if ($limitArea) {
             $where[] = ['limit_area' => $limitArea];
         }
         $lotteryData = Lottery::find()->select(['lottery_id', 'lottery_name', 'lottery_value', 'lottery_img'])->where(['status' => 1])->asArray()->all();
-        if(empty($lotteryData)) {
+        if (empty($lotteryData)) {
             return ['code' => 109, 'msg' => '暂无彩种可订购！请稍后再试或联系相关渠道'];
         }
         return ['code' => 600, 'msg' => '获取成功', 'data' => $lotteryData];
     }
-    
+
     public static function applyToStock($custNo, $lotteryId, $stockNum) {
         $lotteryData = Lottery::find()->select(['lottery_id', 'lottery_name', 'lottery_value'])->where(['lottery_id' => $lotteryId, 'status' => 1])->asArray()->one();
-        if(empty($lotteryData)) {
+        if (empty($lotteryData)) {
             return ['code' => 109, 'msg' => '此彩种渠道暂不知道提供订购！请联系渠道'];
         }
         $storeData = Store::find()->select(['cust_no', 'user_tel', 'channel_no', 'store_name', 'province']);

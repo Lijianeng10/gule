@@ -14,10 +14,16 @@ class StoreController extends Controller {
      * @return type
      */
     public function actionToJumpPage() {
-        $agent = $_SERVER['HTTP_USER_AGENT'];
+//        $agent = $_SERVER['HTTP_USER_AGENT'];
 //        echo $agent;die;
         $request = \Yii::$app->request;
         $custNo = $request->get('myCustNo', '');
+        if (!$custNo) {
+            if (strpos($_SERVER['HTTP_USER_AGENT'], 'AlipayClient') == false) {
+                //非支付宝 返回错误提示
+                return $this->jsonError(109, '请使用支付宝客户端扫码购彩');
+            }
+        }
         $terminalNum = $request->get('terminalNum', '');
         $statusBarHeight = $request->get('statusBarHeight', '');
         if (empty($terminalNum)) {
@@ -282,7 +288,7 @@ class StoreController extends Controller {
         $request = \Yii::$app->request;
         $limitArea = $request->post('limitArea', '');
         $ret = StoreService::getSysLottery($limitArea);
-        if($ret['code'] != 600) {
+        if ($ret['code'] != 600) {
             return $this->jsonError(109, $ret['msg']);
         }
         return $this->jsonResult(600, '获取成功', $ret['code']);
@@ -293,7 +299,7 @@ class StoreController extends Controller {
         $custNo = $request->post('custNo', '');
         $lotteryId = $request->post('lotteryId', '');
         $stockNum = $request->post('stockNum', '');
-        if(empty($custNo) || empty($lotteryId) || empty($stockNum)) {
+        if (empty($custNo) || empty($lotteryId) || empty($stockNum)) {
             return $this->jsonError(100, '参数缺失');
         }
     }
