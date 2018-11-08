@@ -29,7 +29,7 @@ class StoreController extends Controller {
         $offset = $rows * ($page - 1);
         $where = ['and'];
         if (!empty($cust_no)) {
-            $where[] = ['or',['like', 'cust_no', $cust_no],['like', 'user_tel', $cust_no],['like', 'store_name', $cust_no]];
+			$where[] = ['cust_no' => $cust_no];
         }
         if (!empty($status)) {
             $where[] = ['status' => $status];
@@ -80,6 +80,28 @@ class StoreController extends Controller {
         }
         Store::updateAll(['status' => $status], ['store_id' => $parmas['id']]);
         return $this->jsonResult(600, '修改成功', true);
+    }
+	
+	/**
+     * 获取网点
+     */
+    public function actionGetCustNo() {
+		$session = \Yii::$app->session;
+		$where = ['and'];
+		$where[] = ['status' => 1];
+		
+		//判断登陆账号是否为渠道账户
+		if($session['admin']['type'] == 1){
+			$where[] = ['channel_no' => $session['admin']['admin_name']];
+		}
+		
+        $storeData = Store::find()->select(['cust_no', 'store_name'])->where($where)->orderBy("create_time desc")->asArray()->all();
+        $storeLists=[];
+		$storeLists=[['id'=>'','text'=>'全部']];
+        foreach($storeData as $key => $val){
+            $storeLists[] = ['id'=>$val['cust_no'],'text'=>$val['store_name']];
+        }
+        return json_encode($storeLists);
     }
 
 }

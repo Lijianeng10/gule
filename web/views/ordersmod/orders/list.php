@@ -52,6 +52,15 @@
 				value:-1,
 			});
 			
+			//网点信息
+			$('#cust_no').combobox({
+				url:'/ordersmod/orders/get-cust-no',
+				valueField:'id',
+				textField:'text',
+				panelHeight:'auto',
+				editable:true
+			});
+			
             //数据表格
             $('#datagrid').datagrid({
                 url: '/ordersmod/orders/get-list',
@@ -69,11 +78,12 @@
                         width: 180,
                         align: 'center',
                     },{
-                        field: 'cust_no',
+                        field:'cust_info',
                         title: '网点信息',
                         width: 100,
                         align: 'center',
-                        formatter: mainFormatter
+                        sortable: true,
+						formatter: custInfoFormatter
                     }]
 				],
                 columns: [
@@ -161,6 +171,13 @@
                 }
             });
 			
+			//网点信息
+			function custInfoFormatter(value,row){
+                var str= "";
+                str+= row.store_name+'<br>'+row.cust_no+'<br>'+row.user_tel;
+                return str;
+            }
+			
 			//地址
 			function addressXsFormatter(value, row) {
 				var str = '';
@@ -198,11 +215,6 @@
 					str += "<a href='#' name='sure_send' class='easyui-linkbutton info courieradd' onclick=\"courier_add('"+row.order_code+"','"+row.order_id+"')\"></a>&nbsp";
 				}
                 str += '<a href="#" name="read_user" class="easyui-linkbutton info orderdetail" onclick="create_window(\'dlg\',\'订单详情\',\'/ordersmod/views/to-orders-details?order_id='+row.order_id+'\',900,600)"></a>';
-                return str;
-            }
-            function mainFormatter(value,row){
-                str = '';
-                str = row.store_name+'<br>'+row.cust_no+'<br>'+row.user_tel;
                 return str;
             }
         });
@@ -292,8 +304,8 @@
                 <input type="text" id="order_code" name="order_code" class="easyui-textbox" placeholder="订单编号" >
             </div>
             <div class="tb_item">
-                <span>网点编号:</span>
-                <input type="text" id="cust_no" name="cust_no" class="easyui-textbox" placeholder="下单网点编号" >
+                <span>网点名称:</span>
+                <input name="cust_no" id="cust_no" class="easyui-validatebox easyui-combobox">
             </div>
             <div class="tb_item">
                 <span>订单状态:</span>
