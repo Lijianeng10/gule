@@ -198,7 +198,7 @@ class OrdersController extends Controller {
             $where[] = ['like','order.order_code',$order_code];
         }
         if($cust_no != ''){
-            $where[] = ['like','order.cust_no',$cust_no];
+            $where[] = ['order.cust_no' => $cust_no];
         }
         if($order_status != '' && $order_status != '-1'){
             $where[] = ['order.order_status'=>$order_status];
@@ -223,7 +223,7 @@ class OrdersController extends Controller {
 			->where($where)
 			->count();
         $AttrList = Order::find()
-			//->select(['order.*','store.channel_no'])
+			->select(['order.*','store.channel_no','store.store_name','store.user_tel'])
             ->leftJoin('store','store.cust_no = order.cust_no')
             ->where($where)
             ->offset($offset)
@@ -304,5 +304,27 @@ class OrdersController extends Controller {
            $this->getOrderCode();
         }
         return $code;
+    }
+	
+	/**
+     * 获取网点
+     */
+    public function actionGetCustNo() {
+		$session = \Yii::$app->session;
+		$where = ['and'];
+		$where[] = ['status' => 1];
+		
+		//判断登陆账号是否为渠道账户
+		if($session['admin']['type'] == 1){
+			$where[] = ['channel_no' => $session['admin']['admin_name']];
+		}
+		
+        $storeData = Store::find()->select(['cust_no', 'store_name'])->where($where)->orderBy("create_time desc")->asArray()->all();
+        $storeLists=[];
+		$storeLists=[['id'=>'','text'=>'全部']];
+        foreach($storeData as $key => $val){
+            $storeLists[] = ['id'=>$val['cust_no'],'text'=>$val['store_name']];
+        }
+        return json_encode($storeLists);
     }
 }

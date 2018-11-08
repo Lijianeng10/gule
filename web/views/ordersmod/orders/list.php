@@ -52,6 +52,15 @@
 				value:-1,
 			});
 			
+			//网点信息
+			$('#cust_no').combobox({
+				url:'/ordersmod/orders/get-cust-no',
+				valueField:'id',
+				textField:'text',
+				panelHeight:'auto',
+				editable:true
+			});
+			
             //数据表格
             $('#datagrid').datagrid({
                 url: '/ordersmod/orders/get-list',
@@ -69,11 +78,12 @@
                         width: 180,
                         align: 'center',
                     },{
-                        field:'cust_no',
-                        title: '门店编号',
+                        field:'cust_info',
+                        title: '网点信息',
                         width: 100,
                         align: 'center',
-                        sortable: true
+                        sortable: true,
+						formatter: custInfoFormatter
                     }]
 				],
                 columns: [
@@ -160,6 +170,13 @@
 					$("a[name='read_user']").linkbutton({text:'查看',iconCls:'fa fa-search'});
                 }
             });
+			
+			//网点信息
+			function custInfoFormatter(value,row){
+                var str= "";
+                str+= row.store_name+'<br>'+row.cust_no+'<br>'+row.user_tel;
+                return str;
+            }
 			
 			//地址
 			function addressXsFormatter(value, row) {
@@ -287,8 +304,8 @@
                 <input type="text" id="order_code" name="order_code" class="easyui-textbox" placeholder="订单编号" >
             </div>
             <div class="tb_item">
-                <span>门店编号:</span>
-                <input type="text" id="cust_no" name="cust_no" class="easyui-textbox" placeholder="下单门店编号" >
+                <span>网点信息:</span>
+                <input name="cust_no" id="cust_no" class="easyui-validatebox easyui-combobox">
             </div>
             <div class="tb_item">
                 <span>订单状态:</span>

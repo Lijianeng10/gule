@@ -35,6 +35,15 @@
                     });
                 },
             };
+			
+			//网点信息
+			$('#cust_no').combobox({
+				url:'/usermod/store/get-cust-no',
+				valueField:'id',
+				textField:'text',
+				panelHeight:'auto',
+				editable:true
+			});
 
             $('#datagrid').datagrid({
                 url: '/usermod/store/get-store-list',
@@ -54,7 +63,7 @@
                         align: 'center',
                         formatter:infoFormatter
                     },{
-                        field: 'channel_no',
+                        field: 'nickname',
                         title: '所属渠道',
                         width: 100,
                         align: 'center',
@@ -85,7 +94,7 @@
                         field: 'saleMoneys',
                         title: '总销量(元)',
                         width: 80,
-                        sortable: true,
+                        // sortable: true,
                         align: 'center',
                     },{
                         field: 'status',
@@ -160,7 +169,7 @@
         <div class="tb-column">
             <div class="tb_item">
                 <span>网点信息：</span>
-                <input type="text"  name="cust_no" class="easyui-textbox" prompt="网点编号、手机号、网点名称">
+                <input name="cust_no" id="cust_no" class="easyui-validatebox easyui-combobox">
             </div>
             <div class="tb_item">
                 <span>状态：</span>

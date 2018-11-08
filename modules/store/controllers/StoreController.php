@@ -2,6 +2,7 @@
 
 namespace app\modules\store\controllers;
 
+use app\modules\tools\helpers\PayTool;
 use Yii;
 use yii\web\Controller;
 use app\modules\store\services\StoreService;
