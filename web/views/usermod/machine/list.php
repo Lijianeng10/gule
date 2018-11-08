@@ -198,7 +198,7 @@
                 </select>
             </div>
 			<div class="tb_item">
-                <span>网点信息</span>
+                <span>网点名称：</span>
                 <input name="cust_no" id="cust_no" class="easyui-validatebox easyui-combobox">
             </div>
         </div>

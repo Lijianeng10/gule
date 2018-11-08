@@ -5,6 +5,7 @@ namespace app\modules\user\controllers;
 use yii\web\Controller;
 use Yii;
 use app\modules\common\models\PayRecord;
+use app\modules\common\models\Store;
 
 class PayrecordController extends Controller {
 
@@ -16,7 +17,7 @@ class PayrecordController extends Controller {
         $sort = $request->post('sort', 'desc');
         $orderBy = $request->post('order', 'pay_record.create_time');
         $lotteryInfo = $request->post('lotteryInfo', '');
-        $storeInfo = $request->post('storeInfo', '');
+        $cust_no = $request->post('cust_no', '');
         $status = $request->post('status');
         $start_time = $request->post('start_time');
         $end_time = $request->post('end_time');
@@ -31,8 +32,8 @@ class PayrecordController extends Controller {
         if(!empty($orderInfo)){
             $where[] = ['like','pay_record.order_code',$orderInfo];
         }
-        if(!empty($storeInfo)){
-            $where[] = ['or',['like','s.cust_no',$storeInfo],['like','s.user_tel',$storeInfo],['like','s.store_name',$storeInfo]];
+        if(!empty($cust_no)){
+			$where[] = ['s.cust_no' => $cust_no];
         }
         if(!empty($lotteryInfo)){
             $where[] = ['or',['like','l.lottery_name.',$lotteryInfo],['like','l.lottery_value',$lotteryInfo]];
@@ -69,6 +70,28 @@ class PayrecordController extends Controller {
                 ->asArray()
                 ->all();
         return \Yii::datagridJson($lotteryData, $total);
+    }
+	
+	/**
+     * 获取网点
+     */
+    public function actionGetCustNo() {
+		$session = \Yii::$app->session;
+		$where = ['and'];
+		$where[] = ['status' => 1];
+		
+		//判断登陆账号是否为渠道账户
+		if($session['admin']['type'] == 1){
+			$where[] = ['channel_no' => $session['admin']['admin_name']];
+		}
+		
+        $storeData = Store::find()->select(['cust_no', 'store_name'])->where($where)->orderBy("create_time desc")->asArray()->all();
+        $storeLists=[];
+		$storeLists=[['id'=>'','text'=>'全部']];
+        foreach($storeData as $key => $val){
+            $storeLists[] = ['id'=>$val['cust_no'],'text'=>$val['store_name']];
+        }
+        return json_encode($storeLists);
     }
 
 }
