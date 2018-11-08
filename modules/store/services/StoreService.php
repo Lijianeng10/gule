@@ -51,7 +51,7 @@ class StoreService {
                     $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo . '&statusBarHeight=' . $statusBarHeight; // 跳转门店管理页面
                     return $url;
                 } elseif ($machineData['cust_no'] != $custNo) {
-                    if (strpos($_SERVER['HTTP_USER_AGENT'], 'AlipayClient') == false) {
+                    if (strpos($_SERVER['HTTP_USER_AGENT'], 'AlipayClient') === false) {
                         //非支付宝 返回错误提示
                         $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请使用支付宝客户端扫码购彩' . '&statusBarHeight=' . $statusBarHeight;
                     }

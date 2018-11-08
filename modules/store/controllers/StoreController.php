@@ -19,7 +19,7 @@ class StoreController extends Controller {
         $request = \Yii::$app->request;
         $custNo = $request->get('myCustNo', '');
         if (!$custNo) {
-            if (strpos($_SERVER['HTTP_USER_AGENT'], 'AlipayClient') == false) {
+            if (strpos($_SERVER['HTTP_USER_AGENT'], 'AlipayClient') === false) {
                 //非支付宝 返回错误提示
                 return $this->jsonError(109, '请使用支付宝客户端扫码购彩');
             }
