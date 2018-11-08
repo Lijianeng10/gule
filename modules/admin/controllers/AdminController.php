@@ -250,10 +250,7 @@ class AdminController extends Controller {
      */
     public function actionDelete() {
         $ids = \Yii::$app->request->post()['ids'];
-		$sysLists = Admin::find()
-                        ->select(['admin_name'])
-                        ->Where(['admin_id' => $ids])->one();
-		if($sysLists['admin_name'] == 'admin'){
+		if($ids == Constants::ADMIN_ROLE){
 			return $this->jsonResult(109, '超级管理员不能删除');
 		}
         $idsArr = explode(',', $ids);
