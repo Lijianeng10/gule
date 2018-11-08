@@ -26,61 +26,61 @@ class StoreService {
      * @param type $terminalNum
      * @return type
      */
-    public static function toJumpPage($custNo, $terminalNum) {
+    public static function toJumpPage($custNo, $terminalNum, $statusBarHeight) {
         $machineData = Machine::find()->select(['cust_no', 'machine_code', 'terminal_num', 'status', 'lottery_id', 'online_status'])->where(['terminal_num' => $terminalNum, 'status' => 1])->asArray()->one();
         if ($custNo) {
             if (empty($machineData)) {
                 $terminal = Terminal::find()->select(['terminal_num'])->where(['terminal_num' => $terminalNum, 'use_status' => 0])->asArray()->one();
                 if (empty($terminal)) {
-                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=此终端号已被占用';
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=此终端号已被占用' . '&statusBarHeight=' . $statusBarHeight;
                     return $url;
                 }
-                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/activate.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo; // 跳转激活页面
+                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/activate.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo . '&statusBarHeight=' . $statusBarHeight; // 跳转激活页面
                 return $url;
             } else {
                 $onlineStatus = self::validateMachine($machineData['machine_code']);
                 if ($onlineStatus['code'] != 600) {
-                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=验签失败！请稍后再试';
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=验签失败！请稍后再试' . '&statusBarHeight=' . $statusBarHeight;
                     return $url;
                 }
                 if ($onlineStatus['online'] === false) {
-                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请确认机器电源已接通并输入正确的机器码';
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请确认机器电源已接通并输入正确的机器码' . '&statusBarHeight=' . $statusBarHeight;
                     return $url;
                 }
                 if ($machineData['cust_no'] == $custNo) {
-                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo; // 跳转门店管理页面
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo . '&statusBarHeight=' . $statusBarHeight; // 跳转门店管理页面
                     return $url;
                 } elseif ($machineData['cust_no'] != $custNo) {
                     if (empty($machineData['lottery_id'])) {
-                        $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备还未确定出售彩种！请联系店主';
+                        $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备还未确定出售彩种！请联系店主' . '&statusBarHeight=' . $statusBarHeight;
                         return $url;
                     }
-                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页面
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code'] . '&statusBarHeight=' . $statusBarHeight; // 跳转购彩页面
                     return $url;
                 }
             }
         } else {
             if (empty($machineData)) {
-                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该机器未激活！请联系店主';
+                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该机器未激活！请联系店主' . '&statusBarHeight=' . $statusBarHeight;
                 return $url;
             } elseif ($machineData['status'] == 1) {
                 $onlineStatus = self::validateMachine($machineData['machine_code']);
                 if ($onlineStatus['code'] != 600) {
-                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=验签失败！请稍后再试';
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=验签失败！请稍后再试' . '&statusBarHeight=' . $statusBarHeight;
                     return $url;
                 }
                 if ($onlineStatus['online'] === false) {
-                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请确认机器电源已接通并输入正确的机器码';
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请确认机器电源已接通并输入正确的机器码' . '&statusBarHeight=' . $statusBarHeight;
                     return $url;
                 }
                 if (empty($machineData['lottery_id'])) {
-                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备还未确定出售彩种！请联系店主';
+                    $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备还未确定出售彩种！请联系店主' . '&statusBarHeight=' . $statusBarHeight;
                     return $url;
                 }
-                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code']; // 跳转购彩页
+                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $machineData['cust_no'] . '&machineCode=' . $machineData['machine_code'] . '&statusBarHeight=' . $statusBarHeight; // 跳转购彩页
                 return $url;
             } elseif ($machineData['status'] != 1) {
-                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备已被禁用！请联系店主';
+                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备已被禁用！请联系店主' . '&statusBarHeight=' . $statusBarHeight;
                 return $url;
             }
         }
@@ -768,6 +768,31 @@ class StoreService {
         $postData['sign'] = $sign;
         $ret = \Yii::sendCurlPost($url, $postData);
         return $ret;
+    }
+    
+    /**
+     * 获取系统彩种
+     * @param type $limitArea
+     * @return type
+     */
+    public static function getSysLottery($limitArea) {
+        $where = ['and', ['status' => 1]];
+        if($limitArea) {
+            $where[] = ['limit_area' => $limitArea];
+        }
+        $lotteryData = Lottery::find()->select(['lottery_id', 'lottery_name', 'lottery_value', 'lottery_img'])->where(['status' => 1])->asArray()->all();
+        if(empty($lotteryData)) {
+            return ['code' => 109, 'msg' => '暂无彩种可订购！请稍后再试或联系相关渠道'];
+        }
+        return ['code' => 600, 'msg' => '获取成功', 'data' => $lotteryData];
+    }
+    
+    public static function applyToStock($custNo, $lotteryId, $stockNum) {
+        $lotteryData = Lottery::find()->select(['lottery_id', 'lottery_name', 'lottery_value'])->where(['lottery_id' => $lotteryId, 'status' => 1])->asArray()->one();
+        if(empty($lotteryData)) {
+            return ['code' => 109, 'msg' => '此彩种渠道暂不知道提供订购！请联系渠道'];
+        }
+        $storeData = Store::find()->select(['cust_no', 'user_tel', 'channel_no', 'store_name', 'province']);
     }
 
 }
