@@ -27,9 +27,19 @@
                         'terminal_num': $.trim($('input[name="terminal_num"]').val()),
                         'status': $.trim($('input[name="status"]').val()),
                         'online_status': $.trim($('input[name="online_status"]').val()),
+						'cust_no': $.trim($('input[name="cust_no"]').val()),
                     });
                 },
             };
+			
+			//网点信息
+			$('#cust_no').combobox({
+				url:'/usermod/machine/get-cust-no',
+				valueField:'id',
+				textField:'text',
+				panelHeight:'auto',
+				editable:true
+			});
 
             $('#datagrid').datagrid({
                 url: '/usermod/machine/get-machine-list',
@@ -186,6 +196,10 @@
                     <option value="0">离线</option>
                     <option value="1">在线</option>
                 </select>
+            </div>
+			<div class="tb_item">
+                <span>网点信息</span>
+                <input name="cust_no" id="cust_no" class="easyui-validatebox easyui-combobox">
             </div>
         </div>
 
