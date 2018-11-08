@@ -2,6 +2,7 @@
 
 namespace app\modules\store\controllers;
 
+use app\modules\tools\helpers\PayTool;
 use Yii;
 use yii\web\Controller;
 use app\modules\store\services\StoreService;
@@ -246,5 +247,30 @@ class StoreController extends Controller {
         }
         return $this->jsonResult(600, '成功', true);
         
+    }
+
+    public function actionTest(){
+
+
+//        $qbRet = PayTool::createQbThePublic('gl00002324', '868926033600849000000000', 5, 'PS100002', '868926033600849000000000');
+//        print_r($qbRet);die;
+
+        $data =[
+            'appid' => '362a00a28e234199a0d911cbdd1d4c671',
+            'custNo' => 'gl00002324',
+            'money' => 5,
+            'attach' => '868926033600849000000000',
+            'mchOrderNo' => '868926033600849000000000',
+            'model' => '00',
+            'expireTime' => 5,
+            'returnType' => 2,
+            'callBackUrl' => 'http://114.115.148.102:8011/tools/qb-pay/qb-callback',
+            'returnUrl' => 'http://114.115.148.102:8011/h5_ggc/purchase.html?terminalNum=PS100002&custNo=gl00002324&machineCode=868926033600849000000000',
+            'sign' => '6cda3c95d50e13eb9c33d299218c3e33'
+        ];
+
+        $ret = Yii::sendCurlPost('https://open.goodluckchina.net/open/pay/buildPayCode',$data);
+
+        print_r($ret);
     }
 }
