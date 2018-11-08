@@ -54,6 +54,7 @@ class StoreService {
                     if (strpos($_SERVER['HTTP_USER_AGENT'], 'AlipayClient') === false) {
                         //非支付宝 返回错误提示
                         $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请使用支付宝客户端扫码购彩' . '&statusBarHeight=' . $statusBarHeight;
+                        return $url;
                     }
                     if (empty($machineData['lottery_id'])) {
                         $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备还未确定出售彩种！请联系店主' . '&statusBarHeight=' . $statusBarHeight;
