@@ -32,7 +32,8 @@ class PayTool {
             'expireTime' => '5',
             'returnType' => '2',
             'callBackUrl' => $qbCallBack,
-            'returnUrl' => \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo . '&machineCode=' . $machineCode,
+//            'returnUrl' => \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo . '&machineCode=' . $machineCode,
+            'returnUrl' => \Yii::$app->params['userDomain'] . '/h5_ggc/success.html',
         ];
         $post_data['sign'] = self::getSign($post_data);
         $qbret = \Yii::sendCurlPost($surl, $post_data);
