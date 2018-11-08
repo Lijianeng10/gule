@@ -70,7 +70,7 @@
                         align: 'center',
                     },{
                         field:'cust_no',
-                        title: '门店编号',
+                        title: '网点编号',
                         width: 100,
                         align: 'center',
                         sortable: true
@@ -287,8 +287,8 @@
                 <input type="text" id="order_code" name="order_code" class="easyui-textbox" placeholder="订单编号" >
             </div>
             <div class="tb_item">
-                <span>门店编号:</span>
-                <input type="text" id="cust_no" name="cust_no" class="easyui-textbox" placeholder="下单门店编号" >
+                <span>网点编号:</span>
+                <input type="text" id="cust_no" name="cust_no" class="easyui-textbox" placeholder="下单网点编号" >
             </div>
             <div class="tb_item">
                 <span>订单状态:</span>
