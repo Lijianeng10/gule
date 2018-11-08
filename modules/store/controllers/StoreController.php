@@ -21,13 +21,15 @@ class StoreController extends Controller {
         if (!$custNo) {
             if (strpos($_SERVER['HTTP_USER_AGENT'], 'AlipayClient') === false) {
                 //非支付宝 返回错误提示
-                return $this->jsonError(109, '请使用支付宝客户端扫码购彩');
+                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请使用支付宝客户端扫码购彩' . '&statusBarHeight=' . $statusBarHeight;
+                return $this->redirect($url);
             }
         }
         $terminalNum = $request->get('terminalNum', '');
         $statusBarHeight = $request->get('statusBarHeight', '');
         if (empty($terminalNum)) {
-            return $this->jsonError(100, '参数缺失');
+            $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=参数缺失' . '&statusBarHeight=' . $statusBarHeight;
+            return $this->redirect($url);
         }
         $ret = StoreService::toJumpPage($custNo, $terminalNum, $statusBarHeight);
         return $this->redirect($ret);
