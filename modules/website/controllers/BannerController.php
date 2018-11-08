@@ -139,7 +139,7 @@ class BannerController extends Controller {
             }
             if (isset($_FILES['upfile'])&&$_FILES['upfile']!="Undefined") {
                 $file = $_FILES['upfile'];
-                $check = UploadPic::getUpload($file);
+                $check = UploadPic::check_upload_pic($file);
                 if ($check['code'] != 600) {
                     return $this->jsonResult($check['code'], $check['msg']);
                 }
