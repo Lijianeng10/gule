@@ -17,17 +17,19 @@
             <label for="" class="label-top">管理员手机号：</label>
             <input name="admin_tel" class="easyui-validatebox easyui-textbox"  value="">
         </div>
-        <div class="form-item">
-            <label for="" class="label-top">所属角色：</label>
-            <input class="easyui-combobox" name="admin_role[]" id="admin_role" data-options="required:true">
-        </div>
-        <div class="form-item">
-            <label for="" class="label-top">所属类型：</label>
-			<select name="type" class="easyui-combobox" value="">
-                <option value="0" selected>内部用户</option>
-                <option value="1">渠道用户</option>
-            </select>
-        </div>
+		<div class="form-item">
+			<label for="" class="label-top">所属角色：</label>
+			<input class="easyui-combobox" name="admin_role[]" id="admin_role" data-options="required:true">
+		</div>
+		<?php if($login_type == '0'){?>
+			<div class="form-item">
+				<label for="" class="label-top">所属类型：</label>
+				<select name="type" class="easyui-combobox" value="">
+					<option value="0" selected>内部用户</option>
+					<option value="1">渠道用户</option>
+				</select>
+			</div>
+		<?php }?>
 
         <div class="form-item">
             <label for="" class="label-top">启用状态：</label>

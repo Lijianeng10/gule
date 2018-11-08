@@ -50,6 +50,11 @@
                         width: 50,
                         sortable: true
                     }, {
+                        field: 'nickname',
+                        title: '创建人',
+                        width: 50,
+                        sortable: true
+                    }, {
                         field: 'status',
                         title: '角色状态',
                         width: 50,

@@ -26,18 +26,22 @@ class ViewsController extends Controller {
 
     }
     public function actionToAdminAdd(){
-        $role = SysRole::find()->where(["status"=>1])->asArray()->all();
-        return $this->render('/adminmod/admin/add',["role"=>$role]);
+		$session = \Yii::$app->session;
+		$login_type = $session['admin']['type'];
+        //$role = SysRole::find()->where(["status"=>1])->asArray()->all();
+        return $this->render('/adminmod/admin/add',["login_type"=>$login_type]);
     }
     public function actionToAdminEdit(){
+		$session = \Yii::$app->session;
         $id = \Yii::$app->request->get('id');
+		$login_type = $session['admin']['type'];
         $admin = Admin::find()
             ->select(["admin.*"])
             ->leftJoin("sys_admin_role as sr","sr.admin_id = admin.admin_id")
             ->where(['admin.admin_id'=>$id])
             ->asArray()
             ->one();
-        return $this->render('/adminmod/admin/edit',['admin'=>$admin]);
+        return $this->render('/adminmod/admin/edit',['admin'=>$admin,'login_type'=>$login_type]);
     }
 
     public function actionToAdminRole(){

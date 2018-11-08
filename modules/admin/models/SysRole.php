@@ -3,6 +3,7 @@
 namespace app\modules\admin\models;
 
 use Yii;
+use app\modules\common\helpers\Constants;
 
 /**
  * This is the model class for table "sys_role".
@@ -65,12 +66,11 @@ class SysRole extends \yii\db\ActiveRecord
         $session = Yii::$app->session;
         $myroles = $session['admin']['role'];
         $where = ['and'];
-
-        if($session['admin']['type']!=0){
-            if (!in_array(1,$myroles)){//除了超级管理员  都只能看到自己所属角色和自己所创建的角色
-                $where[] = ["or",["admin_pid"=>$adminId],['in',"role_id",$myroles]];
-            }
-        }
+		
+		//除了系统管理员  都只能看到自己和自己所创建的角色
+		if (!array_key_exists(Constants::ADMIN_ROLE,$session['admin']["role"])) {
+			$where[] = ["or",["admin_pid"=>$adminId],['in',"role_id",$myroles]];
+		}
 
         $dataLists =SysRole::find()
             ->select(['role_id as id', 'role_name as text'])

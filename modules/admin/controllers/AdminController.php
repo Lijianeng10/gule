@@ -123,12 +123,12 @@ class AdminController extends Controller {
                 $where[] = ['<=', 'admin.create_time', $end_time];
             }
         }
-        if($session['admin']['type'] !=0 ){
-            if ($session["role"]["role_id"] != Constants::ADMIN_ROLE) {
-                $where[] = ["or", ["admin.admin_id" => $session["admin"]["admin_id"]], ["admin.admin_pid" => $session["admin"]["admin_id"]]];
-            }
-        }
-        //除了系统管理员  都只能看到自己和自己所创建的角色
+		
+		//除了系统管理员  都只能看到自己和自己所创建的用户
+		if (!array_key_exists(Constants::ADMIN_ROLE,$session['admin']["role"])) {
+			$where[] = ["or", ["admin.admin_id" => $session["admin"]["admin_id"]], ["admin.admin_pid" => $session["admin"]["admin_id"]]];
+		}
+		
         $total = Admin::find()->Where($where)->count();
         $offset = $rows * ($page - 1);
         $sysLists = Admin::find()
@@ -160,17 +160,18 @@ class AdminController extends Controller {
 		}
 		
         $admin = new Admin();
-        foreach ($admin->attributes as $k => $v) {
-            if (isset($post[$k])) {
-                if ($k == 'password') {
-                    $admin->$k = md5($post['admin_name_new'].$post[$k]);
-                }elseif ($k != 'admin_role') {
-                    $admin->$k = $post[$k];
-                }
-            }elseif($k == 'admin_name'){
-                $admin->$k = $post['admin_name_new'];
-            }
-        }
+		$admin->admin_name = $post['admin_name_new'];
+		$admin->password = md5($post['admin_name_new'].$post['password']);
+		$admin->nickname = $post['nickname'];
+		$admin->admin_tel = $post['admin_tel'];
+		
+		if($session['admin']['type'] == 1){   //判断登陆账号是否为渠道账户
+			$admin->type = 1;
+		}else{
+			$admin->type = $post['type'];
+		}
+		
+		$admin->status = $post['status'];
         $admin->create_time = date('Y-m-d H:i:s');
         $admin->admin_pid = $session["admin"]["admin_id"];
         if (!$admin->save()) {
@@ -195,13 +196,13 @@ class AdminController extends Controller {
      * @return
      */
     public function actionUpdate() {
+		$session = \Yii::$app->session;
         $post = \Yii::$app->request->post();
         //$admin_name = trim($post['admin_name_new']);
 		$admin_name_old = trim($post['admin_name_old']);
         $nickname = $post['nickname'];
         $admin_pwd = $post['admin_pwd'];
         $admin_tel = $post['admin_tel'];
-        $admin_type = $post['admin_type'];
 		
 		/*if($admin_name_old != $admin_name){
 			$admin_count = Admin::find()->Where(['admin_name' => $admin_name])->count();//判断该用户是否已存在
@@ -221,7 +222,11 @@ class AdminController extends Controller {
             $admin->password = md5($admin_name_old.$admin_pwd);
         }
         $admin->admin_tel = $admin_tel;
-        $admin->type = $admin_type;
+		
+		if($session['admin']['type'] == 0){   //判断登陆账号是否为渠道账户
+			$admin_type = $post['admin_type'];
+			$admin->type = $admin_type;
+		}
         $admin->status = $status;
         if (!$admin->save()) {
             return $this->jsonError(100, '操作失败');
