@@ -518,6 +518,7 @@ class StoreService {
             return ['code' => 600, 'msg' => '下单成功', 'data' => ['create_time' => $payRecord->create_time, 'order_code' => $payRecord->order_code, 'pay_money' => $total, 'pay_url' => $qbRet['pay_url']]];
         } catch (Exception $ex) {
             $trans->rollBack();
+            \Yii::redisDel($key);
             return ['code' => 109, 'msg' => $ex->getMessage()];
         }
     }
