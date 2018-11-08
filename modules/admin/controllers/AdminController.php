@@ -276,10 +276,7 @@ class AdminController extends Controller {
         }
 		
 		if($status == 0){
-			$sysLists = Admin::find()
-							->select(['admin_name'])
-							->Where(['admin_id' => $parmas['id']])->one();
-			if($sysLists['admin_name'] == 'admin'){
+			if($parmas['id'] == Constants::ADMIN_ROLE){
 				return $this->jsonResult(109, '不能禁用超级管理员');
 			}
 		}
