@@ -27,9 +27,19 @@
                         'terminal_num': $.trim($('input[name="terminal_num"]').val()),
                         'status': $.trim($('input[name="status"]').val()),
                         'online_status': $.trim($('input[name="online_status"]').val()),
+						'cust_no': $.trim($('input[name="cust_no"]').val()),
                     });
                 },
             };
+			
+			//网点信息
+			$('#cust_no').combobox({
+				url:'/usermod/machine/get-cust-no',
+				valueField:'id',
+				textField:'text',
+				panelHeight:'auto',
+				editable:true
+			});
 
             $('#datagrid').datagrid({
                 url: '/usermod/machine/get-machine-list',
@@ -55,11 +65,12 @@
                         sortable: true,
                         align: 'center'
                     },{
-                        field: 'cust_no',
-                        title: '所属门店',
+                        field: 'info',
+                        title: '网点信息',
                         width: 80,
                         sortable: true,
-                        align: 'center'
+                        align: 'center',
+                        formatter: infoFormatter
                     },{
                         field: 'channel_no',
                         title: '所属渠道',
@@ -148,6 +159,11 @@
                 }
                  return str;
             }
+            function infoFormatter(value,row){
+                var str= "";
+                str+= row.store_name+'<br>'+row.cust_no+'<br>'+row.user_tel;
+                return str;
+            }
         });
 	</script>
 	<div class="dgdiv">
@@ -180,6 +196,10 @@
                     <option value="0">离线</option>
                     <option value="1">在线</option>
                 </select>
+            </div>
+			<div class="tb_item">
+                <span>网点信息</span>
+                <input name="cust_no" id="cust_no" class="easyui-validatebox easyui-combobox">
             </div>
         </div>
 
