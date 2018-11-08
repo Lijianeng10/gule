@@ -40,11 +40,12 @@ class MachineController extends Controller {
 			$where[] = ['machine.channel_no' => $session['admin']['admin_name']];
 		}
 		
-        $total = Machine::find()->leftJoin('lottery as l','l.lottery_id = machine.lottery_id')->where($where)->count();
+        $total = Machine::find()->leftJoin('lottery as l','l.lottery_id = machine.lottery_id')->leftJoin('store as s','s.cust_no = machine.cust_no')->where($where)->count();
         $offset = $rows * ($page - 1);
         $lists = Machine::find()
-            ->select(['machine.*','l.lottery_name'])
+            ->select(['machine.*','l.lottery_name','s.store_name','s.user_tel'])
             ->leftJoin('lottery as l','l.lottery_id = machine.lottery_id')
+            ->leftJoin('store as s','s.cust_no = machine.cust_no')
             ->where($where)
             ->offset($offset)
             ->limit($rows)

@@ -55,11 +55,12 @@
                         sortable: true,
                         align: 'center'
                     },{
-                        field: 'cust_no',
-                        title: '所属门店',
+                        field: 'info',
+                        title: '网点信息',
                         width: 80,
                         sortable: true,
-                        align: 'center'
+                        align: 'center',
+                        formatter: infoFormatter
                     },{
                         field: 'channel_no',
                         title: '所属渠道',
@@ -147,6 +148,11 @@
                     str += '<a href="#" name="down"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.terminal_id+','+row.status+')">禁用</a>';
                 }
                  return str;
+            }
+            function infoFormatter(value,row){
+                var str= "";
+                str+= row.store_name+'<br>'+row.cust_no+'<br>'+row.user_tel;
+                return str;
             }
         });
 	</script>
