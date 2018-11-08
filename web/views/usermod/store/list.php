@@ -63,7 +63,7 @@
                         align: 'center',
                         formatter:infoFormatter
                     },{
-                        field: 'channel_no',
+                        field: 'nickname',
                         title: '所属渠道',
                         width: 100,
                         align: 'center',
@@ -168,7 +168,7 @@
         </div>
         <div class="tb-column">
             <div class="tb_item">
-                <span>网点名称：</span>
+                <span>网点信息：</span>
                 <input name="cust_no" id="cust_no" class="easyui-validatebox easyui-combobox">
             </div>
             <div class="tb_item">

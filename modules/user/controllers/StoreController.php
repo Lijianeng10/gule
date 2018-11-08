@@ -29,33 +29,35 @@ class StoreController extends Controller {
         $offset = $rows * ($page - 1);
         $where = ['and'];
         if (!empty($cust_no)) {
-			$where[] = ['cust_no' => $cust_no];
+			$where[] = ['store.cust_no' => $cust_no];
         }
         if (!empty($status)) {
-            $where[] = ['status' => $status];
+            $where[] = ['store.status' => $status];
         }
 		if(!empty($start_time)){
-            $where[] = ['>=','create_time',$start_time];
+            $where[] = ['>=','store.create_time',$start_time];
         }
 		if(!empty($end_time)){
-            $where[] = ['<=','create_time',$end_time];
+            $where[] = ['<=','store.create_time',$end_time];
         }
         if(!empty($province)){
-            $where[] = ['province' => $province];
+            $where[] = ['store.province' => $province];
         }
         if(!empty($city)){
-            $where[] = ['city' => $city];
+            $where[] = ['store.city' => $city];
         }
         if(!empty($area)){
-            $where[] = ['area' => $area];
+            $where[] = ['store.area' => $area];
         }
 		//判断登陆账号是否为渠道账户
 		if($session['admin']['type'] == 1){
-			$where[] = ['channel_no' => $session['admin']['admin_name']];
+			$where[] = ['store.channel_no' => $session['admin']['admin_name']];
 		}
 		
         $total = Store::find()->where($where)->count();
         $storeData = Store::find()
+				->select(['store.*','admin.nickname'])
+				->leftJoin('admin','admin.admin_name = store.channel_no')
                 ->where($where)
                 ->limit($rows)
                 ->offset($offset)
