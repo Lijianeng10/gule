@@ -1,7 +1,7 @@
 <style>
     #qrcode {
-        width: 150px;
-        height:150px;
+        width: 200px;
+        height:200px;
     }
 </style>
 <div class="super-theme-example">
@@ -10,10 +10,12 @@
             <tr>
                 <td>
                     <div id="qrcode"></div>
+                    <span style="font-size: 18px;font-weight: bold;width:200px;text-align: center;display: inline-block">终端号：<?php echo $num;?></span>
                 </td>
-                <td style="padding-left: 57px;">
-                    <span style="font-size: 18px;color:blue">终端号：<?php echo $num;?></span>
-                </td>
+                <div id="can"></div>
+<!--                <td style="padding-left: 57px;">-->
+<!--                    <span style="font-size: 18px;color:blue">终端号：--><?php //echo $num;?><!--</span>-->
+<!--                </td>-->
                 <td style="padding-left: 10px;">
                     <div><a href="#" class="easyui-linkbutton primary" onclick="dwn();">下载保存</a></div>
                 </td>
@@ -32,6 +34,26 @@
             foreground : "#000000",        //二维码的前景色
             src: '/images/logo.jpg'             //二维码中间的图片
         });
+        // setTimeout(function() {
+        //     var canvas= $('#qrcode canvas')[0]
+        //     var src = canvas.toDataURL("image/png")
+        //     var oImg = new Image();
+        //     oImg.src = src;
+        //
+        //     canvas.width = canvas.width + 40;
+        //     canvas.height = canvas.height + 40;
+        //     var ctx = canvas.getContext("2d")
+        //     ctx.beginPath();
+        //     ctx.fillStyle = "blue";
+        //     ctx.fillRect(0,0,240,240);
+        //     ctx.stroke();
+        //
+        //     ctx.drawImage(oImg, 20, 10);
+        //
+        //     // var src = canvas.toDataURL("image/png")
+        //     console.log(src)
+        // },0)
+
     });
     // function createQRcode() {
         //var qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -45,10 +67,35 @@
 
     /*下载二维码*/
     function dwn(){
-        var type = 'jpg';
-        var dataurl =$("canvas").get(0).toDataURL('image/jpg').replace("image/jpg", "image/octet-stream");
-        var filename = '<?php echo $num;?>' + '.' + type;
-        saveFile(dataurl,filename);
+        var oldcanvas= $('#qrcode canvas')[0]
+        var src = oldcanvas.toDataURL("image/png")
+        var oImg = new Image();
+        oImg.src = src;
+        oImg.onload = function (){
+            var canvas = document.createElement("canvas");
+            canvas.width = oldcanvas.width + 40;
+            canvas.height = oldcanvas.height + 40;
+            var ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0,0,240,240);
+            ctx.stroke();
+            //添加终端号重新绘图
+            ctx.drawImage(oImg, 20, 10);
+            // $("#can").append(canvas);
+            ctx.font="bold 18px Arial";
+            ctx.fillStyle = '#333';
+            var text ='终端号：'+'<?php echo $num;?>';
+            ctx.fillText(text,40,230);
+
+            var donwloadSrc = canvas.toDataURL("image/png");
+
+            //下载
+            var type = 'png';
+            var dataurl = donwloadSrc//$("canvas").get(0).toDataURL('image/png').replace("image/png", "image/octet-stream");
+            var filename = '<?php echo $num;?>' + '.' + type;
+            saveFile(dataurl,filename);
+        }
     }
     /**
          * 在本地进行文件保存

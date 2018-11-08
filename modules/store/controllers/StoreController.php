@@ -91,8 +91,7 @@ class StoreController extends Controller {
         $terminalNum = $request->post('terminalNum', '');
         $machineCode = $request->post('machineCode', '868926033601029000000000');
         $stock = $request->post('nums', '');
-        $activeType = $request->post('activeType', ''); // 1：机箱库存扣除 2：总库存扣除
-        $ret = StoreService::changeMachineStock($custNo, $terminalNum, $machineCode, $activeType, $stock);
+        $ret = StoreService::changeMachineStock($custNo, $terminalNum, $machineCode, $stock);
         if($ret['code'] != 600) {
             return $this->jsonError(109, $ret['msg']);
         }
@@ -249,6 +248,27 @@ class StoreController extends Controller {
         
     }
 
+    /**
+     * 线下销售
+     * @return type
+     */
+    public function actionUnlineSale() {
+        $request = Yii::$app->request;
+        $custNo = $request->post('custNo', '');
+        $lotteryId = $request->post('lotteryId', '');
+        $lotteryValue = $request->post('lotteryValue', '');
+        $stock = $request->post('nums', 0);
+        if(empty($custNo) || empty($lotteryId) || empty($lotteryValue)) {
+            return $this->jsonError(109, '参数缺失');
+        }
+        $ret = StoreService::underLineSale($custNo, $lotteryId, $lotteryValue, $stock);
+        if($ret['code'] != 600) {
+            return $this->jsonError(109, $ret['msg']);
+        }
+        return $this->jsonResult(600, '操作成功！', true);
+    }
+
+
     public function actionTest(){
 
 
@@ -272,5 +292,4 @@ class StoreController extends Controller {
         $ret = Yii::sendCurlPost('https://open.goodluckchina.net/open/pay/buildPayCode',$data);
 
         print_r($ret);
-    }
 }

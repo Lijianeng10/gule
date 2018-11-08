@@ -119,6 +119,10 @@ class StoreService {
             if ($storeData['code'] != 1) {
                 return ['code' => 109, 'msg' => $storeData['msg']];
             }
+            $addCust = self::bindCustNo($custNo);
+            if($addCust['code'] != 1) {
+                return ['code' => 109, 'msg' => $addCust['msg']];
+            }
             $channelNo = array_slice(explode('.', $storeData['data']['cascadeId']), -2, 1);
             $store = new Store();
             $store->cust_no = $custNo;
@@ -199,7 +203,7 @@ class StoreService {
      * @return type
      */
     public static function getLottery($custNo, $terminalNum, $machineCode) {
-        $storeLottery = StoreLottery::find()->select(['l.lottery_id', 'l.lottery_value', 'l.lottery_name'])
+        $storeLottery = StoreLottery::find()->select(['l.lottery_id', 'l.lottery_value', 'l.lottery_name', 'store_lottery.stock'])
                 ->innerJoin('store s', 's.channel_no = store_lottery.channel_no and s.cust_no = store_lottery.cust_no')
                 ->innerJoin('lottery l', 'l.lottery_id = store_lottery.lottery_id')
                 ->where(['store_lottery.cust_no' => $custNo])
@@ -222,7 +226,7 @@ class StoreService {
         foreach ($storeLottery as $lottery) {
             $lottData[] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
             $valueData[$lottery['lottery_value']] = $lottery['lottery_value'];
-            $lotteryValue[$lottery['lottery_value']][] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name']];
+            $lotteryValue[$lottery['lottery_value']][] = ['lottery_id' => $lottery['lottery_id'], 'lottery_name' => $lottery['lottery_name'], 'stock' => $lottery['stock']];
         }
         $data['lottery'] = $lottData;
         $data['value'] = array_values($valueData);
@@ -269,20 +273,12 @@ class StoreService {
      * @return type
      * @throws Exception
      */
-    public static function changeMachineStock($custNo, $terminalNum, $machineCode, $activeType, $stock) {
+    public static function changeMachineStock($custNo, $terminalNum, $machineCode, $stock) {
         $machine = Machine::findOne(['cust_no' => $custNo, 'machine_code' => $machineCode, 'terminal_num' => $terminalNum, 'status' => 1]);
         if (empty($machine)) {
             return ['code' => 109, 'msg' => '请确认此设备已激活'];
         }
-//        if (empty($activeType)) {
-            $update = ['stock' => $stock];
-//        } else {
-//            if ($stock > $machine->stock && $activeType == 1) {
-//                return ['code' => 109, 'msg' => '机箱内的库存不足扣除量'];
-//            }
-//            $update = ['stock' => new Expression('stock-' . $stock)];
-//            $prePayMoney = $stock * $machine->lottery_value;
-//        }
+        $update = ['stock' => $stock];
         $db = \Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
@@ -290,34 +286,10 @@ class StoreService {
             if ($storeLottery['stock'] < $stock) {
                 throw new Exception('门店此彩种库存不足');
             }
-//            if (!$activeType) { // 机箱库存扣除
-//                $payCreate = self::createPayRecord($custNo, $terminalNum, $machine->channel_no, $prePayMoney);
-//                if ($payCreate['code'] != 600) {
-//                    throw new Exception($payCreate['msg']);
-//                }
-////                $storeUp = ['stock' => new Expression('stock-' . $stock)];
-//                $storeLotteryRet = StoreLottery::updateAll($update, ['cust_no' => $custNo, 'lottery_id' => $machine->lottery_id, 'lottery_value' => $machine->lottery_value]);
-//                if ($storeLotteryRet === false) {
-//                    throw new Exception('库存修改失败-门店彩种');
-//                }
-//            }
             $upMachine = Machine::updateAll($update, ['cust_no' => $custNo, 'machine_code' => $machineCode, 'terminal_num' => $terminalNum]);
             if ($upMachine === false) {
                 throw new Exception('库存修改失败-机器');
             }
-//            if ($activeType == 2) {
-//                $payRecord = PayRecord::findOne(['pay_record_id' => $payCreate['recordId']]);
-//                $payRecord->buy_nums = $stock;
-//                $payRecord->lottery_id = $machine->lottery_id;
-//                $payRecord->lottery_value = $machine->lottery_value;
-//                $payRecord->status = 1;
-//                $payRecord->pay_money = $prePayMoney;
-//                $payRecord->pay_time = date('Y-m-d H:i:s');
-//                $payRecord->modify_time = date('Y-m-d H:i:s');
-//                if (!$payRecord->save()) {
-//                    throw new Exception('库存修改失败-记录');
-//                }
-//            }
             $trans->commit();
             return ['code' => 600, 'msg' => '库存修改成功'];
         } catch (Exception $ex) {
@@ -362,9 +334,10 @@ class StoreService {
         $where1 = "DATE_FORMAT(p.pay_time, '%Y-%m') = '{$month}'";
         $field = ['store.cust_no', 'user_tel', 'channel_no',
             new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where}) end date_sell_amount"),
-            new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where1}) end month_sell_amount")];
+            new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where1}) end month_sell_amount"),
+            new Expression("case when store.status = 1 then (select coalesce(sum(machine_id), 0) from machine m where m.cust_no = store.cust_no and m.status = 1) end machine_nums")];
         $storeData = Store::find()->select($field)->where(['cust_no' => $custNo, 'store.status' => 1])->asArray()->one();
-        if (!empty($storeData)) {
+        if (!empty($storeData) && $storeData['machine_nums'] != 0) {
             $field1 = ['terminal_num', 'machine_code', 'l.lottery_value', 'stock', 'ac_status', 'online_status', 'machine.status', 'l.lottery_name', 'cust_no', 'l.lottery_img', 'sum(machine.stock * machine.lottery_value) sum_amount',
                 new Expression("case when machine.status = 1 then (select coalesce(sum(p.buy_nums),0) from pay_record p where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_count"),
                 new Expression("case when machine.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.terminal_num = machine.terminal_num and p.store_no = machine.cust_no and p.status = 1 and {$where}) end sell_amount")];
@@ -702,6 +675,14 @@ class StoreService {
         return $banner;
     }
 
+    /**
+     * 出票确认
+     * @param type $orderCode
+     * @param type $terminalNum
+     * @param type $outStatus
+     * @param type $outNums
+     * @return type
+     */
     public static function issueTicket($orderCode, $terminalNum, $outStatus, $outNums) {
         $payRecord = PayRecord::findOne(['order_code' => $orderCode, 'terminal_num' => $terminalNum]);
         if (empty($payRecord)) {
@@ -716,6 +697,74 @@ class StoreService {
         $key = 'lockMachine:' . $terminalNum;
         \Yii::redisDel($key);
         return ['code' => 600, 'msg' => '保存成功'];
+    }
+
+    /**
+     * 门店线下销售
+     * @param type $custNo
+     * @param type $lotteryId
+     * @param type $lotteryValue
+     * @param type $stock
+     * @return type
+     * @throws Exception
+     */
+    public static function underLineSale($custNo, $lotteryId, $lotteryValue, $stock) {
+        $storeLottery = StoreLottery::find()->select(['store_lottery.store_lottey_id', 'store_lottery.cust_no', 'store_lottery.channel_no', 'store_lottery.lottery_value', 'store_lottery.stock'])
+                ->innerJoin(['store s', 's.cust_no = store_lottery.cust_no and s.channel_no = store_lottery.channel_no'])
+                ->where(['store_lottery.cust_no' => $custNo, 'lottery_id' => $lotteryId, 'lottery_value' => $lotteryValue])
+                ->andWhere(['>', 'store_lottery.stock', 0])
+                ->asArray()
+                ->one();
+        if (empty($storeLottery)) {
+            return ['code' => 109, 'msg' => '门店此彩种库存不足'];
+        }
+        if ($storeLottery['stock'] < $stock) {
+            return ['code' => 109, 'msg' => '门店此彩种库存不足'];
+        }
+        $update = ['stock' => new Expression('stock-' . $stock)];
+        $prePayMoney = $stock * $storeLottery['lottery_value'];
+        $db = \Yii::$app->db;
+        $trans = $db->beginTransaction();
+        try {
+            $payCreate = self::createPayRecord($custNo, '线下销售', $storeLottery['channel_no'], $prePayMoney);
+            if ($payCreate['code'] != 600) {
+                throw new Exception($payCreate['msg']);
+            }
+            $storeLotteryRet = StoreLottery::updateAll($update, ['cust_no' => $custNo, 'lottery_id' => $lotteryId, 'lottery_value' => $lotteryValue, 'channel_no' => $storeLottery['channel_no']]);
+            if ($storeLotteryRet === false) {
+                throw new Exception('库存修改失败-门店彩种');
+            }
+            $payRecord = PayRecord::findOne(['pay_record_id' => $payCreate['recordId']]);
+            $payRecord->buy_nums = $stock;
+            $payRecord->lottery_id = $lotteryId;
+            $payRecord->lottery_value = $lotteryValue;
+            $payRecord->status = 1;
+            $payRecord->pay_money = $prePayMoney;
+            $payRecord->pay_time = date('Y-m-d H:i:s');
+            $payRecord->modify_time = date('Y-m-d H:i:s');
+            if (!$payRecord->save()) {
+                throw new Exception('库存修改失败-记录');
+            }
+            $trans->commit();
+            return ['code' => 600, 'msg' => '库存修改成功'];
+        } catch (Exception $ex) {
+            $trans->rollBack();
+            return ['code' => 109, 'msg' => $ex->getMessage()];
+        }
+    }
+    
+    /**
+     * 添加下级商户
+     * @param type $custNo
+     * @return type
+     */
+    public static function bindCustNo($custNo) {
+        $url = 'https://open.goodluckchina.net/open/mchCust/addMchCustFlushCache';
+        $postData = ['appId' => '362a00a28e234199a0d911cbdd1d4c67', 'custNo' => 'gl00053268', 'bindCustNo' => $custNo];
+        $sign = PayTool::getSign($postData);
+        $postData['sign'] = $sign;
+        $ret = \Yii::sendCurlPost($url, $postData);
+        return $ret;
     }
 
 }
