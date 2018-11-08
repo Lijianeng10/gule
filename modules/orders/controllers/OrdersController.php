@@ -223,7 +223,7 @@ class OrdersController extends Controller {
 			->where($where)
 			->count();
         $AttrList = Order::find()
-			//->select(['order.*','store.channel_no'])
+			->select(['order.*','store.channel_no','store.store_name','store.user_tel'])
             ->leftJoin('store','store.cust_no = order.cust_no')
             ->where($where)
             ->offset($offset)

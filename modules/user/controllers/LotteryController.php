@@ -13,14 +13,14 @@ class LotteryController extends Controller {
     public function actionGetLotteryList() {
 
         $request = \Yii::$app->request;
-        $page = $request->post('page', 1);
-        $size = $request->post('size', 15);
+        $page = $request->post('page');
+        $rows = $request->post('rows');
         $sort = $request->post('sort', '');
         $orderBy = $request->post('order', '');
         $lotteryInfo = $request->post('lotteryInfo', '');
         $status = $request->post('status');
 //        $session = \Yii::$app->session;
-
+        $offset = $rows * ($page - 1);
         $where = ['and'];
         if (!empty($lotteryInfo)) {
             $where[] = ['or', ['like', 'lottery_code', $lotteryInfo], ['like', 'lottery_name', $lotteryInfo]];
@@ -33,9 +33,9 @@ class LotteryController extends Controller {
         $total = Lottery::find()->where($where)->count();
         $lotteryData = Lottery::find()
                 ->where($where)
-                ->limit($size)
-                ->offset($size * ($page - 1))
-                ->orderBy("{$orderBy} {$sort}")
+                ->limit($rows)
+                ->offset($offset)
+                ->orderBy("{$sort} {$orderBy}")
                 ->asArray()
                 ->all();
         return \Yii::datagridJson($lotteryData, $total);

@@ -15,10 +15,10 @@ class StoreController extends Controller {
 
         $request = \Yii::$app->request;
 		$session = \Yii::$app->session;
-        $page = $request->post('page', 1);
-        $size = $request->post('size', 15);
-        $sort = $request->post('sort', 'desc');
-        $orderBy = $request->post('order', 'create_time');
+        $page = $request->post('page');
+        $rows = $request->post('rows');
+        $sort = $request->post('sort','create_time');
+        $orderBy = $request->post('order', 'desc' );
         $cust_no = $request->post('cust_no');
         $status = $request->post('status');
 		$start_time = $request->post('start_time');
@@ -26,7 +26,7 @@ class StoreController extends Controller {
         $province = $request->post('province');
         $city = $request->post('city');
         $area = $request->post('area');
-
+        $offset = $rows * ($page - 1);
         $where = ['and'];
         if (!empty($cust_no)) {
             $where[] = ['or',['like', 'cust_no', $cust_no],['like', 'user_tel', $cust_no],['like', 'store_name', $cust_no]];
@@ -57,9 +57,9 @@ class StoreController extends Controller {
         $total = Store::find()->where($where)->count();
         $storeData = Store::find()
                 ->where($where)
-                ->limit($size)
-                ->offset($size * ($page - 1))
-                ->orderBy("{$orderBy} {$sort}")
+                ->limit($rows)
+                ->offset($offset)
+                ->orderBy("{$sort} {$orderBy}")
                 ->asArray()
                 ->all();
 				

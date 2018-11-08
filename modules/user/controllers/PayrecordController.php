@@ -11,10 +11,10 @@ class PayrecordController extends Controller {
     public function actionGetPayrecordList() {
         $session = \Yii::$app->session;
         $request = \Yii::$app->request;
-        $page = $request->post('page', 1);
-        $size = $request->post('size', 15);
-        $sort = $request->post('sort', 'desc');
-        $orderBy = $request->post('order', 'pay_record.create_time');
+        $page = $request->post('page');
+        $rows = $request->post('rows');
+        $sort = $request->post('sort', 'pay_record.create_time');
+        $orderBy = $request->post('order', 'desc');
         $lotteryInfo = $request->post('lotteryInfo', '');
         $storeInfo = $request->post('storeInfo', '');
         $status = $request->post('status');
@@ -23,6 +23,7 @@ class PayrecordController extends Controller {
         $pay_start_time = $request->post('pay_start_time');
         $pay_end_time = $request->post('pay_end_time');
         $orderInfo = $request->post('orderInfo', '');
+        $offset = $rows * ($page - 1);
         $where = ['and'];
         //渠道用户只能看到自己旗下的交易信息
         if($session['admin']['type']!=0){
@@ -63,9 +64,9 @@ class PayrecordController extends Controller {
                 ->leftJoin("store as s",'s.cust_no = pay_record.store_no')
                 ->leftJoin("lottery as l",'l.lottery_id = pay_record.lottery_id')
                 ->where($where)
-                ->limit($size)
-                ->offset($size * ($page - 1))
-                ->orderBy("{$orderBy} {$sort}")
+                ->limit($rows)
+                ->offset($offset)
+                ->orderBy("{$sort} {$orderBy} ")
                 ->asArray()
                 ->all();
         return \Yii::datagridJson($lotteryData, $total);

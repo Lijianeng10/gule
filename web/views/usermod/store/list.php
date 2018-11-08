@@ -85,7 +85,7 @@
                         field: 'saleMoneys',
                         title: '总销量(元)',
                         width: 80,
-                        sortable: true,
+                        // sortable: true,
                         align: 'center',
                     },{
                         field: 'status',
