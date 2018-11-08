@@ -15,7 +15,7 @@ class StoreController extends Controller {
      */
     public function actionToJumpPage() {
         $agent = $_SERVER['HTTP_USER_AGENT'];
-        echo $agent;die;
+//        echo $agent;die;
         $request = \Yii::$app->request;
         $custNo = $request->get('myCustNo', '');
         $terminalNum = $request->get('terminalNum', '');
