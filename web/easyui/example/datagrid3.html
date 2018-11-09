@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<!--easyui-->
+		<script src="../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery.easyui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../locale/easyui-lang-zh_CN.js" type="text/javascript" charset="utf-8"></script>
+		<!--开发-->
+		<!--<link rel="stylesheet" href="../easyui/themes/gray/easyui.css">
+		<link rel="stylesheet" href="css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/superBlue.css" id="themeCss">
+		<script src="js/super.js" type="text/javascript" charset="utf-8"></script>-->
+		<!--测试dist-->
+		<link rel="stylesheet" href="../themes/super/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../css/superBlue.css" id="themeCss">
+		<!-- <script src="./themes/super/super.js"></script> -->
+		<script src="../extensions/superDemo.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../extensions/curdtool.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+<body style="height: 100%;">
+	<!-- <div "> -->
+	<div id ="datagrid2"  style="height: 100%;">
+		<table id="datagrid"></table>
+	</div>
+
+	<div id="tb" style="padding:5px;">
+    	<div>
+    		<a href="#" class="easyui-linkbutton info" iconCls="fa fa-plus"  onclick="add_dialog('dlg','./form.html','posturl');">新增</a>
+    		<a href="#" class="easyui-linkbutton info" iconCls="fa fa-edit"  onclick="update_dialog('dlg','./form.html','posturl');">修改</a>
+    		<a href="#" id="remove" class="easyui-linkbutton error" iconCls="fa fa-remove" plain="true" onclick="deleteAll('delete.html');">删除</a>
+    		<a href="#" id="remove" class="easyui-linkbutton info" iconCls="fa fa-search" plain="true" onclick="detail('dlg','./form.html');">查看</a>
+    	</div>
+    	<div style="margin-bottom: 5px; color:#333;">
+    	   手机号：<input type="text"  name="user_tel" class="textbox" >
+    	   昵称：<input type="text"  name="nickname" class="textbox" >
+    	   手机号：<input type="text"  name="user_tel" class="textbox" >
+    	   昵称：<input type="text"  name="nickname" class="textbox" >
+    		创建时间从：<input type="text"  name="date_from" class="easyui-datebox">
+    		到：<input type="text" name="date_to" class="easyui-datebox">
+    		注册类型：    
+    	          <select class="easyui-combobox" name="reg_type" id="reg_type" style="width: 150px;">
+    	          	<option value="">全部</option>
+                    <option value="0">手机</option>
+                    <option value="1">QQ</option>
+                    <option value="2">PC微信</option>
+                    <option value="3">微信小程序</option>
+                </select>
+    		<a href="#" class="easyui-linkbutton" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
+    	</div>
+    </div>
+	<div id="dlg"></div>
+	<script type="text/javascript">
+		var datagridJson = {
+			"total": 28,
+			"rows": [{
+				"productid": "FI-SW-01",
+				"productname": "Koi",
+				"unitcost": 10.00,
+				"status": "P",
+				"listprice": 36.50,
+				"attr1": "Large",
+				"itemid": "EST-1"
+			}, {
+				"productid": "K9-DL-01",
+				"productname": "Dalmation",
+				"unitcost": 12.00,
+				"status": "P",
+				"listprice": 18.50,
+				"attr1": "Spotted Adult Female",
+				"itemid": "EST-10"
+			}, {
+				"productid": "RP-SN-01",
+				"productname": "Rattlesnake",
+				"unitcost": 12.00,
+				"status": "P",
+				"listprice": 38.50,
+				"attr1": "Venomless",
+				"itemid": "EST-11"
+			}, {
+				"productid": "RP-SN-01",
+				"productname": "Rattlesnake",
+				"unitcost": 12.00,
+				"status": "P",
+				"listprice": 26.50,
+				"attr1": "Rattleless",
+				"itemid": "EST-12"
+			}
+			, {
+				"productid": "RP-SN-01",
+				"productname": "Rattlesnake",
+				"unitcost": 12.00,
+				"status": "P",
+				"listprice": 26.50,
+				"attr1": "Rattleless",
+				"itemid": "EST-12"
+			}]
+		}
+		$('#datagrid').datagrid({
+			// url: './js/data/datagrid_data.json',
+			data: datagridJson,
+			fit: true,
+			pagination: true,
+			// singleSelect:true,
+			fitColumns: true,
+			rownumbers : true,
+			loadMsg : '数据加载中...',
+			toolbar : '#tb',
+			columns: [
+				[{
+					field: 'productid',
+					title: 'productid',
+					width: 100,
+					sortable: true
+				}, {
+					field: 'productname',
+					title: 'productname',
+					width: 100,
+					sortable: true
+				}, {
+					field: 'unitcost',
+					title: 'unitcost',
+					width: 100,
+					align: 'right',
+					sortable: true
+				}, {
+					field: 'status',
+					title: 'status',
+					width: 100,
+					align: 'right'
+				}, {
+					field: 'listprice',
+					title: 'listprice',
+					width: 100,
+					align: 'right'
+				}, {
+					field: 'attr1',
+					title: 'attr1',
+					width: 100,
+					align: 'right'
+				}, {
+					field: 'opt',
+					title: 'opt',
+					width: 100,
+					align: 'center',
+					formatter : optFormatter
+				}]
+			]
+		});
+
+		function optFormatter(value, row){
+			return row.productid;
+		}
+	</script>
+</body>
+</html>

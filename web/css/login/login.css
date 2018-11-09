@@ -1,0 +1,107 @@
+html{color:#000;background:#FFF;font-family:'Microsoft Yahei','宋体',Arial}html,body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,p,td,strong{padding:0;margin:0;font-family:'Microsoft Yahei','宋体',Arial}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}button{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit}input,button{*font-size:100%}input,button{border:0;outline:0;}
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+}
+.ji-wrap {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: url(bg.jpg) no-repeat;
+	background-size: cover;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+}	
+.contain {
+    width: 850px;
+    justify-content: space-between;
+	display: flex;
+    align-content: center;
+    align-items: center;
+}
+.tit {
+	width: 280px;
+	display: flex;
+	flex-direction: column;
+	font-size: 36px;
+	color: #fff;
+	font-style: italic;
+	/*margin: 0 200px;*/
+}
+.tit p {
+	margin-top: 12px; 
+	align-self: flex-end;
+}
+.login-box {
+	margin-top: -35px;
+    width: 298px;
+    padding: 30px;
+    background: rgba(0,0,0,.5);
+}
+.login-box h2 {
+	color: #fff;
+	font-size: 24px;
+	margin-bottom: 30px; 
+}
+.login-box >.attention {
+    display: none;
+    text-align: center;
+    margin-top:-10px; 
+}
+.login-box >.input-wrap {
+	width: 300px;
+    padding-left: 34px;
+    margin: 0 auto 18px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    box-sizing: border-box;
+    background: #fff;
+    line-height: 40px;
+    height: 40px;
+    border-radius: 10px;
+}
+.login-box .input-wrap.user {
+    background: #fff url(user.png) 8px no-repeat;
+    background-size: 7%;
+}
+.login-box .input-wrap.password {
+    background: #fff url(password.png) 8px no-repeat;
+    background-size: 7%
+}
+.login-box >.input-wrap input {
+    border-left: 1px solid #ddd;
+    padding-left: 10px;
+}
+
+.btn {
+    display: block;
+    width: 300px;
+    height: 40px;
+    margin: 18px auto 12px;
+    background: #55acee;
+    font-size: 17px;
+    color: #fff;
+    border-radius: 10px;
+}
+.remember-pw {
+	color: #fff;
+	font-size: 14px;
+}
+.check {
+	display: inline-block;
+    border: 1px solid #bfcbd9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 18px;
+    height: 18px;
+    line-height:18px;
+    background-color: #fff;
+    z-index: 1;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.checked {
+    background: #fff url(check.png) center no-repeat;
+}

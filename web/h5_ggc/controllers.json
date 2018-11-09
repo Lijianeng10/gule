@@ -1,0 +1,15 @@
+{
+  "activate.js": "activate-67e8e1a4c3.js",
+  "apply.js": "apply-8971778a9c.js",
+  "decrement.js": "decrement-8971778a9c.js",
+  "edit.js": "edit-8971778a9c.js",
+  "functions.js": "functions-aa2d5ae017.js.gz",
+  "main.js": "main-5102b465e9.js.gz",
+  "network.js": "network-779de3078c.js.gz",
+  "purchase.js": "purchase-8971778a9c.js",
+  "sales.js": "sales-8971778a9c.js",
+  "stock.js": "stock-8971778a9c.js",
+  "store.js": "store-8971778a9c.js",
+  "supply.js": "supply-8971778a9c.js",
+  "validation.js": "validation-f73960a867.js.gz"
+}

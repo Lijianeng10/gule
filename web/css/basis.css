@@ -1,0 +1,95 @@
+.auth {
+    /*display: none;*/
+}
+
+/*新增页面表单样式*/
+.form-item {
+    margin-bottom: 15px;
+    width: 90%;
+    float: left;
+}
+
+.form-item>label {
+    width: 100px;
+    text-align: right;
+    display: inline-block;
+}
+.form-item input, select {
+    display: inline-block;
+    width: 170px;!important;
+}
+/*列表页面文本搜索框input样式*/
+/*#mySeachFrom li{*/
+    /*display: inline-block;*/
+    /*width: 15%;*/
+    /*margin-bottom: 5px;*/
+/*}*/
+/*#mySeachFrom span{*/
+    /*display: inline-block;*/
+    /*width: auto;*/
+    /*text-align: right;*/
+/*}*/
+.textbox{
+    height: 24px;
+    line-height: 24px;
+}
+/**
+图片上传样式
+ */
+.buttomspan{
+    padding-left: 8px;
+    font-size: 14px;
+    color: #0E2D5F;
+}
+a.buttomspan:hover{
+    text-decoration: none !important;
+}
+.imgupload{
+    display: none !important;
+}
+/*富文本编辑器样式*/
+.ke-container{
+    margin-left: 100px !important;
+}
+
+/*列表toolbar样式*/
+#tb {
+    padding:5px;
+    margin: 2px 0px 1px 0px;
+}
+
+.tb-column {
+    display: flex;
+    flex-wrap: wrap;
+}
+.tb-column .tb_item {
+    margin: 5px;
+}
+.tb-column .tb_item >span {
+    display: inline-block;
+    width: 85px;
+    text-align: right;
+    white-space: nowrap;
+
+}
+.tb-column .tb_item >input, .tb-column .tb_item select {
+     display: inline-block;
+     width: 200px;
+     border-radius: 5px;
+ }
+
+.tb-column .tb_item .easyui-datetimebox {
+    width: 150px;
+}
+/**
+省市区筛选框样式
+ */
+#element_id select{
+    width: 120px;!important;
+    height: 26px;!important;
+    border-radius: 0;!important;
+}
+
+
+
+
