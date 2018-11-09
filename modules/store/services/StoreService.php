@@ -436,6 +436,7 @@ class StoreService {
                 }
             }
             $order['order_detail'] = $orderDetail;
+            $order['lottery_nums'] = count($orderDetail);
         }
         return ['page' => $pn, 'pages' => $pages, 'size' => count($orderList), 'total' => empty($page) ? count($orderList) : $total, 'data' => $orderList];
     }
