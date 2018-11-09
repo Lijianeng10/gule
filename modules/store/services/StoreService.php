@@ -379,8 +379,10 @@ class StoreService {
      * @return type
      */
     public static function getSaleList($custNo, $page, $size) {
-        $field = ['order_code', 'store_no', 'channel_no', 'terminal_num', 'pay_money', 'buy_nums', 'create_time', 'lottery_value', 'pay_time'];
-        $query = PayRecord::find()->select($field)->where(['store_no' => $custNo, 'status' => 1]);
+        $field = ['order_code', 'store_no', 'channel_no', 'terminal_num', 'pay_money', 'buy_nums', 'pay_record.create_time', 'l.lottery_value', 'pay_time', 'l.lottery_name'];
+        $query = PayRecord::find()->select($field)
+                ->leftJoin('lottery l', 'l.lottery_id = pay_record.lottery_id')
+                ->where(['store_no' => $custNo, 'pay_record.status' => 1]);
         $pn = 1;
         $pages = 1;
         if ($page) {
@@ -390,7 +392,7 @@ class StoreService {
             $offset = ($page - 1) * $size;
             $query = $query->limit($size)->offset($offset);
         }
-        $saleList = $query->orderBy('create_time desc')->asArray()->all();
+        $saleList = $query->orderBy('pay_record.create_time desc')->asArray()->all();
         return ['page' => $pn, 'pages' => $pages, 'size' => count($saleList), 'total' => empty($page) ? count($saleList) : $total, 'data' => $saleList];
     }
 
@@ -401,11 +403,13 @@ class StoreService {
      * @param type $size
      * @return type
      */
-    public static function getStockList($custNo, $page, $size) {
-        $field = ['lottery_id', 'lottery_name', 'sub_value', 'sub_value', 'sheet_nums', 'price', 'money', 'o.order_status'];
-        $query = OrderDetail::find()->select($field)
-                ->innerJoin('order o', 'o.order_id = order_detail.order_id')
-                ->where(['o.cust_no' => $custNo, 'o.pay_status' => 1]);
+    public static function getStockList($custNo, $page, $size, $tabType) {
+        $field = ['order_id', 'order_code', 'order_num', 'order_money', 'order_status', 'courier_name', 'courier_code', 'order_time', 'touser_remark', 'remark', 'shipping_fee', 'address'];
+        $where = ['and', ['cust_no' => $custNo, 'pay_status' => 1]];
+        if($tabType) {
+            $where[] = ['order_status' => $tabType];
+        }
+        $query = Order::find()->select($field)->where($where);
         $pn = 1;
         $pages = 1;
         if ($page) {
@@ -415,7 +419,25 @@ class StoreService {
             $offset = ($page - 1) * $size;
             $query = $query->limit($size)->offset($offset);
         }
-        $orderList = $query->orderBy('create_time desc')->asArray()->all();
+        
+        $orderList = $query->orderBy('order_time desc')->asArray()->all();
+        $orderIds = array_column($orderList, 'order_id');
+        $field2 = ['order_detail.order_id', 'order_detail.lottery_id', 'order_detail.lottery_name', 'sub_value', 'sub_value', 'sheet_nums', 'price', 'money', 'l.lottery_img', 'nums'];
+        $detail = OrderDetail::find()->select($field2)
+                ->innerJoin('lottery l', 'l.lottery_id = order_detail.lottery_id')
+                ->where(['in', 'order_detail.order_id', $orderIds])
+                ->asArray()
+                ->all();
+        foreach ($orderList as &$order) {
+            $orderDetail = [];
+            foreach ($detail as $d) {
+                if($d['order_id'] == $order['order_id']) {
+                    $orderDetail[] = $d;
+                }
+            }
+            $order['order_detail'] = $orderDetail;
+            $order['lottery_nums'] = count($orderDetail);
+        }
         return ['page' => $pn, 'pages' => $pages, 'size' => count($orderList), 'total' => empty($page) ? count($orderList) : $total, 'data' => $orderList];
     }
 

@@ -250,7 +250,12 @@ class AdminController extends Controller {
      */
     public function actionDelete() {
         $ids = \Yii::$app->request->post()['ids'];
-		if($ids == Constants::ADMIN_ROLE){
+		$role_arr = SysAdminRole::find()
+				->select(["group_concat(role_id) AS role_id"])
+				->where(["admin_id" => $ids])
+				->asArray()
+				->all();
+		if(in_array(Constants::ADMIN_ROLE,explode(',',$role_arr[0]['role_id']))){
 			return $this->jsonResult(109, '超级管理员不能删除');
 		}
         $idsArr = explode(',', $ids);
@@ -276,9 +281,15 @@ class AdminController extends Controller {
         }
 		
 		if($status == 0){
-			if($parmas['id'] == Constants::ADMIN_ROLE){
+			$role_arr = SysAdminRole::find()
+				->select(["group_concat(role_id) AS role_id"])
+				->where(["admin_id" => $parmas['id']])
+				->asArray()
+				->all();
+			if(in_array(Constants::ADMIN_ROLE,explode(',',$role_arr[0]['role_id']))){
 				return $this->jsonResult(109, '不能禁用超级管理员');
 			}
+			
 		}
 		
         Admin::updateAll(['status' => $status], ['admin_id' => $parmas['id']]);
