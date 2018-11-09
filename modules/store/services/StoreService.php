@@ -404,9 +404,10 @@ class StoreService {
      * @return type
      */
     public static function getStockList($custNo, $page, $size) {
-        $field = ['lottery_id', 'lottery_name', 'sub_value', 'sub_value', 'sheet_nums', 'price', 'money', 'o.order_status'];
+        $field = ['order_detail.lottery_id', 'order_detail.lottery_name', 'sub_value', 'sub_value', 'sheet_nums', 'price', 'money', 'o.order_status', 'l.lottery_img', 'o.order_code', 'o.order_money'];
         $query = OrderDetail::find()->select($field)
                 ->innerJoin('order o', 'o.order_id = order_detail.order_id')
+                ->leftJoin('lottery l', 'l.lottery_id = order_detail.lottery_id')
                 ->where(['o.cust_no' => $custNo, 'o.pay_status' => 1]);
         $pn = 1;
         $pages = 1;
