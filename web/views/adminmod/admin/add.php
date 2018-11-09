@@ -19,12 +19,12 @@
         </div>
 		<div class="form-item">
 			<label for="" class="label-top">所属角色：</label>
-			<input class="easyui-combobox" name="admin_role[]" id="admin_role" data-options="required:true">
+			<input class="easyui-combobox" name="admin_role[]" id="admin_role" data-options="required:true,panelHeight:'auto',editable:false">
 		</div>
 		<?php if($login_type == '0'){?>
 			<div class="form-item">
 				<label for="" class="label-top">所属类型：</label>
-				<select name="type" class="easyui-combobox" value="">
+				<select name="type" class="easyui-combobox" value="" data-options="panelHeight:'auto',editable:false">
 					<option value="0" selected>内部用户</option>
 					<option value="1">渠道用户</option>
 				</select>
@@ -33,7 +33,7 @@
 
         <div class="form-item">
             <label for="" class="label-top">启用状态：</label>
-            <select name="status" class="easyui-combobox" value="">
+            <select name="status" class="easyui-combobox" value="" data-options="panelHeight:'auto',editable:false">
                 <option value="0" >禁用</option>
                 <option value="1"  selected>启用</option>
             </select>
