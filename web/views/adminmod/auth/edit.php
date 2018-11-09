@@ -36,7 +36,7 @@
         </div>
         <div class="form-item">
             <label for="" class="label-top">权限类型：</label>
-            <select name="auth_type" class="easyui-combobox" value="">
+            <select name="auth_type" class="easyui-combobox" value="" data-options="panelHeight:'auto',editable:false">
                 <option value="2" <?php if($auth['auth_type'] ==2){?>selected <?php }?>>页面功能</option>
                 <option value="1" <?php if($auth['auth_type'] ==1){?>selected <?php }?>>导航栏菜单</option>
 <!--                <option value="2">页面功能</option>-->

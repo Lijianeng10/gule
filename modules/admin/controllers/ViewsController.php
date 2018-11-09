@@ -22,7 +22,9 @@ class ViewsController extends Controller {
      * @return string 管理员管理
      */
     public function actionToAdminList(){
-        return $this->render('/adminmod/admin/list');
+		$session = \Yii::$app->session;
+		$login_type = $session['admin']['type'];
+        return $this->render('/adminmod/admin/list',['login_type' => $login_type]);
 
     }
     public function actionToAdminAdd(){
