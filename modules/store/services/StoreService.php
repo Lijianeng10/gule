@@ -379,8 +379,10 @@ class StoreService {
      * @return type
      */
     public static function getSaleList($custNo, $page, $size) {
-        $field = ['order_code', 'store_no', 'channel_no', 'terminal_num', 'pay_money', 'buy_nums', 'create_time', 'lottery_value', 'pay_time'];
-        $query = PayRecord::find()->select($field)->where(['store_no' => $custNo, 'status' => 1]);
+        $field = ['order_code', 'store_no', 'channel_no', 'terminal_num', 'pay_money', 'buy_nums', 'pay_record.create_time', 'l.lottery_value', 'pay_time', 'l.lottery_name'];
+        $query = PayRecord::find()->select($field)
+                ->leftJoin('lottery l', 'l.lottery_id = pay_record.lottery_id')
+                ->where(['store_no' => $custNo, 'pay_record.status' => 1]);
         $pn = 1;
         $pages = 1;
         if ($page) {
@@ -390,7 +392,7 @@ class StoreService {
             $offset = ($page - 1) * $size;
             $query = $query->limit($size)->offset($offset);
         }
-        $saleList = $query->orderBy('create_time desc')->asArray()->all();
+        $saleList = $query->orderBy('pay_record.create_time desc')->asArray()->all();
         return ['page' => $pn, 'pages' => $pages, 'size' => count($saleList), 'total' => empty($page) ? count($saleList) : $total, 'data' => $saleList];
     }
 
