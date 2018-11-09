@@ -148,7 +148,8 @@ class StoreController extends Controller {
         $custNo = $request->post('custNo', '');
         $page = $request->post('pageNums', 0);
         $size = $request->post('size', 10);
-        $ret = StoreService::getStockList($custNo, $page, $size);
+        $tabType = $request->post('tabType', 0); // 0:全部 1：待发货 2：已发货
+        $ret = StoreService::getStockList($custNo, $page, $size, $tabType);
         return $this->jsonResult(600, '获取成功', $ret);
     }
 

@@ -403,12 +403,13 @@ class StoreService {
      * @param type $size
      * @return type
      */
-    public static function getStockList($custNo, $page, $size) {
-        $field = ['order_detail.lottery_id', 'order_detail.lottery_name', 'sub_value', 'sub_value', 'sheet_nums', 'price', 'money', 'o.order_status', 'l.lottery_img', 'o.order_code', 'o.order_money'];
-        $query = OrderDetail::find()->select($field)
-                ->innerJoin('order o', 'o.order_id = order_detail.order_id')
-                ->leftJoin('lottery l', 'l.lottery_id = order_detail.lottery_id')
-                ->where(['o.cust_no' => $custNo, 'o.pay_status' => 1]);
+    public static function getStockList($custNo, $page, $size, $tabType) {
+        $field = ['order_id', 'order_code', 'order_num', 'order_money', 'order_status', 'courier_name', 'courier_code', 'order_time', 'touser_remark', 'remark', 'shipping_fee', 'address'];
+        $where = ['and', ['cust_no' => $custNo, 'pay_status' => 1]];
+        if($tabType) {
+            $where[] = ['order_status' => $tabType];
+        }
+        $query = Order::find()->select($field)->where($where);
         $pn = 1;
         $pages = 1;
         if ($page) {
@@ -418,7 +419,24 @@ class StoreService {
             $offset = ($page - 1) * $size;
             $query = $query->limit($size)->offset($offset);
         }
-        $orderList = $query->orderBy('create_time desc')->asArray()->all();
+        
+        $orderList = $query->orderBy('order_time desc')->asArray()->all();
+        $orderIds = array_column($orderList, 'order_id');
+        $field2 = ['order_detail.order_id', 'order_detail.lottery_id', 'order_detail.lottery_name', 'sub_value', 'sub_value', 'sheet_nums', 'price', 'money', 'l.lottery_img', 'nums'];
+        $detail = OrderDetail::find()->select($field2)
+                ->innerJoin('lottery l', 'l.lottery_id = order_detail.lottery_id')
+                ->where(['in', 'order_detail.order_id', $orderIds])
+                ->asArray()
+                ->all();
+        foreach ($orderList as &$order) {
+            $orderDetail = [];
+            foreach ($detail as $d) {
+                if($d['order_id'] == $order['order_id']) {
+                    $orderDetail[] = $d;
+                }
+            }
+            $order['order_detail'] = $orderDetail;
+        }
         return ['page' => $pn, 'pages' => $pages, 'size' => count($orderList), 'total' => empty($page) ? count($orderList) : $total, 'data' => $orderList];
     }
 
