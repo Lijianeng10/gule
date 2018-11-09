@@ -153,9 +153,9 @@
             function optFormatter(value, row) {
                 var str = "";
                 if(row.status ==0){
-                    str += '<a href="#" name="up" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.terminal_id+','+row.status+')">启用</a>';
+                    str += '<a href="#" name="up" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.machine_id+','+row.status+')">启用</a>';
                 }else if(row.status == 1){
-                    str += '<a href="#" name="down"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.terminal_id+','+row.status+')">禁用</a>';
+                    str += '<a href="#" name="down"  style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" iconCls="fa fa-refresh" onclick="change_status('+row.machine_id+','+row.status+')">禁用</a>';
                 }
                  return str;
             }
@@ -210,7 +210,7 @@
             if(status==1){
                 statusStr='禁用';
             }
-            changeStatus('您确定要 ('+statusStr+') 该终端号吗?',"/usermod/terminal/change-status",id,status);
+            changeStatus('您确定要 ('+statusStr+') 该机器吗?',"/usermod/machine/change-status",id,status);
         }
 
         /**
