@@ -314,7 +314,7 @@ class StoreService {
      * @param type $prePayMoney
      * @return type
      */
-    public static function createPayRecord($custNo, $terminalNum, $channelNo, $prePayMoney, $payType = 1) {
+    public static function createPayRecord($custNo, $terminalNum, $channelNo, $prePayMoney, $machineCode = '',$payType = 1) {
         $payRecord = new PayRecord();
         $orderCode = Commonfun::getCode('ORDER', 'T');
         $payRecord->order_code = $orderCode;
@@ -324,6 +324,7 @@ class StoreService {
         $payRecord->pre_pay_money = $prePayMoney;
         $payRecord->create_time = date('Y-m-d H:i:s');
         $payRecord->pay_type = $payType;
+        $payRecord->machine_code = $machineCode;
         if (!$payRecord->save()) {
             return ['code' => 109, 'msg' => '交易记录生成失败'];
         }
@@ -530,7 +531,7 @@ class StoreService {
         $db = \Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
-            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total);
+            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total, $machineCode);
             if ($createOrder['code'] != 600) {
                 throw new Exception('下单失败-记录');
             }
