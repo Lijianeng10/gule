@@ -20,7 +20,7 @@ class PayTool {
         $qbAppId = \Yii::$app->params['java_appId'];
         $qbCallBack = \Yii::$app->params["userDomain"] . '/tools/qb-pay/qb-callback';
         if ($money < 2) {
-            return false;
+            return ['code' => 109, 'msg' => '订单最低金额必须大于2元！！'];
         }
         $post_data = [
             'appid' => $qbAppId,
