@@ -68,6 +68,16 @@
                         width: 80,
                         align: 'center',
                     },{
+                        field: 'lottery_name',
+                        title: '彩种名称',
+                        width: 80,
+                        align: 'center',
+                    },{
+                        field: 'lottery_value',
+                        title: '彩种面额',
+                        width: 80,
+                        align: 'center',
+                    },{
                         field: 'buy_nums',
                         title: '购买数量',
                         width: 80,
@@ -90,16 +100,6 @@
                         width: 50,
                         align: 'center',
                         formatter: statusFormatter
-                    }, {
-                        field: 'lottery_name',
-                        title: '彩种名称',
-                        width: 80,
-                        align: 'center',
-                    },{
-                        field: 'lottery_value',
-                        title: '彩种面额',
-                        width: 80,
-                        align: 'center',
                     },{
                         field: 'area',
                         title: '所属区域',
@@ -111,6 +111,7 @@
                         title: '创建时间',
                         width: 130,
                         align: 'center',
+
                     },{
                         field: 'pay_time',
                         title: '支付时间',
@@ -209,12 +210,12 @@
                     <option value="1">已支付</option>
                 </select>
             </div>
-            <div class="tb_item">
-                <span>创建时间：</span>
-                <input type="text" name="start_time" class="easyui-datetimebox">
-                -
-                <input type="text" name="end_time" class="easyui-datetimebox">
-            </div>
+<!--            <div class="tb_item">-->
+<!--                <span>创建时间：</span>-->
+<!--                <input type="text" name="start_time" class="easyui-datetimebox">-->
+<!--                --->
+<!--                <input type="text" name="end_time" class="easyui-datetimebox">-->
+<!--            </div>-->
             <div class="tb_item">
                 <span>支付时间：</span>
                 <input type="text" name="pay_start_time" class="easyui-datetimebox">
