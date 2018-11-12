@@ -12,6 +12,11 @@
                    data-options="required:true">
         </div>
         <div class="form-item">
+            <label for="" class="label-top">彩种规格：</label>
+            <input type="text" name="sheet_number" class="easyui-validatebox easyui-numberbox" prompt="请输入每包张数"
+                   data-options="required:true">
+        </div>
+        <div class="form-item">
             <label for="" class="label-top">彩种图片：</label>
             <div class="form-item product_pic" style="width:80%;">
                 <div style="width: 120px;height: 160px; text-align: center;border: 1px solid #BECDD5;position: relative;float: left;margin-left: 100px;"
@@ -78,11 +83,12 @@
         var lottery_pic = $('.productPic').attr('src');
         var lottery_name = $.trim($('input[name="lottery_name"]').val());
         var lottery_value = $.trim($('input[name="lottery_value"]').val());
+        var sheet_number = $.trim($('input[name="sheet_number"]').val());
         if ($('#myform').form('validate')) {
             $.ajax({
                 url: '/usermod/lottery/add',
                 type: 'post',
-                data: {lottery_pic: lottery_pic, lottery_name: lottery_name, lottery_value: lottery_value},
+                data: {lottery_pic: lottery_pic, lottery_name: lottery_name, lottery_value: lottery_valu,sheet_number:sheet_number},
                 beforeSend: function () {
                     $.messager.progress({
                         msg: '正在提交中。。。'

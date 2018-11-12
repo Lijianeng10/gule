@@ -56,6 +56,12 @@
                         align: 'center',
                         sortable: true
                     },{
+                        field: 'sheet_number',
+                        title: '张数（包）',
+                        width: 50,
+                        align: 'center',
+                        sortable: true
+                    },{
                         field: 'logo',
                         title: '彩种图片',
                         width: 50,

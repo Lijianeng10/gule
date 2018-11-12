@@ -46,8 +46,9 @@ class LotteryController extends Controller {
         $lotteryName = $request->post('lottery_name', '');
         $lotteryValue = $request->post('lottery_value', '');
         $lotteryPic = $request->post('lottery_pic', '');
+        $sheetNumber = $request->post('sheet_number', '');
         $session = \Yii::$app->session;
-        if (empty($lotteryName) || empty($lotteryValue)) {
+        if (empty($lotteryName) || empty($lotteryValue)||empty($sheetNumber)) {
             return $this->jsonError(109, '参数缺失！！');
         }
         $existLottery = Lottery::findOne(['lottery_name' => $lotteryName,'lottery_value'=>$lotteryValue]);
@@ -64,6 +65,7 @@ class LotteryController extends Controller {
         $lottery->lottery_code = (string) $lotteryCode;
         $lottery->lottery_name = trim($lotteryName);
         $lottery->lottery_value = trim($lotteryValue);
+        $lottery->sheet_number = $sheetNumber;
         $lottery->lottery_img = $lotteryPic;
         $lottery->admin_code = $session['admin']['admin_name'];
         $lottery->create_time = date('Y-m-d H:i:s');
@@ -79,7 +81,8 @@ class LotteryController extends Controller {
         $lotteryId = $request->post('lottery_id');
         $lotteryValue = $request->post('lottery_value', '');
         $lotteryPic = $request->post('lottery_pic', '');
-        if (!$lotteryName||!$lotteryValue) {
+        $sheetNumber = $request->post('sheet_number', '');
+        if (!$lotteryName||!$lotteryValue||empty($sheetNumber)) {
             return $this->jsonError(109, '参数缺失');
         }
         $session = \Yii::$app->session;
@@ -93,6 +96,7 @@ class LotteryController extends Controller {
         }
         $lotteryData->lottery_name = trim($lotteryName);
         $lotteryData->lottery_value = trim($lotteryValue);
+        $lotteryData->sheet_number = trim($sheetNumber);
         $lotteryData->lottery_img = $lotteryPic;
         $lotteryData->admin_code = $session['admin']['admin_name'];
         if (!$lotteryData->save()) {

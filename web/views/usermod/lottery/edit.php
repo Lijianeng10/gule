@@ -13,6 +13,11 @@
                    data-options="required:true" value="<?php echo $lotteryData['lottery_value'];?>">
         </div>
         <div class="form-item">
+            <label for="" class="label-top">彩种规格：</label>
+            <input type="text" name="sheet_number" class="easyui-validatebox easyui-numberbox" prompt="请输入每包张数"
+                   data-options="required:true" value="<?php echo $lotteryData['sheet_number'];?>">
+        </div>
+        <div class="form-item">
             <label for="" class="label-top">彩种图片：</label>
             <div class="form-item product_pic" style="width:80%;">
                 <?php if ($lotteryData['lottery_img']): ?>
@@ -91,11 +96,12 @@
         var lottery_id = $.trim($('input[name="lottery_id"]').val());
         var lottery_name = $.trim($('input[name="lottery_name"]').val());
         var lottery_value = $.trim($('input[name="lottery_value"]').val());
+        var sheet_number = $.trim($('input[name="sheet_number"]').val());
         if ($('#myform').form('validate')) {
             $.ajax({
                 url: '/usermod/lottery/update',
                 type: 'post',
-                data: {lottery_pic: lottery_pic, lottery_name: lottery_name, lottery_value: lottery_value,lottery_id:lottery_id},
+                data: {lottery_pic: lottery_pic, lottery_name: lottery_name, lottery_value: lottery_value,lottery_id:lottery_id,sheet_number:sheet_number},
                 beforeSend: function () {
                     $.messager.progress({
                         msg: '正在提交中。。。'
