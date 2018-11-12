@@ -155,14 +155,16 @@
                 <span>手机号：</span>
                 <input type="text"  name="admin_tel" class="textbox" >
             </div>
-            <div class="tb_item">
-                <span>用户类型：</span>
-				<select class="easyui-combobox" name="admin_type" id="admin_type" data-options="panelHeight:'auto',editable:false">
-					<option value="" selected>全部</option>
-					<option value="0">内部用户</option>
-					<option value="1">渠道</option>
-                </select>
-            </div>
+			<?php if($login_type == '0'){?>
+				<div class="tb_item">
+					<span>用户类型：</span>
+					<select class="easyui-combobox" name="admin_type" id="admin_type" data-options="panelHeight:'auto',editable:false">
+						<option value="" selected>全部</option>
+						<option value="0">内部用户</option>
+						<option value="1">渠道</option>
+					</select>
+				</div>
+			<?php }?>
             <div class="tb_item">
                 <span>状态：</span>
                 <select class="easyui-combobox" name="status" id="status" data-options="panelHeight:'auto',editable:false">

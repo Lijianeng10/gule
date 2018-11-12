@@ -27,18 +27,20 @@
 <!--        </div>-->
         <div class="form-item">
             <label for="" class="label-top">所属角色：</label>
-            <input class="easyui-validatebox easyui-combobox" name="admin_role[]" id="admin_role" data-options="required:true">
+            <input class="easyui-validatebox easyui-combobox" name="admin_role[]" id="admin_role" data-options="required:true,panelHeight:'auto',editable:false">
         </div>
-        <div class="form-item">
-            <label for="" class="label-top">所属类型：</label>
-            <select id="ec" class="easyui-combobox" data-options="editable:false,panelHeight:null" name="admin_type">
-                <option value="0" <?php if ($admin['type'] == 0){ ?>selected <?php } ?>>内部用户</option>
-                <option value="1" <?php if ($admin['type'] == 1){ ?>selected <?php } ?>>渠道用户</option>
-            </select>
-        </div>
+		<?php if($login_type == '0'){?>
+			<div class="form-item">
+				<label for="" class="label-top">所属类型：</label>
+				<select id="ec" class="easyui-combobox" data-options="editable:false,panelHeight:null" name="admin_type" data-options="panelHeight:'auto',editable:false">
+					<option value="0" <?php if ($admin['type'] == 0){ ?>selected <?php } ?>>内部用户</option>
+					<option value="1" <?php if ($admin['type'] == 1){ ?>selected <?php } ?>>渠道用户</option>
+				</select>
+			</div>
+		<?php }?>
         <div class="form-item">
             <label for="" class="label-top">启用状态：</label>
-            <select id="ec" class="easyui-combobox" data-options="editable:false,panelHeight:null" name="status">
+            <select id="ec" class="easyui-combobox" data-options="editable:false,panelHeight:null" name="status" data-options="panelHeight:'auto',editable:false">
                 <option value="0" <?php if ($admin['status'] != 1){ ?>selected <?php } ?>>禁用</option>
                 <option value="1" <?php if ($admin['status'] == 1){ ?>selected <?php } ?>>启用</option>
             </select>

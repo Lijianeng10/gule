@@ -51,6 +51,11 @@ class StoreService {
                     $url = \Yii::$app->params['userDomain'] . '/h5_ggc/store.html?custNo=' . $custNo . '&statusBarHeight=' . $statusBarHeight; // 跳转门店管理页面
                     return $url;
                 } elseif ($machineData['cust_no'] != $custNo) {
+                    if (strpos($_SERVER['HTTP_USER_AGENT'], 'AlipayClient') === false) {
+                        //非支付宝 返回错误提示
+                        $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请使用支付宝客户端扫码购彩' . '&statusBarHeight=' . $statusBarHeight;
+                        return $url;
+                    }
                     if (empty($machineData['lottery_id'])) {
                         $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=该设备还未确定出售彩种！请联系店主' . '&statusBarHeight=' . $statusBarHeight;
                         return $url;
@@ -120,7 +125,7 @@ class StoreService {
                 return ['code' => 109, 'msg' => $storeData['msg']];
             }
             $addCust = self::bindCustNo($custNo);
-            if($addCust['code'] != 1) {
+            if ($addCust['code'] != 1) {
                 return ['code' => 109, 'msg' => $addCust['msg']];
             }
             $channelNo = array_slice(explode('.', $storeData['data']['cascadeId']), -2, 1);
@@ -210,7 +215,7 @@ class StoreService {
                 ->andWhere(['>', 'store_lottery.stock', 0])
                 ->asArray()
                 ->all();
-        if(empty($storeLottery)) {
+        if (empty($storeLottery)) {
             return ['code' => 109, 'msg' => '暂无可售彩种！！可向渠道申请进货'];
         }
         if ($terminalNum && $machineCode) {
@@ -234,7 +239,7 @@ class StoreService {
         $data['lottery'] = $lottData;
         $data['value'] = array_values($valueData);
         $data['lotteryValue'] = $lotteryValue;
-        return ['code' => 600, 'msg' => '获取成功', 'data' =>$data];
+        return ['code' => 600, 'msg' => '获取成功', 'data' => $data];
     }
 
     /**
@@ -309,7 +314,7 @@ class StoreService {
      * @param type $prePayMoney
      * @return type
      */
-    public static function createPayRecord($custNo, $terminalNum, $channelNo, $prePayMoney, $payType = 1) {
+    public static function createPayRecord($custNo, $terminalNum, $channelNo, $prePayMoney, $machineCode = '',$payType = 1) {
         $payRecord = new PayRecord();
         $orderCode = Commonfun::getCode('ORDER', 'T');
         $payRecord->order_code = $orderCode;
@@ -319,6 +324,7 @@ class StoreService {
         $payRecord->pre_pay_money = $prePayMoney;
         $payRecord->create_time = date('Y-m-d H:i:s');
         $payRecord->pay_type = $payType;
+        $payRecord->machine_code = $machineCode;
         if (!$payRecord->save()) {
             return ['code' => 109, 'msg' => '交易记录生成失败'];
         }
@@ -338,7 +344,8 @@ class StoreService {
         $field = ['store.cust_no', 'user_tel', 'channel_no',
             new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where}) end date_sell_amount"),
             new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1 and {$where1}) end month_sell_amount"),
-            new Expression("case when store.status = 1 then (select coalesce(sum(machine_id), 0) from machine m where m.cust_no = store.cust_no and m.status = 1) end machine_nums")];
+            new Expression("case when store.status = 1 then (select coalesce(sum(machine_id), 0) from machine m where m.cust_no = store.cust_no and m.status = 1) end machine_nums"),
+            new Expression("case when store.status = 1 then (select coalesce(sum(p.pay_money),0) from pay_record p where p.store_no = store.cust_no and p.status = 1) end all_sell_amount")];
         $storeData = Store::find()->select($field)->where(['cust_no' => $custNo, 'store.status' => 1])->asArray()->one();
         if (!empty($storeData) && $storeData['machine_nums'] != 0) {
             $field1 = ['terminal_num', 'machine_code', 'l.lottery_value', 'stock', 'ac_status', 'online_status', 'machine.status', 'l.lottery_name', 'cust_no', 'l.lottery_img', 'sum(machine.stock * machine.lottery_value) sum_amount',
@@ -358,6 +365,7 @@ class StoreService {
             $storeData['date_sell_amount'] = 0;
             $storeData['month_sell_amount'] = 0;
             $storeData['machine_nums'] = 0;
+            $storeData['all_sell_amount'] = 0;
         }
 
 
@@ -372,8 +380,10 @@ class StoreService {
      * @return type
      */
     public static function getSaleList($custNo, $page, $size) {
-        $field = ['order_code', 'store_no', 'channel_no', 'terminal_num', 'pay_money', 'buy_nums', 'create_time', 'lottery_value', 'pay_time'];
-        $query = PayRecord::find()->select($field)->where(['store_no' => $custNo, 'status' => 1]);
+        $field = ['order_code', 'store_no', 'channel_no', 'terminal_num', 'pay_money', 'buy_nums', 'pay_record.create_time', 'l.lottery_value', 'pay_time', 'l.lottery_name'];
+        $query = PayRecord::find()->select($field)
+                ->leftJoin('lottery l', 'l.lottery_id = pay_record.lottery_id')
+                ->where(['store_no' => $custNo, 'pay_record.status' => 1]);
         $pn = 1;
         $pages = 1;
         if ($page) {
@@ -383,7 +393,7 @@ class StoreService {
             $offset = ($page - 1) * $size;
             $query = $query->limit($size)->offset($offset);
         }
-        $saleList = $query->orderBy('create_time desc')->asArray()->all();
+        $saleList = $query->orderBy('pay_record.create_time desc')->asArray()->all();
         return ['page' => $pn, 'pages' => $pages, 'size' => count($saleList), 'total' => empty($page) ? count($saleList) : $total, 'data' => $saleList];
     }
 
@@ -394,11 +404,13 @@ class StoreService {
      * @param type $size
      * @return type
      */
-    public static function getStockList($custNo, $page, $size) {
-        $field = ['lottery_id', 'lottery_name', 'sub_value', 'sub_value', 'sheet_nums', 'price', 'money', 'o.order_status'];
-        $query = OrderDetail::find()->select($field)
-                ->innerJoin('order o', 'o.order_id = order_detail.order_id')
-                ->where(['o.cust_no' => $custNo, 'o.pay_status' => 1]);
+    public static function getStockList($custNo, $page, $size, $tabType) {
+        $field = ['order_id', 'order_code', 'order_num', 'order_money', 'order_status', 'courier_name', 'courier_code', 'order_time', 'touser_remark', 'remark', 'shipping_fee', 'address'];
+        $where = ['and', ['cust_no' => $custNo, 'pay_status' => 1]];
+        if($tabType) {
+            $where[] = ['order_status' => $tabType];
+        }
+        $query = Order::find()->select($field)->where($where);
         $pn = 1;
         $pages = 1;
         if ($page) {
@@ -408,7 +420,25 @@ class StoreService {
             $offset = ($page - 1) * $size;
             $query = $query->limit($size)->offset($offset);
         }
-        $orderList = $query->orderBy('create_time desc')->asArray()->all();
+        
+        $orderList = $query->orderBy('order_time desc')->asArray()->all();
+        $orderIds = array_column($orderList, 'order_id');
+        $field2 = ['order_detail.order_id', 'order_detail.lottery_id', 'order_detail.lottery_name', 'sub_value', 'sub_value', 'sheet_nums', 'price', 'money', 'l.lottery_img', 'nums'];
+        $detail = OrderDetail::find()->select($field2)
+                ->innerJoin('lottery l', 'l.lottery_id = order_detail.lottery_id')
+                ->where(['in', 'order_detail.order_id', $orderIds])
+                ->asArray()
+                ->all();
+        foreach ($orderList as &$order) {
+            $orderDetail = [];
+            foreach ($detail as $d) {
+                if($d['order_id'] == $order['order_id']) {
+                    $orderDetail[] = $d;
+                }
+            }
+            $order['order_detail'] = $orderDetail;
+            $order['lottery_nums'] = count($orderDetail);
+        }
         return ['page' => $pn, 'pages' => $pages, 'size' => count($orderList), 'total' => empty($page) ? count($orderList) : $total, 'data' => $orderList];
     }
 
@@ -482,24 +512,27 @@ class StoreService {
         }
         $machine = Machine::find()->select(['machine_code', 'lottery_id', 'lottery_value', 'stock', 'channel_no', 'online_status'])->where(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode, 'machine.status' => 1, 'ac_status' => 1, 'status' => 1])->asArray()->one();
         if (empty($machine)) {
+            \Yii::redisDel($key);
             return ['code' => 109, 'msg' => '设备故障！请联系店主'];
         }
         if ($machine['online_status'] != 1) {
+            \Yii::redisDel($key);
             return ['code' => 109, 'msg' => '该设备还未接通电源！为确保正常出票。请联系店主'];
         }
         if (bccomp($buyNums, $machine['stock']) == 1) {
+            \Yii::redisDel($key);
             return ['code' => 109, 'msg' => '购买张数大于机箱内库存'];
         }
         $prePayMoney = bcmul($buyNums, $machine['lottery_value']);
         if (bccomp($prePayMoney, $total) != 0) {
+            \Yii::redisDel($key);
             return ['code' => 109, 'msg' => '购买总金额错误'];
         }
         $db = \Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
-            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total);
+            $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total, $machineCode);
             if ($createOrder['code'] != 600) {
-
                 throw new Exception('下单失败-记录');
             }
             $payRecord = PayRecord::findOne(['pay_record_id' => $createOrder['recordId']]);
@@ -518,6 +551,7 @@ class StoreService {
             return ['code' => 600, 'msg' => '下单成功', 'data' => ['create_time' => $payRecord->create_time, 'order_code' => $payRecord->order_code, 'pay_money' => $total, 'pay_url' => $qbRet['pay_url']]];
         } catch (Exception $ex) {
             $trans->rollBack();
+            \Yii::redisDel($key);
             return ['code' => 109, 'msg' => $ex->getMessage()];
         }
     }
@@ -755,7 +789,7 @@ class StoreService {
             return ['code' => 109, 'msg' => $ex->getMessage()];
         }
     }
-    
+
     /**
      * 添加下级商户
      * @param type $custNo
@@ -769,7 +803,7 @@ class StoreService {
         $ret = \Yii::sendCurlPost($url, $postData);
         return $ret;
     }
-    
+
     /**
      * 获取系统彩种
      * @param type $limitArea
@@ -777,19 +811,19 @@ class StoreService {
      */
     public static function getSysLottery($limitArea) {
         $where = ['and', ['status' => 1]];
-        if($limitArea) {
+        if ($limitArea) {
             $where[] = ['limit_area' => $limitArea];
         }
         $lotteryData = Lottery::find()->select(['lottery_id', 'lottery_name', 'lottery_value', 'lottery_img'])->where(['status' => 1])->asArray()->all();
-        if(empty($lotteryData)) {
+        if (empty($lotteryData)) {
             return ['code' => 109, 'msg' => '暂无彩种可订购！请稍后再试或联系相关渠道'];
         }
         return ['code' => 600, 'msg' => '获取成功', 'data' => $lotteryData];
     }
-    
+
     public static function applyToStock($custNo, $lotteryId, $stockNum) {
         $lotteryData = Lottery::find()->select(['lottery_id', 'lottery_name', 'lottery_value'])->where(['lottery_id' => $lotteryId, 'status' => 1])->asArray()->one();
-        if(empty($lotteryData)) {
+        if (empty($lotteryData)) {
             return ['code' => 109, 'msg' => '此彩种渠道暂不知道提供订购！请联系渠道'];
         }
         $storeData = Store::find()->select(['cust_no', 'user_tel', 'channel_no', 'store_name', 'province']);

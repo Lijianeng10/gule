@@ -16,14 +16,14 @@
         </div>
         <div class="form-item">
             <label for="" class="label-top">权限类型：</label>
-            <select name="auth_type" class="easyui-combobox" value="">
+            <select name="auth_type" class="easyui-combobox" value="" data-options="panelHeight:'auto',editable:false">
                 <option value="2">页面功能</option>
                 <option value="1">导航栏菜单</option>
             </select>
         </div>
         <div class="form-item">
             <label for="" class="label-top">启用状态：</label>
-            <select name="auth_status" class="easyui-combobox" value="">
+            <select name="auth_status" class="easyui-combobox" value="" data-options="panelHeight:'auto',editable:false">
                 <option value="1">启用</option>
                 <option value="0">禁用</option>
             </select>

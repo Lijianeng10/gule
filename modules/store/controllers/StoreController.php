@@ -14,12 +14,22 @@ class StoreController extends Controller {
      * @return type
      */
     public function actionToJumpPage() {
+//        $agent = $_SERVER['HTTP_USER_AGENT'];
+//        echo $agent;die;
         $request = \Yii::$app->request;
         $custNo = $request->get('myCustNo', '');
-        $terminalNum = $request->get('terminalNum', '');
         $statusBarHeight = $request->get('statusBarHeight', '');
+        if (!$custNo) {
+            if (strpos($_SERVER['HTTP_USER_AGENT'], 'AlipayClient') === false) {
+                //非支付宝 返回错误提示
+                $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=请使用支付宝客户端扫码购彩' . '&statusBarHeight=' . $statusBarHeight;
+                return $this->redirect($url);
+            }
+        }
+        $terminalNum = $request->get('terminalNum', '');
         if (empty($terminalNum)) {
-            return $this->jsonError(100, '参数缺失');
+            $url = \Yii::$app->params['userDomain'] . '/h5_ggc/error.html?msg=参数缺失' . '&statusBarHeight=' . $statusBarHeight;
+            return $this->redirect($url);
         }
         $ret = StoreService::toJumpPage($custNo, $terminalNum, $statusBarHeight);
         return $this->redirect($ret);
@@ -138,7 +148,8 @@ class StoreController extends Controller {
         $custNo = $request->post('custNo', '');
         $page = $request->post('pageNums', 0);
         $size = $request->post('size', 10);
-        $ret = StoreService::getStockList($custNo, $page, $size);
+        $tabType = $request->post('tabType', 0); // 0:全部 1：待发货 2：已发货
+        $ret = StoreService::getStockList($custNo, $page, $size, $tabType);
         return $this->jsonResult(600, '获取成功', $ret);
     }
 
@@ -280,7 +291,7 @@ class StoreController extends Controller {
         $request = \Yii::$app->request;
         $limitArea = $request->post('limitArea', '');
         $ret = StoreService::getSysLottery($limitArea);
-        if($ret['code'] != 600) {
+        if ($ret['code'] != 600) {
             return $this->jsonError(109, $ret['msg']);
         }
         return $this->jsonResult(600, '获取成功', $ret['code']);
@@ -291,7 +302,7 @@ class StoreController extends Controller {
         $custNo = $request->post('custNo', '');
         $lotteryId = $request->post('lotteryId', '');
         $stockNum = $request->post('stockNum', '');
-        if(empty($custNo) || empty($lotteryId) || empty($stockNum)) {
+        if (empty($custNo) || empty($lotteryId) || empty($stockNum)) {
             return $this->jsonError(100, '参数缺失');
         }
     }

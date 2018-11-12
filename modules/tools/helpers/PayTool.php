@@ -20,7 +20,7 @@ class PayTool {
         $qbAppId = \Yii::$app->params['java_appId'];
         $qbCallBack = \Yii::$app->params["userDomain"] . '/tools/qb-pay/qb-callback';
         if ($money < 2) {
-            return false;
+            return ['code' => 109, 'msg' => '订单最低金额必须大于2元！！'];
         }
         $post_data = [
             'appid' => $qbAppId,
@@ -32,7 +32,8 @@ class PayTool {
             'expireTime' => '5',
             'returnType' => '2',
             'callBackUrl' => $qbCallBack,
-            'returnUrl' => \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo . '&machineCode=' . $machineCode,
+            'returnUrl' => \Yii::$app->params['userDomain'] . '/h5_ggc/purchase.html?terminalNum=' . $terminalNum . '&custNo=' . $custNo . '&machineCode=' . $machineCode . '&buyBack=1', // 跳转页面地址
+//            'returnUrl' => \Yii::$app->params['userDomain'] . '/h5_ggc/success.html',
         ];
         $post_data['sign'] = self::getSign($post_data);
         $qbret = \Yii::sendCurlPost($surl, $post_data);

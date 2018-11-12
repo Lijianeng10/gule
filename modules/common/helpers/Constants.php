@@ -10,7 +10,7 @@ namespace app\modules\common\helpers;
 
 class Constants {
 
-    const ADMIN_ROLE = 24; //超级管理员角色ID
+    const ADMIN_ROLE = 3; //超级管理员角色ID
     const SMS_KEY_REGISTER = 'sms_register'; // 注册
     const SMS_KEY_UPPWD = 'sms_up_pwd'; // 修改密码
     const SMS_KEY_UP_PAY_PWD = 'sms_up_pay_pwd'; // 修改设置 支付密码

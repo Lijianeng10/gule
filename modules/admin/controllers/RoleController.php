@@ -40,29 +40,30 @@ class RoleController extends Controller {
         $end_time = $request->post('end_time');
         $where = ['and'];
         if($role_name){
-            $where[] = ['like','role_name',$role_name];
+            $where[] = ['like','sys_role.role_name',$role_name];
         }
         if($status === '0' || $status ==='1'){
-            $where[] = ['status'=>$status];
+            $where[] = ['sys_role.status'=>$status];
         }
         if($start_time||$end_time){
             if($start_time){
-                $where[] = ['>','create_time',$start_time];
+                $where[] = ['>','sys_role.create_time',$start_time];
             }
             if($end_time){
-                $where[] = ['<','create_time',$end_time];
+                $where[] = ['<','sys_role.create_time',$end_time];
             }
         }
-        if($session['admin']['type'] !=0 ){
-            //除了超级管理员  都只能看到自己和自己所创建的角色
-            if (!in_array(Constants::ADMIN_ROLE,$session['admin']['role'])){
-                $where[] = ["or",["admin_pid"=>$session["admin"]["admin_id"]],["role_id"=>$session['admin']["role"]]];
-            }
-        }
+
+		//除了超级管理员  都只能看到自己和自己所创建的角色
+		if (!array_key_exists(Constants::ADMIN_ROLE,$session['admin']["role"])){
+			$where[] = ["or",["sys_role.admin_pid"=>$session["admin"]["admin_id"]],["sys_role.role_id"=>$session['admin']["role"]]];
+		}
 
         $total =SysRole::find()->Where($where)->count();
         $offset = $rows*($page-1);
         $dataLists =SysRole::find()
+			->select(['sys_role.*','admin.nickname'])
+			->leftJoin('admin','admin.admin_id = sys_role.admin_pid')
             ->Where($where)
             ->offset($offset)
             ->limit($rows)
@@ -75,7 +76,7 @@ class RoleController extends Controller {
      * 新增角色
      */
     public function actionAdd() {
-
+		$session = Yii::$app->session;
         $param = Yii::$app->request->post();
 		
 		$role_count = SysRole::find()->Where(['role_name' => trim($param['role_name'])])->count();//判断该角色是否已存在
@@ -83,7 +84,6 @@ class RoleController extends Controller {
 			return $this->jsonError(109, '该角色已存在，不能重复添加！');
 		}
 
-        $session = Yii::$app->session;
         $at_time = 'y/m/d h:i:s';
         $role = new SysRole();
         $role->role_name = $param["role_name"];

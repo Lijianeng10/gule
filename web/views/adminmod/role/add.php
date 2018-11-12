@@ -7,7 +7,7 @@
         </div>
         <div class="form-item">
             <label for="" class="label-top">启用状态：</label>
-            <select name="status" class="easyui-combobox" value="">
+            <select name="status" class="easyui-combobox" value="" data-options="panelHeight:'auto',editable:false">
                 <option value="0">禁用</option>
                 <option value="1" selected>启用</option>
             </select>
