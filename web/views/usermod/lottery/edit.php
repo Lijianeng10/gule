@@ -15,7 +15,7 @@
         <div class="form-item">
             <label for="" class="label-top">彩种规格：</label>
             <input type="text" name="sheet_number" class="easyui-validatebox easyui-numberbox" prompt="请输入每包张数"
-                   data-options="required:true" value="<?php echo $lotteryData['sheet_number'];?>">
+                   data-options="required:true,min:1" value="<?php echo $lotteryData['sheet_number'];?>">
         </div>
         <div class="form-item">
             <label for="" class="label-top">彩种图片：</label>
