@@ -511,16 +511,20 @@ class StoreService {
         }
         $machine = Machine::find()->select(['machine_code', 'lottery_id', 'lottery_value', 'stock', 'channel_no', 'online_status'])->where(['cust_no' => $custNo, 'terminal_num' => $terminalNum, 'machine_code' => $machineCode, 'machine.status' => 1, 'ac_status' => 1, 'status' => 1])->asArray()->one();
         if (empty($machine)) {
+            \Yii::redisDel($key);
             return ['code' => 109, 'msg' => '设备故障！请联系店主'];
         }
         if ($machine['online_status'] != 1) {
+            \Yii::redisDel($key);
             return ['code' => 109, 'msg' => '该设备还未接通电源！为确保正常出票。请联系店主'];
         }
         if (bccomp($buyNums, $machine['stock']) == 1) {
+            \Yii::redisDel($key);
             return ['code' => 109, 'msg' => '购买张数大于机箱内库存'];
         }
         $prePayMoney = bcmul($buyNums, $machine['lottery_value']);
         if (bccomp($prePayMoney, $total) != 0) {
+            \Yii::redisDel($key);
             return ['code' => 109, 'msg' => '购买总金额错误'];
         }
         $db = \Yii::$app->db;
@@ -528,7 +532,6 @@ class StoreService {
         try {
             $createOrder = self::createPayRecord($custNo, $terminalNum, $machine['channel_no'], $total);
             if ($createOrder['code'] != 600) {
-
                 throw new Exception('下单失败-记录');
             }
             $payRecord = PayRecord::findOne(['pay_record_id' => $createOrder['recordId']]);
