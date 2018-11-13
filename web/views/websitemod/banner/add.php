@@ -21,6 +21,7 @@
         });
         // 设置HTML内容
         window.editor.html();
+        
     })
 </script>
 <div class="super-theme-example">
