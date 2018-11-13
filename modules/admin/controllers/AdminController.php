@@ -32,7 +32,6 @@ class AdminController extends Controller {
      * @return
      */
     public function actionLogin() {
-        print_r(111);die;
         Yii::$app->response->statusCode = 200;
 	var_dump("1111111");exit;
         $request = \Yii::$app->request;

@@ -49,9 +49,9 @@
         var admin_pwd = $('input[name="admin_pwd"]').val();
         $.ajax({
             url: '/adminmod/admin/login',
-            header:{
-                contentType: 'application/x-www-form-urlencoded'
-            },
+            // header:{
+            //     contentType: 'application/x-www-form-urlencoded'
+            // },
             async: false,
             type: 'post',
             data:{'admin_name':admin_name,'admin_pwd':admin_pwd},
