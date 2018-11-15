@@ -197,7 +197,7 @@ class Controller extends \yii\base\Controller
      * for details about HTTP status code
      * @return Response the current response object
      */
-    public function redirect($url, $statusCode = 200)
+    public function redirect($url, $statusCode = 302)
     {
         return Yii::$app->getResponse()->redirect(Url::to($url), $statusCode);
     }
