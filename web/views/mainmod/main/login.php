@@ -1,7 +1,7 @@
 <!doctype html>
 <head>
 	<meta charset="UTF-8">
-	<title>咕啦体育-刮刮彩管理系统</title>
+	<title>谷乐管理系统</title>
 	<link rel="stylesheet" href="/css/login/login.css">
     <script src="/easyui/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 </head>
@@ -10,7 +10,7 @@
 			<div class="contain">
 				<div class="tit">
 					<h3>欢迎来到</h3>
-					<p>咕啦-刮刮彩后台</p>
+					<p>谷乐管理后台</p>
 				</div>
 				<div class="login-box">
 					<h2>用户登录</h2>
@@ -24,10 +24,10 @@
 						<span id="msg" style="color: red ; font-size: 14px; "></span>
 					</div>
 					<button class="btn" id="login" onclick="login();">登录</button>
-					<label class="check-box">
-						<input type="checkbox" >
-						<span class="remember-pw">记住密码</span>
-					</label>
+<!--					<label class="check-box">-->
+<!--						<input type="checkbox" >-->
+<!--						<span class="remember-pw">记住密码</span>-->
+<!--					</label>-->
 				</div>
 			</div>
 	</div>
