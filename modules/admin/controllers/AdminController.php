@@ -36,7 +36,7 @@ class AdminController extends Controller {
         $request = \Yii::$app->request;
         $admin_name = $request->post_nn('admin_name');
         $admin_pwd = $request->post_nn('admin_pwd');
-        $admin = Admin::find()->where(['admin_name' => $admin_name, 'password' => md5($admin_name.$admin_pwd)])->asArray()->one();
+        $admin = Admin::find()->where(['admin_name1' => $admin_name, 'password' => md5($admin_name.$admin_pwd)])->asArray()->one();
         if (empty($admin)) {
             return $this->jsonError(109,"请输入正确的账号密码");
         } elseif ($admin['status'] != 1) {
