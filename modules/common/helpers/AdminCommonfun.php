@@ -48,7 +48,7 @@ class AdminCommonfun {
             ->leftJoin('sys_admin_role ar','ar.role_id = ru.role_id')
             ->leftJoin('admin sy','sy.admin_id = ar.admin_id')
             ->where(['sy.admin_id'=>$adminId,'sys_auth.auth_status'=>1])
-//            ->andWhere(['sys_auth.auth_type'=>1])
+            ->andWhere(['sys_auth.auth_type'=>1])
             ->orderBy('sys_auth.auth_sort desc,sys_auth.auth_id asc')
             ->asArray()
             ->all();

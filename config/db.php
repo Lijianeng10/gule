@@ -2,11 +2,18 @@
 
 if (YII_ENV == "dev") {
 
+//    return [
+//        'class' => 'yii\db\Connection',
+//        'dsn' => 'mysql:host=114.115.148.102;dbname=gl_ggc',
+//        'username' => 'root',
+//        'password' => 'chenqiwei',
+//        'charset' => 'utf8mb4',
+//    ];
     return [
         'class' => 'yii\db\Connection',
-        'dsn' => 'mysql:host=114.115.148.102;dbname=gl_ggc',
+        'dsn' => 'mysql:host=119.23.239.189;dbname=gl_ggc',
         'username' => 'root',
-        'password' => 'chenqiwei',
+        'password' => '!Lhj13960lyq',
         'charset' => 'utf8mb4',
     ];
 } else {
