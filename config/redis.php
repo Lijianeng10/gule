@@ -2,10 +2,10 @@
 if(YII_ENV_DEV){
     return [
         'class' => 'app\modules\components\redis\Connection',
-        'hostname' => '114.115.148.102',
-        'password' => 'goodluck',
-        'port' => 63790,
-        'database' => 10,
+        'hostname' => '119.23.239.189',
+        'password' => 'lhj13960lyq',
+        'port' => 6379,
+        'database' =>0,
     ];
 }else{
 //    return [
