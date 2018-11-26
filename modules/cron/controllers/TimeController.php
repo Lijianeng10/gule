@@ -26,4 +26,11 @@ class TimeController extends Controller {
         return $this->jsonResult(600,'执行成功');
     }
 
+    /**
+     * 测试定时服务器
+     */
+    public function actionTestCron(){
+        return $this->jsonResult(600,'执行成功',date('Y-m-d H:i:s'));
+    }
+
 }
