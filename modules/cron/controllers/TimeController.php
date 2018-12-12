@@ -27,10 +27,36 @@ class TimeController extends Controller {
     }
 
     /**
-     * 测试定时服务器
+     * 测试redis 添加队列
      */
-    public function actionTestCron(){
-        return $this->jsonResult(600,'执行成功',date('Y-m-d H:i:s'));
+    public function actionTestAddQueue(){
+        $redis = \Yii::$app->redis;
+        $time = date('Y-m-d H:i:s');
+        $ary=[
+            'num'=>rand(0,9999),
+            'time'=>$time
+        ];
+        $ret = $redis->rpush("mylist",json_encode($ary));
+        if($ret){
+            echo "入队的值".$time;
+        }else{
+            echo "入队失败";
+        }
+
+    }
+    /**
+     * 测试redis 消费队列
+     */
+    public function actionTestLpopQueue(){
+        $redis = \Yii::$app->redis;
+        $value = $redis->lpop('mylist');
+        $ary = json_decode($value,true);
+        if($value){
+            echo "出队的值".$ary['num'].' '.$ary['time'];
+        }else{
+            echo "出队完成";
+
+        }
     }
 
 }
