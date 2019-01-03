@@ -37,6 +37,9 @@ $config = [
         'websitemod' => [//网站管理模块
             'class' => 'app\modules\website\website',
         ],
+        'front' => [//前台页面模块
+            'class' => 'app\modules\front\front',
+        ],
     ],
     'components' => [
         'request' => [
