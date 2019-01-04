@@ -58,5 +58,34 @@ class TimeController extends Controller {
 
         }
     }
+    /**
+     * 更新微信access_token
+     * @return type
+     */
+    public function actionUpdateAccess_token() {
+        $appId = \Yii::$app->params['wx_appid'];
+        $appSecret = \Yii::$app->params['wx_app_secret'];
+
+        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appId&secret=$appSecret";
+        $access_token = '';
+        $flag = 0;
+        while (!$access_token) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            $result = json_decode($result, true);
+            if (isset($result['access_token'])) {
+                $access_token = $result['access_token'];
+            }
+            $flag++;
+            if ($flag == 10) {
+                break;
+            }
+        }
+        \Yii::redisSet('wxgzh_token', $access_token, 6000);
+        return $this->jsonResult(600, 'succ', ['token' => $access_token, 'flag' => $flag]);
+    }
 
 }

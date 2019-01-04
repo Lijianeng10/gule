@@ -8,4 +8,6 @@ return [
     'java_appKey' => 'edd3c3cfb1d147f89124c5f5f969f272e601f61599ef49679a038ceaab36355d' , // 钱包支付AppKey
     'urlIp'=>'http://114.115.148.102:8011',
     'lottery_img_host' => 'http://114.115.148.102/img/', //图片服务器地址
+    'wx_appid'=>'wx70babc4419fce1d0',//微信公众号APPID
+    'wx_app_secret'=>'b02f404f01790c8813b0f7982adcfc69',//微信公众号APPSECRET
 ];
