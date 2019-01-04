@@ -36,17 +36,17 @@ class LoginController extends Controller {
         $ary = [
             'button' => [
                 [
-                    'name' => urlencode('菜单一'),
-                    'type' => 'click',
-                    'key' => 'item1'
+                    'name' => urlencode('我的谷乐'),
+                    'type' => 'view',
+                    'url' => 'http://119.23.239.189'
                 ],
                 [
                     'name' => urlencode('菜单二'),
                     'sub_button' => [
                         [
-                            'name' => urlencode('歌曲'),
-                            'type' => 'click',
-                            'key' => 'songs'
+                            'name' => urlencode('QQ'),
+                            'type' => 'view',
+                            'key' => 'http://www.qq.com'
                         ],
                         [
                             'name' => urlencode('电影'),
