@@ -30,6 +30,37 @@ class LoginController extends Controller {
             die ;
         }
     }
+    public function actionSetMenu(){
+        $access_token = \Yii::redisGet('wxgzh_token');
+        $url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token=' . $access_token;
+        $ary = [
+            'button' => [
+                [
+                    'name' => urlencode('菜单一'),
+                    'type' => 'click',
+                    'key' => 'item1',
+                ], [
+                    'name' => urlencode('菜单二'),
+                    'sub_button' => [
+                        [
+                            'name' => urlencode('歌曲'),
+                            'type' => 'click',
+                            'key' => 'songs',
+                        ],
+                        [
+                            'name' => urlencode('电影'),
+                            'type' => 'view',
+                            'key' => 'http:://www.baidu.com',
+                        ],
+                    ]
+                ]
+            ]
+        ];
+        $postAry = urldecode(json_encode($ary));
+        $ret = \Yii::sendCurlPost($url,$postAry);
+        print_r($ret);die;
+
+    }
 
 
 }

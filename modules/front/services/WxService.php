@@ -17,10 +17,7 @@ class WxService{
      */
     public static function getAccessToken()
     {
-        $appID = \Yii::$app->params['wx_appid'];
-        $appSecret = \Yii::$app->params['wx_app_secret'];
-        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appID."&secret=".$appSecret ;
-        $ret = \Yii::sendCurlGet($url);
+
 
     }
 
