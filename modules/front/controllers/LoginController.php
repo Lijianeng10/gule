@@ -46,7 +46,7 @@ class LoginController extends Controller {
                         [
                             'name' => urlencode('QQ'),
                             'type' => 'view',
-                            'key' => 'http://www.qq.com'
+                            'url' => 'http://www.qq.com'
                         ],
                         [
                             'name' => urlencode('电影'),
