@@ -38,20 +38,20 @@ class LoginController extends Controller {
                 [
                     'name' => urlencode('菜单一'),
                     'type' => 'click',
-                    'key' => 'item1',
+                    'key' => 'item1'
                 ], [
                     'name' => urlencode('菜单二'),
                     'sub_button' => [
                         [
                             'name' => urlencode('歌曲'),
                             'type' => 'click',
-                            'key' => 'songs',
+                            'key' => 'songs'
                         ],
                         [
                             'name' => urlencode('电影'),
                             'type' => 'view',
-                            'key' => 'http:://www.baidu.com',
-                        ],
+                            'url' => 'http:://www.baidu.com'
+                        ]
                     ]
                 ]
             ]
