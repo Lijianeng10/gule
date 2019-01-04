@@ -66,7 +66,7 @@ class TimeController extends Controller {
         $appId = \Yii::$app->params['wx_appid'];
         $appSecret = \Yii::$app->params['wx_app_secret'];
 
-        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appId&secret=$appSecret";
+        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appId."&secret=".$appSecret;
         $access_token = '';
         $flag = 0;
         while (!$access_token) {
