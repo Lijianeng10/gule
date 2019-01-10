@@ -13,6 +13,7 @@ use Yii;
  * @property string $phone
  * @property string $pwd
  * @property string $agent_code
+ * @property integer $status
  * @property string $create_time
  * @property string $update_time
  */
@@ -32,6 +33,7 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['status'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
             [['cust_no', 'nickname', 'agent_code'], 'string', 'max' => 50],
             [['phone'], 'string', 'max' => 20],
@@ -51,6 +53,7 @@ class User extends \yii\db\ActiveRecord
             'phone' => 'Phone',
             'pwd' => 'Pwd',
             'agent_code' => 'Agent Code',
+            'status' => 'Status',
             'create_time' => 'Create Time',
             'update_time' => 'Update Time',
         ];

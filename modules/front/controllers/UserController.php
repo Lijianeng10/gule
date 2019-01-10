@@ -5,16 +5,14 @@ namespace app\modules\front\controllers;
 use Yii;
 use yii\web\Controller;
 use app\modules\common\models\User;
+use app\modules\front\services\UserService;
 
 class UserController extends Controller {
     public function actionRegister(){
         $request = \Yii::$app->request;
-        $phone = trim($request->post('phone',''));
-        $password = $request->post('password','');
-        $surePwd = $request->post('surePwd','');
-        if(empty($phone)||empty($password)||empty($surePwd)){
-            return $this->jsonError(109,'参数缺失！');
-        }
+        $phone = trim($request->post_nn('phone'));
+        $password = $request->post_nn('password');
+        $surePwd = $request->post_nn('surePwd');
         if(trim($password)!=trim($surePwd)){
             return $this->jsonError(109,'两次密码不一致，请检查！');
         }
@@ -32,7 +30,12 @@ class UserController extends Controller {
         if(!$user->save()){
             return $this->jsonError(109,'注册失败！'.$user->getErrors());
         }
-        return $this->jsonResult(600,'注册成功！',$custNo);
+        $token = UserService::autoLogin($user->cust_no, $user->attributes['user_id']); //自动登录
+        $result =[
+            'cust_no'=>$user->cust_no,
+            'token'=>$token
+        ];
+        return $this->jsonResult(600,'注册成功！',$result);
     }
     /**
      * 生成唯一用户编号
@@ -46,5 +49,22 @@ class UserController extends Controller {
 //        $No= \Yii::redisIncrby('register_no',100000);
 //        print_r($No);die;
 //    }
+    /**
+     * 用户登录
+     */
+    public function actionLogin()
+    {
+        $request = \Yii::$app->request;
+        $phone = $request->post_nn('phone');
+        $password = $request->post_nn('password');
+        $user = User::find()->where(['phone' => $phone, "pwd" => md5($password)])->asArray()->one();
+        if (!$user) {//未注册
+            return $this->jsonError(109, "账号或密码输入有误，请检查后重新登录");
+        } else if ($user['status'] != 1) {
+            return $this->jsonError(402, '该账户已禁用，请联系管理人员。');
+        }
+        $token = UserService::autoLogin($user['cust_no'], $user['user_id']); //自动登录
+        return $this->jsonResult(600, '登录成功', ['token' => $token, 'cust_no' => $user['cust_no']]);
+    }
 
 }
