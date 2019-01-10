@@ -687,7 +687,7 @@ class BaseYii
         $redis = \yii::$app->redis;
         $redis->database = 0;
         $ret = $redis->executeCommand('Incr', ["{$key}"]);
-        if($ret < 10000000){
+        if($ret < 100000){
             $maxCustNo =User::find("cust_no")->orderBy("user_id desc")->asArray()->one();
             $str = substr($maxCustNo["cust_no"],2);
             $ret = $redis->executeCommand('Incrby', ["{$key}",$str]);

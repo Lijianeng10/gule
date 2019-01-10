@@ -42,5 +42,9 @@ class UserController extends Controller {
         $cust_no = "gl" . $No;
         return $cust_no;
     }
+//    public function actionSetNo(){
+//        $No= \Yii::redisIncrby('register_no',100000);
+//        print_r($No);die;
+//    }
 
 }
