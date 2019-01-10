@@ -4,7 +4,7 @@ namespace app\modules\front\controllers;
 
 use Yii;
 use yii\web\Controller;
-use app\modules\user\models\User;
+use app\modules\common\models\User;
 
 class UserController extends Controller {
     public function actionRegister(){
