@@ -11,7 +11,7 @@ if (YII_ENV == "dev") {
 //    ];
     return [
         'class' => 'yii\db\Connection',
-        'dsn' => 'mysql:host=119.23.239.189;dbname=gl_ggc',
+        'dsn' => 'mysql:host=119.23.239.189;dbname=gule',
         'username' => 'root',
         'password' => '!Lhj13960lyq',
         'charset' => 'utf8mb4',
@@ -21,7 +21,7 @@ if (YII_ENV == "dev") {
     return [
         'class' => 'yii\db\Connection',
         // 主库的配置
-        'dsn' => 'mysql:host=27.155.105.164;dbname=gl_ggc',
+        'dsn' => 'mysql:host=27.155.105.164;dbname=gule',
         'username' => 'coder',
         'password' => 'gula_lottery_coder',
         'charset' => 'utf8',

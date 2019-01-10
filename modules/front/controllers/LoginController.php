@@ -38,10 +38,15 @@ class LoginController extends Controller {
                 [
                     'name' => urlencode('我的谷乐'),
                     'type' => 'view',
+                    'url' => 'http://119.23.239.189:1011'
+                ],
+                [
+                    'name' => urlencode('谷乐管理'),
+                    'type' => 'view',
                     'url' => 'http://119.23.239.189'
                 ],
                 [
-                    'name' => urlencode('菜单二'),
+                    'name' => urlencode('其他'),
                     'sub_button' => [
                         [
                             'name' => urlencode('QQ'),

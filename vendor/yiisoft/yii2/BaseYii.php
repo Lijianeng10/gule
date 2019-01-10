@@ -13,6 +13,7 @@ use yii\base\UnknownClassException;
 use yii\log\Logger;
 use yii\di\Container;
 use app\modules\common\models\Terminal;
+use app\modules\common\models\User;
 
 /**
  * Gets the application start timestamp.
@@ -684,13 +685,20 @@ class BaseYii
     //自定义redis Incr 数值递增
     public static function redisIncr($key) {
         $redis = \yii::$app->redis;
-        $redis->database = 10;
+        $redis->database = 0;
         $ret = $redis->executeCommand('Incr', ["{$key}"]);
-        if($ret < 100000){
-            $maxNo =Terminal::find("terminal_num")->orderBy("terminal_id desc")->asArray()->one();
-            $str = substr($maxNo["terminal_num"],2);
+        if($ret < 10000000){
+            $maxCustNo =User::find("cust_no")->orderBy("user_id desc")->asArray()->one();
+            $str = substr($maxCustNo["cust_no"],2);
             $ret = $redis->executeCommand('Incrby', ["{$key}",$str]);
         }
+        return $ret;
+    }
+    //设置redis  key的默认值
+    public static function redisIncrby($key,$value) {
+        $redis = \yii::$app->redis;
+        $redis->database = 0;
+        $ret = $redis->executeCommand('Incrby', ["{$key}",$value]);
         return $ret;
     }
 }
