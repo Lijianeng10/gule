@@ -42,6 +42,8 @@ class Controller extends Component implements ViewContextInterface
      * @var string the ID of this controller.
      */
     public $id;
+    public $custNo = null;
+    public $userId = null;
     /**
      * @var Module the module that this controller belongs to.
      */
@@ -270,6 +272,8 @@ class Controller extends Component implements ViewContextInterface
     {
         $event = new ActionEvent($action);
         $this->trigger(self::EVENT_BEFORE_ACTION, $event);
+        $this->custNo = \Yii::$custNo;
+        $this->userId = \Yii::$userId;
         return $event->isValid;
     }
 

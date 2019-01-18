@@ -71,8 +71,7 @@ class UserController extends Controller {
      * @return
      */
     public function actionGetUserDetail(){
-        $request = \Yii::$app->request;
-        $custNo = $request->post_nn('custNo');
+        $custNo = $this->custNo;
 //        $fieds = ['user.user_name', 'user.user_tel', 'user.cust_no', 'user.user_pic', 'user.province', 'user.city', 'user.area', 'user.address', 'user.authen_status', 'uf.all_funds', 'uf.able_funds', 'uf.ice_funds', 'uf.no_withdraw','uf.pay_password has_pwd'];
         $user = User::find()
 //            ->select($fieds)
@@ -81,6 +80,31 @@ class UserController extends Controller {
             ->asArray()
             ->one();
         return $this->jsonResult(600, '获取成功', $user);
+    }
+    /**
+     * 修改名称
+     */
+    public function actionSetNickname() {
+        $userId = $this->userId;
+        $request = Yii::$app->request;
+        $nickname = $request->post('nickname', '');
+        if ($nickname == '' || ctype_space($nickname)) {
+            return $this->jsonError(100, '参数缺失');
+        }
+        if (strpos($nickname, '官') !== false || strpos($nickname, '群') !== false || strpos($nickname, 'wns8807') !== false) {
+            return $this->jsonError(100, '非法字符！！请慎重填写');
+        }
+        $nickName = str_replace(' ', '', $nickname);
+        $exist = User::find()->select(['nickname'])->where(['nickname' => $nickName])->andWhere(['!=', 'user_id', $userId])->asArray()->one();
+        if (!empty($exist)) {
+            return $this->jsonError(109, '该昵称已被征用啦！');
+        }
+        $userData = User::findOne(['user_id' => $userId]);
+        $userData->nickname = $nickName;
+        if (!$userData->save()) {
+            return $this->jsonError(109, '修改失败');
+        }
+        return $this->jsonResult(600, '修改成功', true);
     }
 
 }

@@ -73,6 +73,9 @@ class BaseYii
      * @var \yii\console\Application|\yii\web\Application the application instance
      */
     public static $app;
+    public static $custNo;
+    public static $userId;
+    public static $agentId = '0';
     /**
      * @var array registered path aliases
      * @see getAlias()

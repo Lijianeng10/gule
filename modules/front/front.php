@@ -21,4 +21,27 @@ class front extends \yii\base\Module
 
         // custom initialization code goes here
     }
+    public function behaviors() {
+        return [
+            "LoginFilter" => [
+                "class" => 'app\modules\core\filters\FrontLoginFilter',
+                'only' => [
+                     'user/get-user-detail',
+                    'user/set-nickname'
+                ],
+                "any" => [
+//                    'user/get-store-detail',
+//                    'user/user-follow',
+//                    'user/bink-bank-card',
+//                    'fjtc/get-redeem-code',
+//                    'fjtc/cron-deal',
+//                    'user-comment/comment',
+//                    'user-comment/reply',
+                ],
+                "except"=>[
+
+                ]
+            ]
+        ];
+    }
 }
