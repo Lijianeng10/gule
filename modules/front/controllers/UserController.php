@@ -158,8 +158,11 @@ class UserController extends Controller {
         }
         $saveKey = Constants::SMS_KEY_UPPWD;
         AliSms::check_code($saveKey, $phone, $smsCode);
-        $result = $this->userService->updatePwd($phone, $password); //修改密码
-        return $this->jsonResult($result["code"], $result["msg"], '');
+        $ret = User::updateAll(['pwd'=>md5($password)],['phone'=>$phone]);
+        if(!$ret){
+            return $this->jsonError(109, '修改失败！');
+        }
+        return $this->jsonResult(600,'修改成功！');
     }
 
 }
