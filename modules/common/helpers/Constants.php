@@ -23,6 +23,17 @@ class Constants {
     const PAY_TYPE_PIC_URL = 'http://ovjj0n6lg.bkt.clouddn.com/img/sys/paytype_pic/pay_type_';
 
     /**
+     * 阿里短信模板
+     * 1：注册 2：登录 4：忘记密码(登录密码，支付密码)
+     */
+    const ALISMS_MODULES=[
+        "1"=>"SMS_134135445",
+        "2"=>"SMS_134135447",
+        "4"=>"SMS_134135443",
+        '5'=>"SMS_134135448",
+        "6"=>"SMS_135027049",
+    ];
+    /**
      * 网点认证状态
      */
     const AUTHEN_STATUS = [
@@ -98,19 +109,6 @@ class Constants {
         '0' => '未支付',
         '1' => '已支付',
         '2' => '订单取消',
-    ];
-    //服务保证
-    const SERVICE_ENSURE = [
-        '1' => '7天无理由退货',
-        '2' => '保证正品',
-        '3' => '15天质量问题换货',
-        '4' => '免费包邮'
-    ];
-    //面值长度
-    const VALUE_LENGTH = [
-        '5' => 102,
-        '10' => 153,
-        '20' => 203
     ];
 
 }

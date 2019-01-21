@@ -6,6 +6,8 @@ use Yii;
 use yii\web\Controller;
 use app\modules\common\models\User;
 use app\modules\front\services\UserService;
+use app\modules\common\helpers\Constants;
+use app\modules\tools\helpers\AliSms;
 
 class UserController extends Controller {
     public function actionRegister(){
@@ -105,6 +107,59 @@ class UserController extends Controller {
             return $this->jsonError(109, '修改失败');
         }
         return $this->jsonResult(600, '修改成功', true);
+    }
+    /**
+     * 说明: 发送短信验证码（注册）忘记密码
+     * @param account //手机号
+     * @param cType //1:注册 2:登录 4:忘记密码
+     * @return
+     */
+    public function actionGetSmsCode() {
+        $request = Yii::$app->request;
+        $userTel = $request->post('phone', '');
+        $cType = $request->post('cType', ''); //1:注册 2:登录 4:忘记密码 5:提现申请
+        if (empty($userTel) || empty($cType)) {
+            return $this->jsonError(100, '参数缺失');
+        }
+        if (strlen($userTel) != 11) {
+            return $this->jsonError(109, '请输入正确的手机号！');
+        }
+        if ($cType == 1) {//注册
+            $ret = User::find()->where(['phone'=>$userTel])->one();
+            if(!empty($ret)){
+                return $this->jsonError(109, '该手机号已注册！');
+            }
+            $saveKey = Constants::SMS_KEY_REGISTER;
+        } else if ($cType == 2) {//登录
+            $saveKey = Constants::SMS_KEY_LOGIN;
+        } else if ($cType == 4) {//忘记密码
+            $saveKey = Constants::SMS_KEY_UPPWD;
+        } else if ($cType == 5) {//用户提现申请
+            $saveKey = Constants::SMS_KEY_WITHDRAW_APPLY;
+        } elseif ($cType == 6) {
+            $saveKey = Constants::SMS_KEY_WX_CHANGE_BOUNDING;
+        }
+        AliSms::sendSmsCode($cType, $saveKey, $userTel);
+    }
+    /**
+     * 说明: 忘记密码
+     * @param $phone   手机号
+     * @param smsCode   短信验证码
+     * @param password  新密码
+     * @return
+     */
+    public function actionUpdatePwd() {
+        $request = \Yii::$app->request;
+        $phone = $request->post('phone');
+        $smsCode = $request->post('smsCode');
+        $password = $request->post('password');
+        if (empty($phone) || empty($password)) {
+            return $this->jsonError(100, '参数缺失');
+        }
+        $saveKey = Constants::SMS_KEY_UPPWD;
+        AliSms::check_code($saveKey, $phone, $smsCode);
+        $result = $this->userService->updatePwd($phone, $password); //修改密码
+        return $this->jsonResult($result["code"], $result["msg"], '');
     }
 
 }
