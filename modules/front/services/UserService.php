@@ -7,10 +7,10 @@
  */
 namespace app\modules\front\services;
 
-use app\modules\user\models\User;
 use Yii;
 use yii\base\Exception;
 use yii\db\Expression;
+use app\modules\common\models\User;
 
 class UserService{
     /**
