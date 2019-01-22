@@ -119,7 +119,7 @@ class UserController extends Controller {
         $userTel = $request->post('phone', '');
         $cType = $request->post('cType', ''); //1:注册 2:登录 4:忘记密码 5:提现申请
         if (empty($userTel) || empty($cType)) {
-            return $this->jsonError(100, '参数缺失');
+            return $this->jsonError(109, '参数缺失');
         }
         if (strlen($userTel) != 11) {
             return $this->jsonError(109, '请输入正确的手机号！');
@@ -154,7 +154,7 @@ class UserController extends Controller {
         $smsCode = $request->post('smsCode');
         $password = $request->post('password');
         if (empty($phone) || empty($password)) {
-            return $this->jsonError(100, '参数缺失');
+            return $this->jsonError(109, '参数缺失');
         }
         $saveKey = Constants::SMS_KEY_UPPWD;
         AliSms::check_code($saveKey, $phone, $smsCode);
@@ -163,6 +163,21 @@ class UserController extends Controller {
             return $this->jsonError(109, '修改失败！');
         }
         return $this->jsonResult(600,'修改成功！');
+    }
+
+    /**
+     * 完善用户信息
+     */
+    public function actionSetUserInfo(){
+        $custNo = $this->custNo;
+        $request = \Yii::$app->request;
+        $realName = $request->post('realName','');
+        $idCardNum = $request->post('id_card_num','');
+        $eMail = $request->post('eMail','');
+        if(empty($realName)||empty($idCardNum)){
+            return $this->jsonError(109, '参数缺失');
+        }
+        $ret = UserService::setUserInfo($custNo,$realName,$idCardNum,$eMail);
     }
 
 }

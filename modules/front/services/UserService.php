@@ -7,6 +7,7 @@
  */
 namespace app\modules\front\services;
 
+use app\modules\user\models\User;
 use Yii;
 use yii\base\Exception;
 use yii\db\Expression;
@@ -37,4 +38,25 @@ class UserService{
         $all = $custNo . $salt . time();
         return md5($all);
     }
+
+    /**
+     * 完善账户信息
+     * @param $realName 真实姓名
+     * @param $idCardNum 身份证号
+     * @param $eMail 电子邮箱
+     */
+    public static function setUserInfo($custNo,$realName,$idCardNum,$eMail){
+        $user = User::find()->where(['cust_no'=>$custNo])->one();
+        $user->real_name = $realName;
+        $user->id_card_num = $idCardNum;
+        $user->e_mail = $eMail;
+        if($user->real_status ==0){
+            $user->real_status = 1;
+        }
+        if(!$user->save()){
+            return ['code'=>109,'msg'=>$user->getErrors()];
+        }
+        return ['code'=>600,'msg'=>'提交成功！'];
+    }
+
 }

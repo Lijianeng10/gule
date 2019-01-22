@@ -27,7 +27,8 @@ class front extends \yii\base\Module
                 "class" => 'app\modules\core\filters\FrontLoginFilter',
                 'only' => [
                      'user/get-user-detail',
-                    'user/set-nickname'
+                     'user/set-nickname',
+                     'user/set-user-info',
                 ],
                 "any" => [
 //                    'user/get-store-detail',
