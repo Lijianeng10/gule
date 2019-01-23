@@ -172,7 +172,7 @@ class UserController extends Controller {
         $custNo = $this->custNo;
         $request = \Yii::$app->request;
         $realName = $request->post('realName','');
-        $idCardNum = $request->post('id_card_num','');
+        $idCardNum = $request->post('idCardNum','');
         $eMail = $request->post('eMail','');
         if(empty($realName)||empty($idCardNum)){
             return $this->jsonError(109, '参数缺失');
