@@ -178,6 +178,7 @@ class UserController extends Controller {
             return $this->jsonError(109, '参数缺失');
         }
         $ret = UserService::setUserInfo($custNo,$realName,$idCardNum,$eMail);
+        return $this->jsonResult($ret['code'],$ret['msg']);
     }
 
 }
