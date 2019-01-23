@@ -44,12 +44,14 @@ class UserService{
      * @param $realName 真实姓名
      * @param $idCardNum 身份证号
      * @param $eMail 电子邮箱
+     * @param $address 居住地址
      */
-    public static function setUserInfo($custNo,$realName,$idCardNum,$eMail){
+    public static function setUserInfo($custNo,$realName,$idCardNum,$eMail,$address){
         $user = User::find()->where(['cust_no'=>$custNo])->one();
         $user->real_name = $realName;
         $user->id_card_num = $idCardNum;
         $user->e_mail = $eMail;
+        $user->address = $address;
         if($user->real_status ==0){
             $user->real_status = 1;
         }

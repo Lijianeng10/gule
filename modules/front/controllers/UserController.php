@@ -174,10 +174,11 @@ class UserController extends Controller {
         $realName = $request->post('realName','');
         $idCardNum = $request->post('idCardNum','');
         $eMail = $request->post('eMail','');
-        if(empty($realName)||empty($idCardNum)){
+        $address = $request->post('address','');
+        if(empty($realName)||empty($idCardNum)||empty($eMail)||empty($address)){
             return $this->jsonError(109, '参数缺失');
         }
-        $ret = UserService::setUserInfo($custNo,$realName,$idCardNum,$eMail);
+        $ret = UserService::setUserInfo($custNo,$realName,$idCardNum,$eMail,$address);
         return $this->jsonResult($ret['code'],$ret['msg']);
     }
 
