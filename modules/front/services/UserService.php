@@ -60,5 +60,21 @@ class UserService{
         }
         return ['code'=>600,'msg'=>'提交成功！'];
     }
+    /**
+     * 完善用户银行信息
+     * @param $accountName 开户姓名
+     * @param $bankName 银行名称
+     * @param $bankCardNum 银行卡号
+     */
+    public static function setUserBankInfo($custNo,$accountName,$bankName,$bankCardNum){
+        $user = User::find()->where(['cust_no'=>$custNo])->one();
+        $user->account_name = $accountName;
+        $user->bank_name = $bankName;
+        $user->bank_card_num = $bankCardNum;
+        if(!$user->save()){
+            return ['code'=>109,'msg'=>$user->getErrors()];
+        }
+        return ['code'=>600,'msg'=>'提交成功！'];
+    }
 
 }

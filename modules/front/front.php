@@ -29,6 +29,7 @@ class front extends \yii\base\Module
                      'user/get-user-detail',
                      'user/set-nickname',
                      'user/set-user-info',
+                     'user/set-user-bank-info',
                 ],
                 "any" => [
 //                    'user/get-store-detail',

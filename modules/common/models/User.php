@@ -19,6 +19,9 @@ use Yii;
  * @property string $id_card_num
  * @property string $e_mail
  * @property string $address
+ * @property string $account_name
+ * @property string $bank_name
+ * @property string $bank_card_num
  * @property integer $real_status
  * @property string $create_time
  * @property string $update_time
@@ -41,10 +44,10 @@ class User extends \yii\db\ActiveRecord
         return [
             [['status', 'real_status'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
-            [['cust_no', 'nickname', 'agent_code', 'real_name', 'id_card_num'], 'string', 'max' => 50],
-            [['pic', 'pwd', 'address'], 'string', 'max' => 255],
+            [['cust_no', 'nickname', 'agent_code', 'real_name', 'id_card_num', 'account_name'], 'string', 'max' => 50],
+            [['pic', 'pwd', 'address', 'bank_name'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 20],
-            [['e_mail'], 'string', 'max' => 100],
+            [['e_mail', 'bank_card_num'], 'string', 'max' => 100],
         ];
     }
 
@@ -66,6 +69,9 @@ class User extends \yii\db\ActiveRecord
             'id_card_num' => 'Id Card Num',
             'e_mail' => 'E Mail',
             'address' => 'Address',
+            'account_name' => 'Account Name',
+            'bank_name' => 'Bank Name',
+            'bank_card_num' => 'Bank Card Num',
             'real_status' => 'Real Status',
             'create_time' => 'Create Time',
             'update_time' => 'Update Time',

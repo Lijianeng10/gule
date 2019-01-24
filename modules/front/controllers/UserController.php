@@ -181,5 +181,20 @@ class UserController extends Controller {
         $ret = UserService::setUserInfo($custNo,$realName,$idCardNum,$eMail,$address);
         return $this->jsonResult($ret['code'],$ret['msg']);
     }
+    /**
+     * 完善用户账户信息
+     */
+    public function actionSetUserBankInfo(){
+        $custNo = $this->custNo;
+        $request = \Yii::$app->request;
+        $accountName = $request->post('accountName','');
+        $bankName = $request->post('bankName','');
+        $bankCardNum = $request->post('bankCardNum','');
+        if(empty($accountName)||empty($bankName)||empty($bankCardNum)){
+            return $this->jsonError(109, '参数缺失');
+        }
+        $ret = UserService::setUserBankInfo($custNo,$accountName,$bankName,$bankCardNum);
+        return $this->jsonResult($ret['code'],$ret['msg']);
+    }
 
 }
