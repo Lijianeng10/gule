@@ -154,7 +154,7 @@
             if(status==1){
                 statusStr='发布'
             }
-            changeStatus('您确定要 ('+statusStr+') 该广告吗吗?',"/websitemod/banner/change-status",bananer_id,status);
+            changeStatus('您确定要 ('+statusStr+') 该广告吗?',"/websitemod/banner/change-status",bananer_id,status);
         }
     </script>
 </body>

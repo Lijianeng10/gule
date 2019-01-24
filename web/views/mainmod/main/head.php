@@ -78,10 +78,10 @@ h2 {
 
 </style>
 	<div class="header">
-		<h2>咕啦-刮刮彩管理系统</h2>
+		<h2>谷乐管理系统</h2>
 		<div class="box">
 			<div class="user">
-				<img class="user-img" src="http://osk6t6jhb.bkt.clouddn.com/img/user/user_pic/gl00002324/180321141249.jpg" alt="" title="">
+				<img class="user-img" src="./images/photo.jpg" alt="" title="">
 				<h3><?php echo \Yii::$app->session['admin']['nickname']?></h3>
 			</div>
 			<i class="icon"></i>

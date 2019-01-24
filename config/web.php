@@ -28,8 +28,8 @@ $config = [
         'adminmod' => [//管理用户模块
             'class' => 'app\modules\admin\admin',
         ],
-        'store' => [
-            'class' => 'app\modules\store\store',
+        'productmod' => [//产品模块
+            'class' => 'app\modules\product\product',
         ],
         'cron' => [
             'class' => 'app\modules\cron\cron',
