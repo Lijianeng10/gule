@@ -110,8 +110,6 @@
                         return "<spen style='color: blue'>上架<spen>";
                     }
                     return "<spen style='color: red'>下架<spen>";
-                }
-                ;
                 };
                 function isHotFormatter(value, row) {
                     if (value == 1) {
