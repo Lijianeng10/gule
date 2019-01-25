@@ -8,6 +8,7 @@ use app\modules\common\models\User;
 use app\modules\front\services\UserService;
 use app\modules\common\helpers\Constants;
 use app\modules\tools\helpers\AliSms;
+use app\modules\common\models\ShopCar;
 
 class UserController extends Controller {
     public function actionRegister(){
@@ -195,6 +196,31 @@ class UserController extends Controller {
         }
         $ret = UserService::setUserBankInfo($custNo,$accountName,$bankName,$bankCardNum);
         return $this->jsonResult($ret['code'],$ret['msg']);
+    }
+    /**
+     * 获取用户购物车列表
+     */
+    public function actionGetShopCarList(){
+        $userId = $this->userId;
+        $request = Yii::$app->request;
+        $ret = UserService::getShopCarList($userId);
+        return $this->jsonResult(600,'获取成功',$ret['data']);
+    }
+    /**
+     * 用户购物车操作
+     */
+    public function actionOptUserShopCar(){
+        $userId = $this->userId;
+        $request = Yii::$app->request;
+        $cardId = $request->post('car_id','');
+        $productId = $request->post('product_id','');
+        $nums = $request->post('nums',1);
+        $type = $request->post('type',1);
+        $res = UserService::optUserShopCar($userId,$type,$cardId,$productId,$nums);
+        if($res["code"]!=600){
+            return $this->jsonError($res["code"],$res["msg"]);
+        }
+        return $this->jsonResult($res["code"],$res["msg"],$res["data"]);
     }
 
 }
