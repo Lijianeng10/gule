@@ -68,6 +68,12 @@
                                 width: 50,
                                 align: 'center',
                                 formatter: statusFormatter
+                            },{
+                                field: 'is_hot',
+                                title: '是否推荐',
+                                width: 30,
+                                align: 'center',
+                                formatter: isHotFormatter
                             }, {
                                 field: 'create_time',
                                 title: '创建时间',
@@ -86,6 +92,8 @@
                         //                    $("a[name='edit']").linkbutton({text:'编辑',iconCls:'fa fa-edit'});
                        $("a[name='up']").linkbutton({text: '下架', iconCls: 'fa fa-edit'});
                        $("a[name='down']").linkbutton({text: '上架', iconCls: 'fa fa-edit'});
+                        $("a[name='hot_up']").linkbutton({text: '取消推荐', iconCls: 'fa fa-edit'});
+                        $("a[name='hot_down']").linkbutton({text: '开始推荐', iconCls: 'fa fa-edit'});
 //                        $("a[name='limit']").linkbutton({text: '限制区域', iconCls: 'fa fa-edit'});
                         //                    $("a[name='del']").linkbutton({text:'删除',iconCls:'fa fa-delete'});
                     }
@@ -104,6 +112,13 @@
                     return "<spen style='color: red'>下架<spen>";
                 }
                 ;
+                };
+                function isHotFormatter(value, row) {
+                    if (value == 1) {
+                        return "<spen style='color: blue'>是<spen>";
+                    }
+                    return "<spen style='color: red'>否<spen>";
+                };
                 function optFormatter(value, row) {
                     var str = '<a href="#" name="detail" class="easyui-linkbutton success"></a>';
                     // str += '<a href="#" name="edit" style="margin-left: 5px" class="easyui-linkbutton success auth productProductEdit" onclick="productEdit(' + row.product_id + ')"> 编辑</a>';
@@ -111,6 +126,11 @@
                         str += '<a href="#" name="up" style="margin-left: 5px" class="easyui-linkbutton error auth productProductChangeStatus" onclick="change_status(' + row.product_id + ',0)"> 下架</a>';
                     } else if (row.status == 0) {
                         str += '<a href="#" name="down" style="margin-left: 5px" class="easyui-linkbutton primary auth productProductChangeStatus" onclick="change_status(' + row.product_id + ',1)">上架</a>';
+                    }
+                    if (row.is_hot == 1) {
+                        str += '<a href="#" name="hot_up" style="margin-left: 5px" class="easyui-linkbutton error auth productProductChangeStatus" onclick="change_hot_status(' + row.product_id + ',0)"> 取消推荐</a>';
+                    } else if (row.is_hot == 0) {
+                        str += '<a href="#" name="hot_down" style="margin-left: 5px" class="easyui-linkbutton primary auth productProductChangeStatus" onclick="change_hot_status(' + row.product_id + ',1)">开始推荐</a>';
                     }
                     return str;
                 }
@@ -179,6 +199,13 @@
                 changeStatus('您确定要 ('+statusStr+') 该产品吗?',"/productmod/product/change-status",product_id,status);
             }
 
+            function change_hot_status(product_id, status) {
+                var statusStr = "取消推荐";
+                if (status == 1) {
+                    statusStr = '开始推荐'
+                }
+                changeStatus('您确定要 ('+statusStr+') 该产品吗?',"/productmod/product/change-hot-status",product_id,status);
+            }
             function productEdit(productId) {
                 create_window('p_dlg', '编辑', '/productmod/views/to-product-edit?product_id=' + productId, '70%', '98%');
             };

@@ -13,6 +13,15 @@ use yii\db\Expression;
 use app\modules\common\models\Product;
 
 class ProductService{
+    public static function getHotProduct($pageSize) {
+        $productList = Product::find()
+            ->where(['status' => 1,'is_hot'=>1])
+            ->limit($pageSize)
+            ->orderBy('create_time desc')
+            ->asArray()
+            ->all();
+        return $productList;
+    }
     /**
      * 获取产品列表
      * @return type

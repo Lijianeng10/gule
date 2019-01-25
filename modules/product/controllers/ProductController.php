@@ -146,6 +146,18 @@ class ProductController extends Controller {
         }
     }
 
+    /**
+     * 产品推荐
+     */
+    public function actionChangeHotStatus() {
+        $parmas = \Yii::$app->request->post();
+        $res = Product::updateAll(['is_hot' => $parmas['status']], ['product_id' => $parmas['id']]);
+        if($res){
+            return $this->jsonResult(600, '操作成功', true);
+        }else{
+            return $this->jsonError(109, '操作失败');
+        }
+    }
     public function actionUpdate() {
         $session = \Yii::$app->session;
         $coreId = $session['admin']['center_id'];

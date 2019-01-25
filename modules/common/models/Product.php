@@ -14,6 +14,7 @@ use Yii;
  * @property string $product_pic
  * @property string $product_price
  * @property string $product_detail
+ * @property integer $is_hot
  * @property integer $status
  * @property string $create_time
  * @property string $update_time
@@ -34,7 +35,7 @@ class Product extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['category', 'status'], 'integer'],
+            [['category', 'is_hot', 'status'], 'integer'],
             [['product_price'], 'number'],
             [['product_detail'], 'string'],
             [['create_time', 'update_time'], 'safe'],
@@ -56,6 +57,7 @@ class Product extends \yii\db\ActiveRecord
             'product_pic' => 'Product Pic',
             'product_price' => 'Product Price',
             'product_detail' => 'Product Detail',
+            'is_hot' => 'Is Hot',
             'status' => 'Status',
             'create_time' => 'Create Time',
             'update_time' => 'Update Time',

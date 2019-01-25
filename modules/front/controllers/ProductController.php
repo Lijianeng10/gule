@@ -9,6 +9,16 @@ use app\modules\front\services\ProductService;
 
 class ProductController extends Controller {
     /**
+     * 获取推荐产品
+     * @return type
+     */
+    public function actionGetHotProduct() {
+        $request = \Yii::$app->request;
+        $pageSize = $request->post('page_size', 10);
+        $ret = ProductService::getHotProduct($pageSize);
+        return $this->jsonResult(600, '获取成功', $ret);
+    }
+    /**
      * 获取产品列表
      * @return type
      */
