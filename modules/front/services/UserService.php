@@ -82,64 +82,14 @@ class UserService{
      * @param $userId 用户ID
      */
     public static function getShopCarList($userId){
-        $field = ['c.*','g.title','g.goods_name','g.remark','g.main_pic','s.sku_id','s.attr_value','s.price','sp.pic_url','g.category_id','g.status'];
-        $new = (new Query())->select('*')->from('shop_goods_pics')->groupBy('sku_id');
-        $list = (new Query())->select($field)
-            ->from('shop_car as c')
-            ->leftJoin('shop_goods as g','g.goods_id = c.goods_id')
-            ->leftJoin('shop_goods_sku as s','s.sku_id = c.sku_id')
-            ->leftJoin(['sp'=>$new],'sp.sku_id = s.sku_id')
-            ->where(['c.user_id'=>$userId])
-            ->orderBy('c.create_time desc')
+        $field = ['shop_car.*','p.*'];
+        $list = ShopCar::find()
+            ->select($field)
+            ->leftJoin('product p','p.product_id = shop_car.product_id')
+            ->where(['shop_car.user_id'=>$userId])
+            ->orderBy('shop_car.create_time desc')
+            ->asArray()
             ->all();
-        $proData = [];
-        $subData = [];
-        $invalid = [];
-        $valid = [];
-        if(!empty($list)){
-            //处理sku字符串
-            $field = ['sa.goods_attr_id','sa.name','sv.attr_value_id','sv.value'];
-            foreach ($list as $k=>$v){
-                $attr = (new Query())->select($field)->from('shop_goods_attr as sa')
-                    ->leftJoin('shop_goods_attr_type_category as sc','sc.attr_type_id = sa.attr_type_id')
-                    ->leftJoin('shop_goods_attr_value as sv','sv.attr_id = sa.goods_attr_id')
-                    ->where(['sc.category_id'=>$v['category_id']])
-                    ->all();
-                $attrData=[];
-                foreach ($attr as $ke =>$value){
-                    if(!array_key_exists($value['goods_attr_id'], $attrData)){
-                        $attrData[$value['goods_attr_id']] =['id'=>$value['goods_attr_id'],'text'=>$value['name']];
-                    }
-                    $attrData[$value['goods_attr_id']]['sub'][$value['attr_value_id']] =['id'=>$value['attr_value_id'],'text'=>$value['value']];
-                }
-                $str = '';
-                $attrAry =json_decode($v['attr_value'],true);
-                foreach ($attrAry as $key => $val){
-                    $str .=$attrData[$key]["text"].":".$attrData[$key]["sub"][$val]['text']." ";
-                }
-                $proData["goods_id"] =$v["goods_id"];
-                $proData["title"] =$v["title"];
-                $proData["goods_name"] =$v["goods_name"];
-                $proData["remark"] =$v["remark"];
-                $proData["main_pic"] =$v["main_pic"];
-                $subData["sku_id"] =$v["sku_id"];
-                $subData["attrValue"] =$str;
-                $subData["attr_value"] =$v["attr_value"];
-                $subData["price"] =$v["price"];
-                $subData["sub_pic"] =$v["pic_url"];
-                $list[$k]["product"] = $proData;
-                $list[$k]["sub_product"] = $subData;
-                if($v['status']!=1){
-                    $invalid[] = $list[$k];
-                    unset($list[$k]);
-                }else{
-                    $valid[] = $list[$k];
-                    unset($list[$k]);
-                }
-            }
-        }
-        $list['valid'] = $valid;
-        $list['invalid'] = $invalid;
         return ['code'=>600,'msg'=>'获取成功','data'=>$list];
     }
     /**
@@ -156,8 +106,9 @@ class UserService{
                 //查找购物车中是否存在同商品数据，有则只更新数量
                 $carInfo = ShopCar::find()->where($where)->one();
                 if(!empty($carInfo)){
-                    $newNums = $carInfo->nums + $nums;
-                    $res = ShopCar::updateAll(["nums"=>$newNums],$where);
+//                    $newNums = $carInfo->nums + $nums;
+//                    $res = ShopCar::updateAll(["nums"=>$newNums],$where);
+                    return ['code'=>109,'msg'=>'该产品已存在购物车中，请前往购物车购买！'];
                 }else{
                     //新增购物车
                     $userCar = new ShopCar();
