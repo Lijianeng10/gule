@@ -35,7 +35,7 @@
                     url: '/productmod/product/get-product-list',
                     fit: true,
                     pagination: true,
-//                    singleSelect: true,
+                   singleSelect: true,
                     fitColumns: true,
                     rownumbers: true,
                     loadMsg: '数据加载中...',
@@ -144,6 +144,7 @@
             <div class="tb_menu">
                 <div style="margin: 5px 0px 5px 0px; color:#000000;">
                     <a href="#" class="easyui-linkbutton primary auth productProductAdd" iconCls="fa fa-plus"  onclick="create_window('dlg', '新增产品', '/productmod/views/to-product-add', '50%', '80%');">新增</a>
+                    <a href="#" class="easyui-linkbutton primary auth adminAuthEdit" iconCls="fa fa-edit"  onclick="update_no_button_dialog('dlg','编辑产品','/productmod/views/to-product-edit','50%','80%');">编辑</a>
                     <a href="#" id="remove" class="easyui-linkbutton error auth productProductDelete" iconCls="fa fa-remove" plain="true" onclick="deleteAll('/productmod/product/delete');">删除</a>
                     <a href="#" class="easyui-linkbutton primary auth productSearch" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
             </div>

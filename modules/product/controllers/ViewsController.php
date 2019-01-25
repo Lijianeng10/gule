@@ -6,6 +6,7 @@ use Yii;
 use yii\db\Query;
 use yii\web\Controller;
 use app\modules\common\models\Category;
+use app\modules\common\models\Product;
 
 
 class ViewsController extends Controller {
@@ -35,6 +36,14 @@ class ViewsController extends Controller {
 
     public function actionToProductAdd() {
         return $this->render('/productmod/product/add');
+    }
+    public function actionToProductEdit(){
+        $id = \Yii::$app->request->get('product_id');
+        $data = Product::find()->where(['product_id'=>$id])->asArray()->one();
+//        if($data['status']!=0){
+//            return $this->jsonError(109,'请先将产品下架再编辑！');
+//        }
+        return $this->render('/productmod/product/edit',['data'=>$data]);
     }
 
 }
