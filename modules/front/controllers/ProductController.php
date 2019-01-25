@@ -30,5 +30,18 @@ class ProductController extends Controller {
         return $this->jsonResult(600, '获取成功', $ret);
     }
 
+    /**
+     * 获取产品详情
+     */
+    public function actionGetProductDetail(){
+        $request = \Yii::$app->request;
+        $productId = $request->post('productId', '');
+        if(empty($productId)){
+            return $this->jsonError(109,'参数缺失！');
+        }
+        $ret = ProductService::getProductDetail($productId);
+        return $this->jsonResult(600, '获取成功', $ret);
+    }
+
 
 }

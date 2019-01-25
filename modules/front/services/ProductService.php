@@ -13,6 +13,11 @@ use yii\db\Expression;
 use app\modules\common\models\Product;
 
 class ProductService{
+    /**
+     * 获取推荐产品
+     * @param $pageSize
+     * @return array
+     */
     public static function getHotProduct($pageSize) {
         $productList = Product::find()
             ->where(['status' => 1,'is_hot'=>1])
@@ -38,5 +43,18 @@ class ProductService{
             ->asArray()
             ->all();
         return ['page_num' => $pageNum, 'data' => $productList, 'size' => $pageSize, 'pages' => $pages, 'total' => $total];
+    }
+
+    /**
+     * 获取产品详情
+     * @param $productId
+     * @return array|null|\yii\db\ActiveRecord
+     */
+    public static function getProductDetail($productId) {
+        $product = Product::find()
+            ->where(['product_id' => $productId])
+            ->asArray()
+            ->one();
+        return $product;
     }
 }
