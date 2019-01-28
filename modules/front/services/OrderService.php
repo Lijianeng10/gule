@@ -74,9 +74,9 @@ class OrderService {
     public static function createOrder($post, $custNo, $userId,$openid='') {
         $goodsNums = $post['goods_nums'];
         $concent = $post['concent'];
-        $addressId = $post['address_id'];
+//        $addressId = $post['address_id'];
         $orderMoney = $post['order_money'];
-        $orderRemark = $post['order_remark'];
+//        $orderRemark = $post['order_remark'];
 //        if($orderMoney <= 0) {
 //            return ['code' => 109, 'msg' => '订单金额有误！'];
 //        }
@@ -91,7 +91,7 @@ class OrderService {
         $orderModel->order_num = $goodsNums;
         $orderModel->order_money = $orderMoney;
 //        $orderModel->address = $addressData['consignee_name'].' '.$addressData['consignee_tel'].' '.$addressData['province'].$addressData['city'].$addressData['area'].$addressData['address'];
-        $orderModel->remark = $orderRemark;
+//        $orderModel->remark = $orderRemark;
         $orderModel->order_time = date('Y-m-d H:i:s');
         $db = \Yii::$app->db;
         $trans = $db->beginTransaction();
