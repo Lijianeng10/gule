@@ -26,7 +26,8 @@ class ProductController extends Controller {
         $request = \Yii::$app->request;
         $pageNum = $request->post('page_num', 1);
         $pageSize = $request->post('page_size', 10);
-        $ret = ProductService::getProductList($pageNum,$pageSize);
+        $id = $request->post('id', '');//类别ID
+        $ret = ProductService::getProductList($pageNum,$pageSize,$id);
         return $this->jsonResult(600, '获取成功', $ret);
     }
 
