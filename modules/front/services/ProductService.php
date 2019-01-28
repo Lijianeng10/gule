@@ -32,12 +32,18 @@ class ProductService{
      * 获取产品列表
      * @return type
      */
-    public static function getProductList($pageNum,$pageSize) {
-        $total = Product::find()->where(['status' => 1])->count();
+    public static function getProductList($pageNum,$pageSize,$id) {
+        $where = [];
+        $where[] = ['and'];
+        if($id){
+            $where[] = ['category'=>$id];
+        }
+        $where[] = ['status' => 1];
+        $total = Product::find()->where($where)->count();
         $pages = ceil($total / $pageSize);
         $offset = ($pageNum - 1) * $pageSize;
         $productList = Product::find()
-            ->where(['status' => 1])
+            ->where($where)
             ->limit($pageSize)
             ->offset($offset)
             ->orderBy('create_time desc')
