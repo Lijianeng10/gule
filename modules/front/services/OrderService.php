@@ -12,10 +12,10 @@ use app\modules\common\helpers\Commonfun;
 //use app\modules\shop\services\PayService;
 //use app\modules\shop\models\ShopCar;
 //use app\modules\pay\helpers\WxPay;
-//use app\modules\shop\helpers\Constants;
 use app\modules\common\models\ShopCar;
 use app\modules\common\models\ShopOrders;
 use app\modules\common\models\ShopOrdersDetail;
+use app\modules\common\helpers\Constants;
 
 
 class OrderService {
@@ -222,7 +222,7 @@ class OrderService {
         $total = ShopOrders::find()->where($where)->count();
         $offset = $size * ($page - 1);
         $pages = ceil($total / $size);
-        $field = ['order_id','order_code', 'order_num', 'order_money', 'order_status', 'pay_status', 'address', 'shipping_fee', 'remark', 'order_time','pay_time', 'send_time', 'receive_time','wxpay_data'];
+        $field = ['order_id','order_code', 'order_num', 'order_money', 'order_status', 'pay_status', 'address', 'remark', 'order_time','pay_time', 'send_time', 'receive_time','wxpay_data'];
         $orderData = ShopOrders::find()->select($field)
                 ->where($where)
                 ->limit($size)
@@ -231,13 +231,13 @@ class OrderService {
                 ->orderBy('order_time desc')
                 ->asArray()
                 ->all();
-        $orderStatus = Constants::SHOP_ORDER_STATUS;
-        $payStatus = Constants::SHOP_PAY_STATUS;
+        $orderStatus = Constants::ORDER_STATUS_ARR;
+        $payStatus = Constants::PAY_STATUS_ARR;
         foreach ($orderData as &$order) {
-            $addressAry = explode(' ',$order['address']);
-            $order['consignee_name'] = $addressAry[0];
-            $order['consignee_phone'] = $addressAry[1];
-            $order['address'] = $addressAry[2];
+//            $addressAry = explode(' ',$order['address']);
+//            $order['consignee_name'] = $addressAry[0];
+//            $order['consignee_phone'] = $addressAry[1];
+//            $order['address'] = $addressAry[2];
             $order['end_time'] = date("Y-m-d H:i:s",strtotime($order['order_time'])+10*60);
             $order['statusVal'] = $orderStatus[$order['order_status']];
             $order['payVal'] = $payStatus[$order['pay_status']];
@@ -245,30 +245,14 @@ class OrderService {
         }
         $codeArr = array_column($orderData, 'order_id');
         $commentStatus = 0;//订单评价状态
-        $new = (new Query())->select('*')->from('shop_goods_pics')->groupBy('sku_id');
-        $field2 = ['d.*','g.goods_name', 'g.title', 'g.main_pic', 'g.remark','s.attr_value','sp.pic_url','s.attr_name',];
+        $field2 = ['d.*','p.product_name', 'p.product_pic', 'p.product_price'];
         $orderDetail = (new  Query())->select($field2)
             ->from("shop_orders_detail d")
-            ->leftJoin('shop_goods g', 'g.goods_id = d.goods_id')
-            ->leftJoin('shop_goods_sku s', 's.sku_id = d.sku_id')
-            ->leftJoin(['sp'=>$new],'sp.sku_id = s.sku_id')
+            ->leftJoin('product p', 'p.product_id = d.product_id')
             ->where(['in', 'd.order_id', $codeArr])
             ->all();
-        foreach ($orderDetail as &$v){
-            //处理sku字符串
-            $attrAry = json_decode($v['attr_name'],true);
-            $str = '';
-            foreach ($attrAry as $key => $val){
-                $str .=$key .':'.$val.' ';
-            }
-            $v['attrValue'] = $str;
-            if($v['is_comment']==1){
-                $commentStatus = 1;
-            }
-        }
         foreach ($orderDetail as $detail) {
             $orderData[$detail['order_id']]['order_detail'][] = $detail;
-            $orderData[$detail['order_id']]['commentStatus'] = $commentStatus;
         }
 
         return ['page' => $page, 'size' => count($orderData), 'pages' => $pages, 'total' => $total, 'data' => array_values($orderData)];
