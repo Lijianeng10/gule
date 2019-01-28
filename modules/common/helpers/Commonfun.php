@@ -813,5 +813,22 @@ class Commonfun {
         $sign = md5($signCode);
         return $sign;
     }
+    /**
+     * 咕啦商城生成编号
+     * @param string $type
+     * @param char $letter
+     * @return string
+     */
+    public static function getShopCode($type, $letter) {
+        $redis = \Yii::$app->redis;
+        $time = date('ymdH');
+        $redisStr = "GLS:" . $type . ":" . $time . ":" . $letter;
+        $likeStr = "GLS" . $type . $time . $letter;
+        $serialnum = $redis->executeCommand('incr', [$redisStr]);
+        $redis->executeCommand('expire', ["{$redisStr}", 7200]);
+        $serialnum = sprintf("%04d", $serialnum);
+        $code = $likeStr .$serialnum;
+        return $code;
+    }
 
 }
