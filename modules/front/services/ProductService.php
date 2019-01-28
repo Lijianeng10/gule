@@ -34,7 +34,7 @@ class ProductService{
      */
     public static function getProductList($pageNum,$pageSize,$id) {
         $where = [];
-        $where[] = ['and'];
+        $where = ['and'];
         if($id){
             $where[] = ['category'=>$id];
         }
