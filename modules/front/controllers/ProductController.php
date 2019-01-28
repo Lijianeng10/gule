@@ -42,6 +42,13 @@ class ProductController extends Controller {
         $ret = ProductService::getProductDetail($productId);
         return $this->jsonResult(600, '获取成功', $ret);
     }
+    /**
+     * 获取产品类别
+     */
+    public function actionGetCategoryList(){
+        $ret = ProductService::getCategoryList();
+        return $this->jsonResult(600, '获取成功', $ret);
+    }
 
 
 }
