@@ -11,6 +11,7 @@ use Yii;
 use yii\base\Exception;
 use yii\db\Expression;
 use app\modules\common\models\Product;
+use app\modules\common\models\Category;
 
 class ProductService{
     /**
@@ -56,5 +57,17 @@ class ProductService{
             ->asArray()
             ->one();
         return $product;
+    }
+
+    /**
+     * 获取产品类别
+     */
+    public static function getCategoryList(){
+        $list = Category::find()
+            ->where(['status'=>1])
+            ->orderBy('sort asc')
+            ->asArray()
+            ->all();
+        return $list;
     }
 }
