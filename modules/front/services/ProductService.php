@@ -82,6 +82,7 @@ class ProductService{
      * @return array|null|\yii\db\ActiveRecord
      */
     public static function getProductListDetail($pidAry) {
+        $ary = explode(',',$pidAry);
         $product = Product::find()
             ->where(['in','product_id',$pidAry])
             ->asArray()
