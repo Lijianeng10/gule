@@ -84,7 +84,7 @@ class ProductService{
     public static function getProductListDetail($pidAry) {
         $ary = explode(',',$pidAry);
         $product = Product::find()
-            ->where(['in','product_id',$pidAry])
+            ->where(['in','product_id',$ary])
             ->asArray()
             ->all();
         return $product;
