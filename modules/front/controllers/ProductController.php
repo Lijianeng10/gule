@@ -55,11 +55,11 @@ class ProductController extends Controller {
      */
     public function actionGetProductListDetail(){
         $request = \Yii::$app->request;
-        $pidAry = $request->post('pidAry', '');
-        if(empty($pidAry)){
+        $pidStr = $request->post('pidStr', '');
+        if(empty($pidStr)){
             return $this->jsonError(109,'参数缺失！');
         }
-        $ret = ProductService::getProductListDetail($pidAry);
+        $ret = ProductService::getProductListDetail($pidStr);
         return $this->jsonResult(600, '获取成功', $ret);
     }
 

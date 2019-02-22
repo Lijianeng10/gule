@@ -81,10 +81,10 @@ class ProductService{
      * @param $productId
      * @return array|null|\yii\db\ActiveRecord
      */
-    public static function getProductListDetail($pidAry) {
-        $ary = explode(',',$pidAry);
+    public static function getProductListDetail($pidStr) {
+        $ary = explode(',',$pidStr);
         $product = Product::find()
-            ->where(['in','product_id',$pidAry])
+            ->where(['in','product_id',$ary])
             ->asArray()
             ->all();
         return $product;
