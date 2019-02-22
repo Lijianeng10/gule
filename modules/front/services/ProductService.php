@@ -76,4 +76,16 @@ class ProductService{
             ->all();
         return $list;
     }
+    /**
+     * 获取产品详情
+     * @param $productId
+     * @return array|null|\yii\db\ActiveRecord
+     */
+    public static function getProductListDetail($pidAry) {
+        $product = Product::find()
+            ->where(['in','product_id',$pidAry])
+            ->asArray()
+            ->all();
+        return $product;
+    }
 }

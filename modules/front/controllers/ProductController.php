@@ -50,6 +50,17 @@ class ProductController extends Controller {
         $ret = ProductService::getCategoryList();
         return $this->jsonResult(600, '获取成功', $ret);
     }
-
+    /**
+     * 获取产品详情
+     */
+    public function actionGetProductListDetail(){
+        $request = \Yii::$app->request;
+        $pidAry = $request->post('pidAry', '');
+        if(empty($pidAry)){
+            return $this->jsonError(109,'参数缺失！');
+        }
+        $ret = ProductService::getProductListDetail($pidAry);
+        return $this->jsonResult(600, '获取成功', $ret);
+    }
 
 }
