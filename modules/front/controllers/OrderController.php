@@ -28,7 +28,7 @@ class OrderController extends Controller {
         if($ret['code'] != 600) {
             return $this->jsonError($ret['code'], $ret['msg']);
         }
-        return $this->jsonResult($ret['code'], $ret['msg'],'');
+        return $this->jsonResult($ret['code'], $ret['msg'],$ret['data']);
     }
 
     /**

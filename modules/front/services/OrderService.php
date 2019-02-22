@@ -11,11 +11,11 @@ use app\modules\common\helpers\Commonfun;
 //use app\modules\user\models\UserAddress;
 //use app\modules\shop\services\PayService;
 //use app\modules\shop\models\ShopCar;
-//use app\modules\pay\helpers\WxPay;
 use app\modules\common\models\ShopCar;
 use app\modules\common\models\ShopOrders;
 use app\modules\common\models\ShopOrdersDetail;
 use app\modules\common\helpers\Constants;
+use app\modules\common\helpers\WxPay;
 
 
 class OrderService {
@@ -130,21 +130,21 @@ class OrderService {
             $payService = new PayService();
             $payService->addPayRecord($orderModel->order_id,$orderModel->order_code,$userId,$custNo,1, 2,$orderMoney);
             //微信小程序支付
-//            $body = '咕啦商城-购买商品';
-//            $money = floatval($orderMoney*100);//接口中参数支付金额单位为【分】
-//            $wxPay =new WxPay();
-//            $payRet =$wxPay->unifiedorder($orderModel->order_code,$body,$money,$openid);
-//            if($payRet["code"]!=600){
-//                return ['code' => 109, 'msg' => $payRet['msg']];
-//            }
-            //订单ID
-//            $payRet['data']['orderId'] = $orderModel->order_id;
+            $body = '咕啦商城-购买商品';
+            $money = floatval($orderMoney*100);//接口中参数支付金额单位为【分】
+            $wxPay =new WxPay();
+            $payRet =$wxPay->unifiedorder($orderModel->order_code,$body,$money,$openid);
+            if($payRet["code"]!=600){
+                return ['code' => 109, 'msg' => $payRet['msg']];
+            }
+//            订单ID
+            $payRet['data']['orderId'] = $orderModel->order_id;
             //保存wx支付返回的数据包
 //            ShopOrders::updateAll(['wxpay_data'=>json_encode($payRet['data'])],['order_code'=>$orderModel->order_code]);
             //删除购物车数据
             ShopCar::deleteAll(['and', ['user_id' => $userId],['in', 'product_id', $carCode]]);
 //            'data' =>$payRet['data']
-            return ['code' => 600, 'msg' => '下单成功', ''];
+            return ['code' => 600, 'msg' => '下单成功','data' =>$payRet['data']];
         } catch (Exception $ex) {
             $trans->rollBack();
             return ['code' => 109, 'msg' => $ex->getMessage()];
