@@ -11,4 +11,10 @@ return [
     'gl_shop_mch_id' => '1514825831',//咕啦商城商户ID
     'gl_shop_secret' => '77d196072921adfd9656bbb94e72a717',//咕啦商城 app secret
     'gl_shop_pay_key' => '0257c8b69d6f9a49285a82a8b7942636',//咕啦商城支付秘钥
+
+    'smtpServer'=>'smtp.qq.com',//SMTP服务器
+    'smtpServerport' =>25,//SMTP服务器端口
+    'smtpUsermail' => 'lijianeng10@qq.com',//SMTP服务器的用户邮箱
+    'smtpUser' => 'lijianeng10@qq.com',//SMTP服务器的用户帐号，注：部分邮箱只需@前面的用户名
+    'smtpPass' => 'fmqfwsfttzlbbcjf',//SMTP服务器的授权码
 ];
