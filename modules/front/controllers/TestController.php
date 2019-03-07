@@ -21,5 +21,29 @@ class TestController extends Controller {
         $ret = MailService::sendMail($smtpEmailTo,$mailTitle,$mailContent);
         print_r($ret);die;
     }
+    /**
+     * 发送邮件
+     *
+     * @param string $from      发送邮箱
+     * @param string $to        收件邮箱
+     * @param string $subject   主题
+     * @param string $body      邮件内容，默认使用html
+     *
+     * @return bool
+     */
+    public function actionIndex()
+    {
+        $from = Yii::$app->params['smtpUsermail'];
+        $to = "15805963038@163.com";
+        $subject = "早上好啊!";
+        $body = '嘿嘿嘿';
+        $mailer = Yii::$app->mailer->compose();
+        $mailer->setFrom($from);
+        $mailer->setTo($to);
+        $mailer->setSubject($subject);
+        $mailer->setHtmlBody($body);
+        $status = $mailer->send();
+        print_r($status);die;
+    }
 
 }

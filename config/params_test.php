@@ -14,7 +14,7 @@ return [
 
     'smtpServer'=>'smtp.qq.com',//SMTP服务器
     'smtpServerport' =>25,//SMTP服务器端口
-    'smtpUsermail' => 'lijianeng10@qq.com',//SMTP服务器的用户邮箱
-    'smtpUser' => 'lijianeng10@qq.com',//SMTP服务器的用户帐号，注：部分邮箱只需@前面的用户名
+    'smtpUsermail' => '1028617248@qq.com',//SMTP服务器的用户邮箱
+    'smtpUser' => '1028617248@qq.com',//SMTP服务器的用户帐号，注：部分邮箱只需@前面的用户名
     'smtpPass' => 'fmqfwsfttzlbbcjf',//SMTP服务器的授权码
 ];
