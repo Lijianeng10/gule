@@ -8,6 +8,7 @@ use yii\web\Controller;
 use app\modules\common\models\Banner;
 use app\modules\common\helpers\PublicHelpers;
 use app\modules\common\helpers\Constants;
+use app\modules\common\models\Video;
 
 
 class ViewsController extends Controller {
@@ -34,5 +35,15 @@ class ViewsController extends Controller {
             ->asArray()
             ->one();
         return $this->render('/websitemod/banner/edit',["picJump" => $picJump,'banner'=>$banner]);
+    }
+
+    /**
+     *视频管理
+     */
+    public function actionToVideoList(){
+        return $this->render('/websitemod/video/list',[]);
+    }
+    public function actionToVideoAdd(){
+        return $this->render('/websitemod/video/add');
     }
 }
