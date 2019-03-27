@@ -62,10 +62,10 @@
                 ],
                 onLoadSuccess:function(data){
                     controlBtn();
-                    $("a[name='edit_banner']").linkbutton({text:'编辑'});
-                    $("a[name='del_banner']").linkbutton({text:'删除'});
-                    $("a[name='up']").linkbutton({text:'上线'});
-                    $("a[name='down']").linkbutton({text:'下线'});
+                    // $("a[name='edit_banner']").linkbutton({text:'编辑'});
+                    // $("a[name='del_banner']").linkbutton({text:'删除'});
+                    // $("a[name='up']").linkbutton({text:'上线'});
+                    $("a[name='down']").linkbutton({text:'查看'});
                 }
             });
             function picFormatter(value, row) {
@@ -93,13 +93,7 @@
             }
             function optFormatter(value, row) {
                 var str = "";
-                // if(row.status ==0 ||row.status ==2){
-                //     str += '<a href="#" name="edit_banner" style="margin-left: 5px" class="easyui-linkbutton info  websiteBananerEdit" onclick="create_window(\'dlg\',\'编辑\',\'/websitemod/views/to-banner-edit?banner_id='+row.banner_id+' \',\'\',700)"></a>';
-                //     str += '<a href="#" name="del_banner" style="margin-left: 5px" class="easyui-linkbutton info  websiteBananerDelete" onclick="delData('+row.banner_id+',\'/websitemod/banner/delete\');"></a>';
-                //     str += '<a href="#" name="up" style="margin-left: 5px" class="easyui-linkbutton info  websiteBananerChangeStatus" onclick="change_status('+row.banner_id+',1)"></a>';
-                // }else if(row.status == 1){
-                //     str += '<a href="#" name="down" style="margin-left: 5px" class="easyui-linkbutton info  websiteBananerChangeStatus" onclick="change_status('+row.banner_id+',2)"></a>';
-                // }
+                str += '<a href="'+row.url+'" name="down" style="margin-left: 5px" class="easyui-linkbutton info  websiteBananerChangeStatus"></a>'
                  return str;
             }
         });
