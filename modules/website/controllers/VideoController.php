@@ -21,7 +21,7 @@ class VideoController extends Controller {
         $page = $request->post('page');
         $rows = $request->post('rows');
         $sort = $request->post('sort', 'create_time');
-        $order = $request->post('order');
+        $order = $request->post('order','desc');
         $picName = $request->post('pic_name', '');
         $status = $request->post('status', '');
         $where = ['and'];
@@ -148,7 +148,7 @@ class VideoController extends Controller {
      */
     public function actionDelete() {
         $id = \Yii::$app->request->post()['id'];
-        $res = Banner::deleteAll(['banner_id'=>$id]);
+        $res = Video::deleteAll(['video_id'=>$id]);
         if($res){
             return $this->jsonResult(600, '操作成功', true);
         }else{

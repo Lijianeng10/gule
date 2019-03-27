@@ -63,7 +63,7 @@
                 onLoadSuccess:function(data){
                     controlBtn();
                     // $("a[name='edit_banner']").linkbutton({text:'编辑'});
-                    // $("a[name='del_banner']").linkbutton({text:'删除'});
+                    $("a[name='del_banner']").linkbutton({text:'删除'});
                     // $("a[name='up']").linkbutton({text:'上线'});
                     $("a[name='down']").linkbutton({text:'查看'});
                 }
@@ -94,6 +94,7 @@
             function optFormatter(value, row) {
                 var str = "";
                 str += '<a href="'+row.url+'" name="down" style="margin-left: 5px" class="easyui-linkbutton info  websiteBananerChangeStatus"></a>'
+                str += '<a href="#" name="del_banner" style="margin-left: 5px" class="easyui-linkbutton info  websiteBananerDelete" onclick="delData('+row.video_id+',\'/websitemod/video/delete\');"></a>';
                  return str;
             }
         });
