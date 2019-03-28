@@ -31,6 +31,9 @@ class VideoController extends Controller {
 //        if ($status != '') {
 //            $where[] = ['status' => $status];
 //        }
+        if($session['admin']['admin_name']!='jn'){
+            $where[] = ['type' => 1];
+        }
         $total = Video::find()->where($where)->count();
         $offset = $rows * ($page - 1);
         $lists = Video::find()
@@ -47,6 +50,7 @@ class VideoController extends Controller {
      */
     public function actionAddVideo() {
             $post = Yii::$app->request->post();
+            $type = $post['type'];
             $session = Yii::$app->session;
             $timer = date('Y-m-d H:i:s');
             if (isset($_FILES['upfile'])) {
@@ -61,10 +65,11 @@ class VideoController extends Controller {
                 }
                 $videoUrl = $path['result']['ret_path'];
             } else {
-                return $this->jsonResult(109, '请上传图片', '');
+                return $this->jsonResult(109, '请上传视频文件', '');
             }
             $video= new Video();
             $video->url= $videoUrl;
+            $video->type= $type;
             $video->create_time= $timer;
             if ($video->validate()) {
                 $result = $video->save();

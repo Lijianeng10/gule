@@ -5,6 +5,13 @@
             <input type="file" id="file">
         </div>
         <div class="form-item">
+            <label for="" class="label-top">类型：</label>
+            <select name="type" class="easyui-combobox" value="" data-options="panelHeight:'auto',editable:false">
+                <option value="1" selected>普通</option>
+                <option value="2">VIP</option>
+            </select>
+        </div>
+        <div class="form-item">
             <button class="easyui-linkbutton primary" style="margin-left: 100px;" id="sureBtn" >提交</button>
             <button class="easyui-linkbutton primary" id="closeBtn">关闭<button>
         </div>
