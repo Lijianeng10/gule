@@ -2,13 +2,12 @@
 
 namespace app\modules\common\models;
 
-use Yii;
-
 /**
  * This is the model class for table "video".
  *
  * @property integer $video_id
  * @property string $url
+ * @property integer $type
  * @property string $create_time
  * @property string $update_time
  */
@@ -28,6 +27,7 @@ class Video extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['type'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
             [['url'], 'string', 'max' => 255],
         ];
@@ -41,6 +41,7 @@ class Video extends \yii\db\ActiveRecord
         return [
             'video_id' => 'Video ID',
             'url' => 'Url',
+            'type' => 'Type',
             'create_time' => 'Create Time',
             'update_time' => 'Update Time',
         ];

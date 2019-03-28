@@ -16,9 +16,12 @@
         <link rel="stylesheet" href="/js/kindeditor/themes/default/default.css" />
         <script charset="utf-8" src="/js/kindeditor/kindeditor-all.js"></script>
         <script charset="utf-8" src="/js/kindeditor/lang/zh_CN.js"></script>
-	</head>
+        <!--        视频播放-->
+        <link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
+        <script src="http://vjs.zencdn.net/c/video.js"></script>
+    </head>
 <body style="height: 100%;">
-    <script type="text/javascript">
+<script type="text/javascript">
         $(function() {
             obj = {
                 editRow: undefined,
@@ -36,26 +39,32 @@
                 pagination: true,
                 pageSize: 20,
                 // singleSelect:true,
-                fitColumns: true,
+                // fitColumns: true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
                 toolbar: '#tb',
                 columns: [
                     [{
+                        field: 'video',
+                        title: '视频',
+                        width: 300,
+                        align: 'center',
+                        formatter: videoFormatter,
+                    },{
                         field: 'url',
                         title: '视频URL',
-                        width: 100,
+                        width: 500,
                         align: 'center',
                     },{
                         field: 'create_time',
                         title: '创建时间',
                         sortable: true,
-                        width: 60,
+                        width: 150,
                         align: 'center',
                     }, {
                         field: 'opt',
                         title: '操作',
-                        width: 100,
+                        width: 200,
                         align: 'left',
                         formatter: optFormatter,
                     }]
@@ -91,6 +100,16 @@
                 }
                 return str;
             }
+            function videoFormatter(value, row) {
+                var str = '';
+                str += '<div style ="position:relative;">';
+                str += '<video id ="video" class="videoContent" controls style="width:200px;height: 200px;">';
+                str += '<source src="'+row.url+'" type="video/mp4"/>';
+                str += '</video>';
+                str += '<div id ="output" style ="position:absolute;left:0;left:0"></div>';
+                str += '</div>';
+                return str;
+            }
             function optFormatter(value, row) {
                 var str = "";
                 str += '<a href="'+row.url+'" name="down" style="margin-left: 5px" class="easyui-linkbutton info  websiteBananerChangeStatus"></a>'
@@ -98,7 +117,7 @@
                  return str;
             }
         });
-	</script>
+</script>
 	<div class="dgdiv">
 		<table id="datagrid"></table>
 	</div>
