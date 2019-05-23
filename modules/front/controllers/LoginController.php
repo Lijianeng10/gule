@@ -65,7 +65,6 @@ class LoginController extends Controller {
         $postAry = urldecode(json_encode($ary));
         $ret = \Yii::sendCurlPost($url,$postAry);
         print_r($ret);die;
-
     }
 
 
