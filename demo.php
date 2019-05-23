@@ -8,5 +8,5 @@
 require 'vendor/pheanstalk/autoload.php';
 use Pheanstalk\Pheanstalk;
 
-$pheanstalk = new Pheanstalk('127.0.0.1',11301);
+$pheanstalk = new Pheanstalk('127.0.0.1');
 print_r($pheanstalk->stats());
