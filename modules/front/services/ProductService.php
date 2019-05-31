@@ -68,14 +68,16 @@ class ProductService{
     /**
      * 获取产品类别
      */
-    public static function getCategoryList(){
+    public static function getCategoryList($type){
         $list = Category::find()
             ->where(['status'=>1])
             ->orderBy('sort asc,create_time asc')
             ->asArray()
             ->all();
-        $tree = [];
-        $list = self::getTree($list,$tree);
+        if(!empty($type)){
+            $tree = [];
+            $list = self::getTree($list,$tree);
+        }
         return $list;
     }
     /**

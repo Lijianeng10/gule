@@ -47,7 +47,9 @@ class ProductController extends Controller {
      * 获取产品类别
      */
     public function actionGetCategoryList(){
-        $ret = ProductService::getCategoryList();
+        $request = \Yii::$app->request;
+        $type = $request->post('type','');
+        $ret = ProductService::getCategoryList($type);
         return $this->jsonResult(600, '获取成功', $ret);
     }
     /**
