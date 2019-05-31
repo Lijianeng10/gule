@@ -71,9 +71,11 @@ class ProductService{
     public static function getCategoryList(){
         $list = Category::find()
             ->where(['status'=>1])
-            ->orderBy('sort asc')
+            ->orderBy('sort asc,create_time asc')
             ->asArray()
             ->all();
+        $tree = [];
+        $list = self::getTree($list,$tree);
         return $list;
     }
     /**
@@ -88,5 +90,19 @@ class ProductService{
             ->asArray()
             ->all();
         return $product;
+    }
+    //获取树形结构数据
+    public static function getTree($info, $child, $pid = 0) {
+        $child = array();
+        if (!empty($info)) {
+            foreach ($info as $k => &$v) {
+                if ($v['p_id'] == $pid) {
+                    $v['children'] = self::getTree($info, $child, $v['category_id']);
+                    $child[] = $v;
+                    unset($info[$k]);
+                }
+            }
+        }
+        return $child;
     }
 }
