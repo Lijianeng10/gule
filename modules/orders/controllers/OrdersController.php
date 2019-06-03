@@ -5,68 +5,16 @@ namespace app\modules\orders\controllers;
 use Yii;
 use yii\db\Query;
 use yii\web\Controller;
-use app\modules\common\models\Lottery;
-use app\modules\common\models\Order;
-use app\modules\common\models\OrderDetail;
-use app\modules\common\models\StoreLottery;
 use app\modules\common\helpers\Constants;
 use app\modules\common\helpers\Commonfun;
-use app\modules\common\models\Store;
+use app\modules\common\models\ShopOrders;
+use app\modules\common\models\ShopOrdersDetail;
 
 /**
  * Orders controller for the `orders` module
  */
 class OrdersController extends Controller {
-    /**
-     * 获取彩种
-     */
-    public function actionGetLottery() {
-		$request = \Yii::$app->request;
-		$lottery_id_str = $request->get('lottery_id_str','');
-		$lottery_id_str = trim($lottery_id_str,',');
-		
-		$where = ['and'];
-		$where[] = [ 'status' => 1];
-		if($lottery_id_str != ''){
-			$lottery_id_arr = explode(',',$lottery_id_str);
-			$where[] = ['not in','lottery_id',$lottery_id_arr];
-		}
-        $lotteryData = Lottery::find()->select(['lottery_id', 'lottery_name','lottery_value'])->where($where)->orderBy("lottery_name asc")->asArray()->all();
-        $lotteryLists=[];
-        foreach($lotteryData as $key => $val){
-			$lottery_name_new = $val['lottery_name'] . '-' . $val['lottery_value'] . '元';
-            $lotteryLists[] = ['id'=>$val['lottery_id'],'text'=>$lottery_name_new];
-        }
-        return json_encode($lotteryLists);
-    }
-	
-	/**
-     * 获取网点
-     */
-    public function actionGetStore() {
-		$session = \Yii::$app->session;
-		$where = ['and'];
-		$where[] = ['status' => 1];
-		
-		//判断登陆账号是否为渠道账户
-		if($session['admin']['type'] == 1){
-			$where[] = ['channel_no' => $session['admin']['admin_name']];
-		}
-		
-        $storeData = Store::find()->select(['cust_no', 'store_name'])->where($where)->orderBy("create_time desc")->asArray()->all();
-        $storeLists=[];
-		$storeLists=[['id'=>'','text'=>'请选择...']];
-        foreach($storeData as $key => $val){
-			if($val['store_name'] != ''){
-				$store_name_new = $val['cust_no'] . '-' . $val['store_name'];
-			}else{
-				$store_name_new = $val['cust_no'];
-			}
-            $storeLists[] = ['id'=>$val['cust_no'],'text'=>$store_name_new];
-        }
-        return json_encode($storeLists);
-    }
-	
+
     /**
      * 新增网点订单
      */
@@ -183,7 +131,7 @@ class OrdersController extends Controller {
 		$session = \Yii::$app->session;
         $page = $request->post('page');
         $rows = $request->post('rows');
-        $sort = $request->post('sort','order.order_time');
+        $sort = $request->post('sort','shop_orders.order_time');
         $order = $request->post('order','desc');
         $offset = $rows * ($page - 1);
 
@@ -195,36 +143,31 @@ class OrdersController extends Controller {
         $end_order_time = $request->post('end_order_time');//下单结束时间
         $where = ['and'];
         if($order_code != ''){
-            $where[] = ['like','order.order_code',$order_code];
+            $where[] = ['like','shop_orders.order_code',$order_code];
         }
         if($cust_no != ''){
-            $where[] = ['order.cust_no' => $cust_no];
+            $where[] = ['u.cust_no' => $cust_no];
         }
         if($order_status != '' && $order_status != '-1'){
-            $where[] = ['order.order_status'=>$order_status];
+            $where[] = ['shop_orders.order_status'=>$order_status];
         }
         if($pay_status != '' && $pay_status != '-1'){
-            $where[] = ['order.pay_status'=>$pay_status];
+            $where[] = ['shop_orders.pay_status'=>$pay_status];
         }
         if($start_order_time != ''){
-            $where[] = ['>=','order.order_time',$start_order_time];
+            $where[] = ['>=','shop_orders.order_time',$start_order_time];
         }
         if($end_order_time != ''){
-            $where[] = ['<=','order.order_time',$end_order_time];
+            $where[] = ['<=','shop_orders.order_time',$end_order_time];
         }
-		
-		//判断登陆账号是否为渠道账户
-		if($session['admin']['type'] == 1){
-			$where[] = ['store.channel_no' => $session['admin']['admin_name']];
-		}
-		
-        $total = Order::find()
-			->leftJoin('store','store.cust_no = order.cust_no')
+
+        $total = ShopOrders::find()
+			->leftJoin('user u','u.user_id = shop_orders.user_id')
 			->where($where)
 			->count();
-        $AttrList = Order::find()
-			->select(['order.*','store.channel_no','store.store_name','store.user_tel'])
-            ->leftJoin('store','store.cust_no = order.cust_no')
+        $AttrList = ShopOrders::find()
+			->select(['shop_orders.*','u.cust_no','u.nickname','u.phone'])
+            ->leftJoin('user u','u.user_id = shop_orders.user_id')
             ->where($where)
             ->offset($offset)
             ->limit($rows)

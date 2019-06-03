@@ -51,15 +51,7 @@
 				editable:false,//不可编辑，只能选择
 				value:-1,
 			});
-			
-			//网点信息
-			$('#cust_no').combobox({
-				url:'/ordersmod/orders/get-cust-no',
-				valueField:'id',
-				textField:'text',
-				panelHeight:'auto',
-				editable:true
-			});
+
 			
             //数据表格
             $('#datagrid').datagrid({
@@ -89,24 +81,26 @@
                 columns: [
                     [ {
                         field:'order_num',
-                        title: '商品总数',
+                        title: '商品数量',
                         width: 70,
 						align: 'center',
                         sortable: true
                     },{
                         field: 'order_money',
                         title: '订单总金额',
-                        width: 80,
+                        width: 100,
 						align: 'center',
                         sortable: true
-                    }, {
-                        field: 'address_xs',
-                        title: '收货地址',
-                        //width: 300,
-                        halign: 'center',
-						align: 'left',
-						formatter: addressXsFormatter
-                    },  {
+                    },
+                    //     {
+                    //     field: 'address_xs',
+                    //     title: '收货地址',
+                    //     //width: 300,
+                    //     halign: 'center',
+						// align: 'left',
+						// formatter: addressXsFormatter
+                    // },
+                        {
                         field: 'order_status',
                         title: '订单状态',
                         width: 70,
@@ -160,8 +154,8 @@
                     }, {
                         field: 'opt',
                         title: '操作',
-                        width: 160,
-                        align: 'center',
+                        width: 250,
+                        align: 'left',
                         formatter: optFormatter
                     }]
                 ],
@@ -174,7 +168,7 @@
 			//网点信息
 			function custInfoFormatter(value,row){
                 var str= "";
-                str+= row.store_name+'<br>'+row.cust_no+'<br>'+row.user_tel;
+                str+= row.nickname+'<br>'+row.cust_no+'<br>'+row.phone;
                 return str;
             }
 			
@@ -295,7 +289,7 @@
 	
 		<div>
             <a href="#" class="easyui-linkbutton primary goodsCategorySearch" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
-            <a href="#" class="easyui-linkbutton primary goodsCategorySearch" iconCls="fa fa-search" onclick="create_window('dlg','新增订单','/ordersmod/views/to-add-orders',800,600)"> 新 增 </a>
+<!--            <a href="#" class="easyui-linkbutton primary goodsCategorySearch" iconCls="fa fa-search" onclick="create_window('dlg','新增订单','/ordersmod/views/to-add-orders',800,600)"> 新 增 </a>-->
         </div>
 		
     	<div class="tb-column">
@@ -305,7 +299,7 @@
             </div>
             <div class="tb_item">
                 <span>网点信息:</span>
-                <input name="cust_no" id="cust_no" class="easyui-validatebox easyui-combobox">
+                <input name="cust_no" id="cust_no" class="easyui-textbox">
             </div>
             <div class="tb_item">
                 <span>订单状态:</span>

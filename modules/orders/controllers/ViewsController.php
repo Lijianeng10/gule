@@ -4,9 +4,8 @@ namespace app\modules\orders\controllers;
 
 use Yii;
 use yii\web\Controller;
-use app\modules\common\models\Lottery;
-use app\modules\orders\models\Order;
-use app\modules\orders\models\OrderDetail;
+use app\modules\common\models\ShopOrders;
+use app\modules\common\models\ShopOrdersDetail;
 
 /**
  * Views controller for the `views` module
@@ -16,7 +15,7 @@ class ViewsController extends Controller {
      * 订单列表
      * @return string
      */
-    public function actionToOrderList(){
+    public function actionToOrdersList(){
         return $this->render('/ordersmod/orders/list');
     }
     /**
@@ -52,11 +51,13 @@ class ViewsController extends Controller {
         $request = \Yii::$app->request;
         $order_id = $request->get('order_id');
         $where = ['order_id' => $order_id];
-        $ordersData = Order::find()->where($where)->asArray()->one();
-		$orderDetailData = OrderDetail::find()
-						->select(["order_detail.*","lottery.lottery_img"])
-						->leftJoin("lottery","lottery.lottery_id = order_detail.lottery_id")
-						->where($where)->asArray()->all();
+        $ordersData = ShopOrders::find()->where($where)->asArray()->one();
+		$orderDetailData = ShopOrdersDetail::find()
+						->select(["shop_orders_detail.*","product.product_name","product.product_pic"])
+						->leftJoin("product","product.product_id = shop_orders_detail.product_id")
+						->where($where)
+                        ->asArray()
+                        ->all();
         return $this->render('/ordersmod/orders/detail', ['ordersData' => $ordersData,'orderDetailData' => $orderDetailData]);
     }
 
