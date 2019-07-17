@@ -25,11 +25,15 @@
         document.forms[0].target = "rfFrame";
         var formData = new FormData();
         var data = $("#myform").serializeArray();
+        // getBase64Image($("#file").get(0).files[0],function () {
+        //     alert(111)
+        // });
         formData.append("upfile", $("#file").get(0).files[0]);
         $.each(data, function (i, field){
             formData.append(field.name, field.value);
         });
         $.ajax({
+            // url: '/websitemod/video/test-baidu',
             url: '/websitemod/video/add-video',
             async: false,
             type: 'POST',
@@ -78,5 +82,21 @@
 
 
     })
+    function getBase64Image(imgs,callback) {
+        var windowURL = window.URL || window.webkitURL;
+        var dataUrl  = windowURL.createObjectURL(imgs);
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d");
+        var img = new Image();
+        img.src = dataUrl;
+        img.onload = function (ev) {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img,0,0);
+            var dataURL = canvas.toDataURL("image/jpg");
+            console.log(dataURL)
+        }
+    }
+
 </script>
 

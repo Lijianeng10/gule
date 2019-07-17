@@ -12,6 +12,7 @@ use yii\db\Query;
 use yii\web\Controller;
 use app\modules\common\models\Video;
 use app\modules\tools\helpers\UploadPic;
+use app\modules\tools\baidu\AipOcr;
 
 class VideoController extends Controller {
 
@@ -160,5 +161,60 @@ class VideoController extends Controller {
             return $this->jsonError(109, '操作失败');
         }
 
+    }
+
+    public function actionTestBaidu(){
+        $client = new AipOcr('16827834', 'M2coWRB118w1k2evq80Pfe31', '1G5bWqheASRAElylbP62wyrYPwT8XpF5');
+        $post = Yii::$app->request->post();
+        $type = $post['type'];
+        $session = Yii::$app->session;
+        $timer = date('Y-m-d H:i:s');
+        if (isset($_FILES['upfile'])) {
+            $file = $_FILES['upfile'];
+            $image = 'base64';
+          $image = file_get_contents($image);
+
+        // 调用通用文字识别, 图片参数为本地图片
+//            $client->basicGeneral($image);
+
+        // 如果有可选参数
+            $options = array();
+            $options["language_type"] = "CHN_ENG";
+            $options["detect_direction"] = "true";
+            $options["detect_language"] = "true";
+            $options["probability"] = "true";
+
+            // 带参数调用通用文字识别, 图片参数为本地图片
+            $ret = $client->basicGeneral($image, $options);
+            print_r($ret);
+//            $url = "https//www.x.com/sample.jpg";
+
+            // 调用通用文字识别, 图片参数为远程url图片
+//            $client->basicGeneralUrl($url);
+
+            // 如果有可选参数
+//            $options = array();
+//            $options["language_type"] = "CHN_ENG";
+//            $options["detect_direction"] = "true";
+//            $options["detect_language"] = "true";
+//            $options["probability"] = "true";
+
+            // 带参数调用通用文字识别, 图片参数为远程url图片
+//            $client->basicGeneralUrl($url, $options);
+
+
+
+//            $saveDir = '/video/';
+//            $str = substr(strrchr($file['name'], '.'), 1);
+//            $name = rand(0,99).'.' . $str;
+//            $pathJson = UploadPic::pic_host_upload($file, $saveDir,$name);
+//            $path = json_decode($pathJson, true);
+//            if ($path['code'] != 600) {
+//                return $this->jsonResult($path['code'], $path['msg']);
+//            }
+//            $videoUrl = $path['result']['ret_path'];
+        } else {
+            return $this->jsonResult(109, '请上传文件', '');
+        }
     }
 }

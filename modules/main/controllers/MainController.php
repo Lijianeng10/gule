@@ -16,7 +16,6 @@ class MainController extends Controller
 
     public function actionIndex()
     {
-
         $session = \Yii::$app->session;
         $admin = $session['admin'];
         if (!$admin) {
