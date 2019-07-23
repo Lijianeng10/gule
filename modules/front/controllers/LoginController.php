@@ -36,9 +36,9 @@ class LoginController extends Controller {
         $ary = [
             'button' => [
                 [
-                    'name' => urlencode('我的谷乐'),
+                    'name' => urlencode('微信授权'),
                     'type' => 'view',
-                    'url' => 'http://119.23.239.189:1011'
+                    'url' => 'http://114.115.148.102:8600/user/user/we-chat-auth'
                 ],
                 [
                     'name' => urlencode('谷乐管理'),
