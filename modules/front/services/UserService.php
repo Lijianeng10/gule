@@ -15,6 +15,111 @@ use app\modules\common\models\ShopCar;
 
 class UserService{
     /**
+     * 授权第一步，获取code
+     * @return int
+     */
+    public static function getUserInfo($type, $code = '') {
+        $appid = $wxInfo['appid'];
+        $appsecret = $wxInfo['secret'];
+        $redirect_uri = $wxInfo['redirect_uri'];
+        if (empty($code)) {
+            //触发微信返回code码
+            $baseUrl = urlencode($redirect_uri);
+            $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" . $appid . "&redirect_uri=" . $baseUrl . "&response_type=code&scope=snsapi_userinfo&state=" . $storeCode . "&connect_redirect=1#wechat_redirect";
+            Header("Location: $url");
+            exit;
+        } else {
+            //获取用户基础信息
+            $wxUserInfo = self::getSnsapiUserinfo($appid, $appsecret, $code);
+            if (!isset($wxUserInfo['openid'])) {
+                return ['code' => 109, 'msg' => '请先关注该公众号！', 'data' => ''];
+            }
+            $user = User::find()->where(['openid' => $wxUserInfo['openid']])->asArray()->one();
+            $token = '';
+            //授权过的用户直接登录
+            if (!empty($user)) {
+                if (!empty($user['user_tel'])) {
+                    //已经存在则直接登录
+                    $token = self::autoLogin($user['cust_no'], $user['user_id']);
+                }
+            }
+            $userInfoAry = [];
+//            $userInfoAry['user_id'] = $userId;
+//            $userInfoAry['cust_no'] = $custNo;
+//            $userInfoAry['cust_type'] = $custType;
+            $userInfoAry['token'] = $token;
+            $userInfoAry['wxUserInfo'] = $wxUserInfo;
+            $userInfoAry['agentCode'] = $storeCode;
+            return ['code' => 600, 'msg' => '登录成功！', 'data' => $userInfoAry];
+        }
+    }
+
+    /**
+     *  获取微信登录用户信息
+     * @param $appid
+     * @param $appsecret
+     * @param $code
+     * @return array
+     */
+    public static function getSnsapiUserinfo($appid, $appsecret, $code) {
+        //获取网页授权的access_token、openid
+        $url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" . $appid . "&secret=" .
+            $appsecret . "&code=" . $code . "&grant_type=authorization_code";
+        $weixin = file_get_contents($url); //通过code换取网页授权access_token
+        $jsondecode = json_decode($weixin); //对JSON格式的字符串进行编码
+        $array = get_object_vars($jsondecode); //转换成数组
+        $accessToken = $array['access_token']; //输出access_token
+        $openid = $array['openid']; //输出openid
+        //获取详细信息
+        $infoUrl = "https://api.weixin.qq.com/sns/userinfo?access_token=" . $accessToken . "&openid=" . $openid . "&lang=zh_CN";
+        $ret = \Yii::CurlGet($infoUrl);
+        return $ret;
+    }
+
+    /**
+     * 创建用户
+     * @param $wxUserInfo 微信用户信息包
+     * @param string $agent 所属上级
+     * @param string $userTel 手机号
+     */
+    public static function createUser($wxUserInfo, $storeCode = 'hy', $userTel = '') {
+        $custNo = self::getNo();
+        $cTime = date('Y-m-d H:i:s');
+        $user = new User();
+        $user->cust_no = $custNo;
+        $user->user_tel = $userTel;
+        $user->head_img = $wxUserInfo['headimgurl'];
+        $user->user_name = $wxUserInfo['nickname'];
+        $user->privince = $wxUserInfo['province'];
+        $user->city = $wxUserInfo['city'];
+        $user->area = $wxUserInfo['country']; //国家
+        $user->agent = $storeCode;
+//        $user->unionid = $wxUserInfo['unionid'];
+        $user->openid = $wxUserInfo['openid'];
+        $user->c_time = $cTime;
+        $db = \Yii::$app->db;
+        $tran = $db->beginTransaction();
+        try {
+            if (!$user->save()) {
+                throw new Exception('用户新增失败！');
+            }
+            $userId = $user->attributes['user_id'];
+            $userFunds = new UserFunds();
+            $userFunds->user_id = $userId;
+            $userFunds->cust_no = $custNo;
+            $userFunds->c_time = $cTime;
+            if (!$userFunds->save()) {
+                throw new Exception('用户资金表新增失败！');
+            }
+            $tran->commit();
+            $userData = ['user_id' => $userId, 'cust_no' => $custNo];
+            return ['code' => 600, 'msg' => '新增成功！', 'data' => $userData];
+        } catch (\yii\db\Exception $e) {
+            $tran->rollBack();
+            return ['code' => 109, 'msg' => $e->getMessage()];
+        }
+    }
+    /**
      * 自动登录 生成token
      * @param $custNo 用户编号
      * @param $userId 用户ID

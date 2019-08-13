@@ -11,6 +11,37 @@ use app\modules\tools\helpers\AliSms;
 use app\modules\common\models\ShopCar;
 
 class UserController extends Controller {
+
+
+    /**
+     * 微信授权
+     * @return string
+     */
+    public function actionWeChatAuth() {
+        $request = \Yii::$app->request;
+        $type = $request->get('type',1);
+        $ret = UserService::getUserInfo($type);
+        if ($ret['code'] != 600) {
+            return $this->jsonError($ret['code'], $ret['msg']);
+        }
+        return $this->jsonResult(600, '登录成功！', $ret['data']);
+    }
+
+    public function actionCallBackWxCode() {
+        $request = \Yii::$app->request;
+        $storeCode = $request->get('state');
+        $wxCode = $request->get('code', '');
+        //$storeCode 参数拼接了门店公众号Code、H5跳转链接
+        $codeAry = explode('_', $storeCode);
+        $ret = UserService::getUserInfo($codeAry[0], $wxCode);
+        $pageUrl = \Yii::$app->params['page_url'];
+        if ($ret['code'] != 600) {
+            $url = \Yii::$app->params['awardDomain'] . '/' . $pageUrl[$codeAry[1]] . '?code=' . $ret['code'] . '&msg=' . $ret['msg'];
+        }
+        $url = \Yii::$app->params['awardDomain'] . '/' . $pageUrl[$codeAry[1]] . '?userInfo=' . json_encode($ret['data']);
+        return $this->redirect($url);
+    }
+
     public function actionRegister(){
         $request = \Yii::$app->request;
         $phone = trim($request->post_nn('phone'));
