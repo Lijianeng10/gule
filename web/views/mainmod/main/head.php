@@ -78,7 +78,7 @@ h2 {
 
 </style>
 	<div class="header">
-		<h2>谷乐管理系统</h2>
+		<h2>谷乐账云管理系统</h2>
 		<div class="box">
 			<div class="user">
 				<img class="user-img" src="./images/photo.jpg" alt="" title="">

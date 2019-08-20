@@ -1,7 +1,7 @@
 <!doctype html>
 <head>
 	<meta charset="UTF-8">
-	<title>谷乐管理系统</title>
+	<title>谷乐账云管理系统</title>
 	<link rel="stylesheet" href="/css/login/login.css">
     <script src="/easyui/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 </head>
@@ -10,7 +10,7 @@
 			<div class="contain">
 				<div class="tit">
 					<h3>欢迎来到</h3>
-					<p>谷乐管理后台</p>
+					<p>谷乐账云管理后台</p>
 				</div>
 				<div class="login-box">
 					<h2>用户登录</h2>

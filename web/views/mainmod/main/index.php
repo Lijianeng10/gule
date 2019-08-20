@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>谷乐管理系统</title>
+		<title>谷乐账云管理系统</title>
         <!--easyui-->
 		<link rel="stylesheet" href="/easyui/themes/super/css/font-awesome.min.css">
 		<link rel="stylesheet" href="/easyui/themes/super/superBlue.css" id="themeCss">

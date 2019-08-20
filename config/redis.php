@@ -2,8 +2,8 @@
 if(YII_ENV_DEV){
     return [
         'class' => 'app\modules\components\redis\Connection',
-        'hostname' => '119.23.239.189',
-        'password' => 'lhj13960lyq',
+        'hostname' => '139.159.143.55',
+        'password' => 'glcg8888',
         'port' => 6379,
         'database' =>0,
     ];

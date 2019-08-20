@@ -37,9 +37,9 @@
                 var labeul =$(this).parent("li").find(">ul")
                 if ($(this).parent().hasClass('open') == false) {
                     //展开未展开
-                    parent.find('ul').slideUp(300);
-                    parent.find("li").removeClass("open")
-                    parent.find('li a').removeClass("active").find(".arrow").removeClass("open")
+                    // parent.find('ul').slideUp(300);
+                    // parent.find("li").removeClass("open")
+                    // parent.find('li a').removeClass("active").find(".arrow").removeClass("open")
                     $(this).parent("li").addClass("open").find(labeul).slideDown(300);
                     $(this).addClass("active").find(".arrow").addClass("open")
                 }else{

@@ -11,9 +11,9 @@ if (YII_ENV == "dev") {
 //    ];
     return [
         'class' => 'yii\db\Connection',
-        'dsn' => 'mysql:host=119.23.239.189;dbname=gule',
+        'dsn' => 'mysql:host=139.159.143.55;dbname=gule',
         'username' => 'root',
-        'password' => '!Lhj13960lyq',
+        'password' => '!Glcg8888',
         'charset' => 'utf8mb4',
     ];
 } else {
