@@ -50,7 +50,7 @@ class UserService{
 //            $userInfoAry['cust_type'] = $custType;
             $userInfoAry['token'] = $token;
             $userInfoAry['wxUserInfo'] = $wxUserInfo;
-            $userInfoAry['agentCode'] = $storeCode;
+//            $userInfoAry['agentCode'] = $storeCode;
             return ['code' => 600, 'msg' => '登录成功！', 'data' => $userInfoAry];
         }
     }
