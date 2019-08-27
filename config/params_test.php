@@ -18,7 +18,7 @@ return [
         'token' => 'gule',
         'redirect_uri' => 'http://www.gulezyun.com.cn/api/front/user/call-back-wx-code',
         'appid' => 'wxa2114b0a7c53ffc1',
-        'secret' => 'e9678906d75d964e268aa35e1608ec15',
+        'secret' => '423670fefb95b1e1be24c5f4dfb91919',
         'mchid' => 'your mchid',
         'key' => 'your key',
         'notifyUrl' => 'wechat notify url',

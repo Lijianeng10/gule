@@ -31,8 +31,7 @@ class UserService{
             exit;
         } else {
             //获取用户基础信息
-            $wxUserInfo = self::getSnsapiUserinfo($appid, $appsecret, $code);
-            print_r($wxUserInfo);die;
+            $wxUserInfo = self::getSnsapiUserinfo($appid, $appsecret,$code);
             if (!isset($wxUserInfo['openid'])) {
                 return ['code' => 109, 'msg' => '请先关注该公众号！', 'data' => ''];
             }
