@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -12,8 +13,8 @@ use yii\base\InvalidParamException;
 use yii\base\UnknownClassException;
 use yii\log\Logger;
 use yii\di\Container;
-use app\modules\common\models\Terminal;
 use app\modules\common\models\User;
+//use app\modules\common\services\KafkaService;
 
 /**
  * Gets the application start timestamp.
@@ -59,8 +60,8 @@ defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', true);
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class BaseYii
-{
+class BaseYii {
+
     /**
      * @var array class map used by the Yii autoloading mechanism.
      * The array keys are the class names (without leading backslashes), and the array values
@@ -69,6 +70,7 @@ class BaseYii
      * @see autoload()
      */
     public static $classMap = [];
+
     /**
      * @var \yii\console\Application|\yii\web\Application the application instance
      */
@@ -76,12 +78,19 @@ class BaseYii
     public static $custNo;
     public static $userId;
     public static $agentId = '0';
+    public static $platform = 1;
+    public static $storeOperatorId = 0;
+    public static $storeOperatorNo;
+    public static $storeCode;
+    public static $polling = 2; // 是否轮循 1：轮循 2：不
+
     /**
      * @var array registered path aliases
      * @see getAlias()
      * @see setAlias()
      */
     public static $aliases = ['@yii' => __DIR__];
+
     /**
      * @var Container the dependency injection (DI) container used by [[createObject()]].
      * You may use [[Container::set()]] to set up the needed dependencies of classes and
@@ -91,13 +100,11 @@ class BaseYii
      */
     public static $container;
 
-
     /**
      * Returns a string representing the current version of the Yii framework.
      * @return string the version of Yii framework
      */
-    public static function getVersion()
-    {
+    public static function getVersion() {
         return '2.0.11';
     }
 
@@ -131,8 +138,7 @@ class BaseYii
      * @throws InvalidParamException if the alias is invalid while $throwException is true.
      * @see setAlias()
      */
-    public static function getAlias($alias, $throwException = true)
-    {
+    public static function getAlias($alias, $throwException = true) {
         if (strncmp($alias, '@', 1)) {
             // not an alias
             return $alias;
@@ -167,8 +173,7 @@ class BaseYii
      * @param string $alias the alias
      * @return string|bool the root alias, or false if no root alias is found
      */
-    public static function getRootAlias($alias)
-    {
+    public static function getRootAlias($alias) {
         $pos = strpos($alias, '/');
         $root = $pos === false ? $alias : substr($alias, 0, $pos);
 
@@ -215,8 +220,7 @@ class BaseYii
      * @throws InvalidParamException if $path is an invalid alias.
      * @see getAlias()
      */
-    public static function setAlias($alias, $path)
-    {
+    public static function setAlias($alias, $path) {
         if (strncmp($alias, '@', 1)) {
             $alias = '@' . $alias;
         }
@@ -274,8 +278,7 @@ class BaseYii
      * @param string $className the fully qualified class name without a leading backslash "\"
      * @throws UnknownClassException if the class does not exist in the class file
      */
-    public static function autoload($className)
-    {
+    public static function autoload($className) {
         if (isset(static::$classMap[$className])) {
             $classFile = static::$classMap[$className];
             if ($classFile[0] === '@') {
@@ -339,8 +342,7 @@ class BaseYii
      * @throws InvalidConfigException if the configuration is invalid.
      * @see \yii\di\Container
      */
-    public static function createObject($type, array $params = [])
-    {
+    public static function createObject($type, array $params = []) {
         if (is_string($type)) {
             return static::$container->get($type, $params);
         } elseif (is_array($type) && isset($type['class'])) {
@@ -361,8 +363,7 @@ class BaseYii
     /**
      * @return Logger message logger
      */
-    public static function getLogger()
-    {
+    public static function getLogger() {
         if (self::$_logger !== null) {
             return self::$_logger;
         }
@@ -374,8 +375,7 @@ class BaseYii
      * Sets the logger object.
      * @param Logger $logger the logger object.
      */
-    public static function setLogger($logger)
-    {
+    public static function setLogger($logger) {
         self::$_logger = $logger;
     }
 
@@ -387,8 +387,7 @@ class BaseYii
      * complex data structure, such as array.
      * @param string $category the category of the message.
      */
-    public static function trace($message, $category = 'application')
-    {
+    public static function trace($message, $category = 'application') {
         if (YII_DEBUG) {
             static::getLogger()->log($message, Logger::LEVEL_TRACE, $category);
         }
@@ -402,8 +401,7 @@ class BaseYii
      * complex data structure, such as array.
      * @param string $category the category of the message.
      */
-    public static function error($message, $category = 'application')
-    {
+    public static function error($message, $category = 'application') {
         static::getLogger()->log($message, Logger::LEVEL_ERROR, $category);
     }
 
@@ -415,8 +413,7 @@ class BaseYii
      * complex data structure, such as array.
      * @param string $category the category of the message.
      */
-    public static function warning($message, $category = 'application')
-    {
+    public static function warning($message, $category = 'application') {
         static::getLogger()->log($message, Logger::LEVEL_WARNING, $category);
     }
 
@@ -428,8 +425,7 @@ class BaseYii
      * complex data structure, such as array.
      * @param string $category the category of the message.
      */
-    public static function info($message, $category = 'application')
-    {
+    public static function info($message, $category = 'application') {
         static::getLogger()->log($message, Logger::LEVEL_INFO, $category);
     }
 
@@ -450,8 +446,7 @@ class BaseYii
      * @param string $category the category of this log message
      * @see endProfile()
      */
-    public static function beginProfile($token, $category = 'application')
-    {
+    public static function beginProfile($token, $category = 'application') {
         static::getLogger()->log($token, Logger::LEVEL_PROFILE_BEGIN, $category);
     }
 
@@ -462,8 +457,7 @@ class BaseYii
      * @param string $category the category of this log message
      * @see beginProfile()
      */
-    public static function endProfile($token, $category = 'application')
-    {
+    public static function endProfile($token, $category = 'application') {
         static::getLogger()->log($token, Logger::LEVEL_PROFILE_END, $category);
     }
 
@@ -471,11 +465,9 @@ class BaseYii
      * Returns an HTML hyperlink that can be displayed on your Web page showing "Powered by Yii Framework" information.
      * @return string an HTML hyperlink that can be displayed on your Web page showing "Powered by Yii Framework" information
      */
-    public static function powered()
-    {
+    public static function powered() {
         return \Yii::t('yii', 'Powered by {yii}', [
-            'yii' => '<a href="http://www.yiiframework.com/" rel="external">' . \Yii::t('yii',
-                    'Yii Framework') . '</a>'
+            'yii' => '<a href="http://www.yiiframework.com/" rel="external">' . \Yii::t('yii', 'Yii Framework') . '</a>'
         ]);
     }
 
@@ -504,8 +496,7 @@ class BaseYii
      * [[\yii\base\Application::language|application language]] will be used.
      * @return string the translated message.
      */
-    public static function t($category, $message, $params = [], $language = null)
-    {
+    public static function t($category, $message, $params = [], $language = null) {
         if (static::$app !== null) {
             return static::$app->getI18n()->translate($category, $message, $params, $language ?: static::$app->language);
         }
@@ -524,8 +515,7 @@ class BaseYii
      * @param array $properties the property initial values given in terms of name-value pairs.
      * @return object the object itself
      */
-    public static function configure($object, $properties)
-    {
+    public static function configure($object, $properties) {
         foreach ($properties as $name => $value) {
             $object->$name = $value;
         }
@@ -541,15 +531,161 @@ class BaseYii
      * @param object $object the object to be handled
      * @return array the public member variables of the object
      */
-    public static function getObjectVars($object)
-    {
+    public static function getObjectVars($object) {
         return get_object_vars($object);
     }
-    
-    public static function sendCurlPost($surl,$post_data){
+
+    public static function sendCurlPost($surl, $post_data, $time_out = 60) {
+        $data = self::curlPost($surl, $post_data, $time_out);
+        if (!$data['error']) {
+            return json_decode($data['data'], true);
+        }
+        return $data['data'];
+    }
+
+    public static function sendCurlGet($surl) {
+        $ch = curl_init();
+        //设置选项，包括URL
+        curl_setopt($ch, CURLOPT_URL, 'http://' . $surl);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//        curl_setopt($ch, CURLOPT_HEADER, 1);
+        //执行并获取HTML文档内容
+        $output = curl_exec($ch);
+        //释放curl句柄
+        curl_close($ch);
+        //打印获得的数据
+//        $res = json_decode($output, true); //json转数组
+        return $output;
+    }
+
+    public static function sendCurlDel($surl) {
+        $ch = curl_init();
+        //设置选项，包括URL
+        curl_setopt($ch, CURLOPT_URL, $surl);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        //执行并获取HTML文档内容
+        $output = curl_exec($ch);
+        //释放curl句柄
+        curl_close($ch);
+        //打印获得的数据
+        //        $res = json_decode($output, true); //json转数组
+        return $output;
+    }
+
+    //自定义redis set 方法
+    public static function redisSet($key, $value, $time = 0) {
+        $redis = \yii::$app->redis;
+        $redis->database = 6;
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
+        if (empty($time)) {
+            $ret = $redis->executeCommand('set', ["{$key}", "{$value}"]);
+        } else {
+            $ret = $redis->executeCommand('setex', ["{$key}", $time, "{$value}"]);
+        }
+        return $ret;
+    }
+
+    /**
+     * 自定义redis get 方法
+     * @param string $key
+     * @param string $type 返回类型 1:字符串 2:数组 .
+     */
+    public static function redisGet($key, $type = 1) {
+        $redis = \yii::$app->redis;
+        $redis->database = 6;
+        $redisRet = $redis->executeCommand('get', ["{$key}"]);
+        if ($type == 2) {
+            if ($redisRet == '[]') {//当数组为空时返回-99
+                return -99;
+            }
+            $redisRet = json_decode($redisRet, true);
+        }
+        return $redisRet;
+    }
+
+    /**
+     * 自定义redis del 方法
+     * @param string $key
+     */
+    public static function redisDel($key) {
+        $redis = \yii::$app->redis;
+        $redis->database = 6;
+        $redisRet = $redis->executeCommand('del', ["{$key}"]);
+
+        return $redisRet;
+    }
+
+    /**
+     * 说明: json返回接口 成功
+     * @author  kevi
+     * @date 2017年5月27日 上午10:38:03
+     * @param
+     * @return
+     */
+    public static function jsonResult($code, $msg, $data) {
+        $respone = array(
+            "code" => $code,
+            'msg' => $msg,
+            "result" => $data
+        );
+        echo json_encode($respone, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        \Yii::$app->end();
+    }
+
+    /**
+     * 说明: json返回接口 失败
+     * @author  kevi
+     * @date 2017年5月27日 上午10:38:03
+     * @param
+     * @return
+     */
+    public static function jsonError($code, $msg) {
+        $respone = array(
+            "code" => $code,
+            "msg" => $msg
+        );
+        echo json_encode($respone, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        \Yii::$app->end(200);
+    }
+
+    public static function tokenSet($key, $val) {
+        $redis = \yii::$app->redis;
+        $redis->database = 6;
+        $ret = $redis->setex($key, 604800, $val); //设置过期时间7天
+        $redis->database = 0;
+        return $ret;
+    }
+
+    public static function tokenGet($key) {
+        $redis = \yii::$app->redis;
+        $redis->database = 6;
+        $redisToken = $redis->get($key);
+        if (!empty($redisToken)) {
+            $redis->expire($key, 604800); //更新过期时间7天
+        }
+        $redis->database = 0;
+        return $redisToken;
+    }
+
+    public static function tokenDel($key) {
+        $redis = \yii::$app->redis;
+        $redis->database = 6;
+        $ret = $redis->del($key);
+        $redis->database = 0;
+        return $ret;
+    }
+
+    public static function curlPost($surl, $post_data, $time_out = 60) {
+
         //初始化
         $ch = curl_init();
         //设置选项，包括URL
+        curl_setopt($ch, CURLOPT_TIMEOUT, $time_out);
         curl_setopt($ch, CURLOPT_URL, $surl);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -559,149 +695,82 @@ class BaseYii
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         //执行并获取HTML文档内容
         $output = curl_exec($ch);
+        if (curl_errno($ch)) {
+//            KafkaService::addLog('CurlPostError', 'url:' . $surl . '; params:' . var_export($post_data, true) . '; result:' . var_export(curl_errno($ch), true));
+            return ['data' => curl_errno($ch), 'error' => true];
+        }
         //释放curl句柄
         curl_close($ch);
         //打印获得的数据
-        return json_decode($output,true);
+        return ['data' => $output, 'error' => false];
     }
-    public static function sendCurlGet($surl) {
+
+    public static function curlJsonPost($surl, $post_data, $time_out = 60) {
+
+        //初始化
+        $ch = curl_init();
+        //设置选项，包括URL
+        curl_setopt($ch, CURLOPT_TIMEOUT, $time_out);
+        curl_setopt($ch, CURLOPT_URL, $surl);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        $post_data = !is_array($post_data) ? $post_data : http_build_query($post_data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json; charset=utf-8',
+                'Content-Length: ' . strlen($post_data))
+        );
+        //执行并获取HTML文档内容
+        $output = curl_exec($ch);
+        if (curl_errno($ch)) {
+//            KafkaService::addLog('CurlPostError', 'url:' . $surl . '; params:' . var_export($post_data, true) . '; result:' . var_export(curl_errno($ch), true));
+            return ['data' => curl_errno($ch), 'error' => true];
+        }
+//        KafkaService::addLog('CurlPostResult', 'url:' . $surl . '; params:' . var_export($post_data, true) . '; result:' . var_export($output, true));
+//        释放curl句柄
+        curl_close($ch);
+        //打印获得的数据
+        return ['data' => $output, 'error' => false];
+    }
+
+    /**
+     * CURL  get  返回json数据
+     * @param $surl
+     * @return mixed
+     */
+    public static function CurlGet($surl) {
         $ch = curl_init();
         //设置选项，包括URL
         curl_setopt($ch, CURLOPT_URL, $surl);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
+//        curl_setopt($ch, CURLOPT_HEADER, 1);
         //执行并获取HTML文档内容
         $output = curl_exec($ch);
         //释放curl句柄
         curl_close($ch);
         //打印获得的数据
-        return json_decode($output, true); //json转数组
-    }
-    
-    //自定义redis set 方法
-    public static function redisSet($key,$value,$time=0){
-        $redis = \yii::$app->redis;
-        if(is_array($value)){
-            $value = json_encode($value);
-        }
-        if(empty($time)){
-            $ret = $redis->executeCommand('set',["{$key}","{$value}"]);
-        }else{
-            $ret = $redis->executeCommand('setex',["{$key}",$time,"{$value}"]);
-        }
-        return $ret;
-    }
-    /**
-     * 自定义redis get 方法
-     * @param string $key
-     * @param string $type 返回类型 1:字符串 2:数组 .
-     */
-    public static function redisGet($key,$type=1){
-        $redis = \yii::$app->redis;
-        $redisRet = $redis->executeCommand('get',["{$key}"]);
-        if($type==2){
-            if($redisRet=='[]'){//当数组为空时返回-99
-                return -99;
-            }
-            $redisRet = json_decode($redisRet,true);
-        }
-        return $redisRet;
-    }
-    
-    /**
-     * 自定义redis del 方法
-     * @param string $key
-     */
-    public static function redisDel($key){
-        $redis = \yii::$app->redis;
-        $redisRet = $redis->executeCommand('del',["{$key}"]);
-        
-        return $redisRet;
-    }
-    /**
-     * 说明: json返回接口 失败
-     * @author  kevi
-     * @date 2017年5月27日 上午10:38:03
-     * @param
-     * @return
-     */
-    public static function jsonError($code, $msg) {
-    	$respone = array(
-    		"code" => $code,
-    		"msg" => $msg
-    	);
-    	echo json_encode($respone, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    	\Yii::$app->end(200);
-    }
-    /**
-     * 说明: json返回接口 成功
-     * @author  kevi
-     * @date 2017年5月27日 上午10:38:03
-     * @param
-     * @return
-     */
-    public static function jsonResult($code, $msg, $data) {
-    	$respone = array(
-    		"code" => $code,
-    		'msg' => $msg,
-    		"result" => $data
-    	);
-    	echo json_encode($respone, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    	\Yii::$app->end();
+//        KafkaService::addLog('CurlGetIntegral', 'url:' . $surl . ';result:' . var_export($output, true));
+        return json_decode($output, true);
     }
 
-    public static function datagridJson($data,$total){
-        $ret['rows'] = $data;
-        $ret['total'] = $total;
-        echo json_encode($ret);
-        \Yii::$app->end();
-    }
-    /**
-     * token 操作方法
-     */
-    public static function tokenSet($key, $val) {
-        $redis2 = \yii::$app->redis;
-        $redis2->database = 1;
-        $ret = $redis2->setex($key,604800, $val);//设置过期时间7天
-        $redis2->database = 10;
-        return $ret;
-    }
-
-    public static function tokenGet($key) {
-        $redis2 = \yii::$app->redis;
-        $redis2->database = 1;
-        $redisToken = $redis2->get($key);
-        if(!empty($redisToken)){
-            $redis2->expire($key,604800);//更新过期时间7天
-        }
-        $redis2->database = 10;
-        return $redisToken;
-    }
-
-    public static function tokenDel($key) {
-        $redis2 = \yii::$app->redis;
-        $redis2->database = 1;
-        $ret = $redis2->del($key);
-        $redis2->database = 10;
-        return $ret;
-    }
     //自定义redis Incr 数值递增
     public static function redisIncr($key) {
         $redis = \yii::$app->redis;
-        $redis->database = 0;
+        $redis->database = 6;
         $ret = $redis->executeCommand('Incr', ["{$key}"]);
         if($ret < 100000){
-            $maxCustNo =User::find("cust_no")->orderBy("user_id desc")->asArray()->one();
-            $str = substr($maxCustNo["cust_no"],2);
+            $maxNo =User::find("cust_no")->orderBy("user_id desc")->asArray()->one();
+            if(empty($maxNo)){
+                $str = 100000;
+            }else{
+                $str = substr($maxNo["cust_number"],2);
+            }
             $ret = $redis->executeCommand('Incrby', ["{$key}",$str]);
         }
         return $ret;
     }
-    //设置redis  key的默认值
-    public static function redisIncrby($key,$value) {
-        $redis = \yii::$app->redis;
-        $redis->database = 0;
-        $ret = $redis->executeCommand('Incrby', ["{$key}",$value]);
-        return $ret;
-    }
+
 }
