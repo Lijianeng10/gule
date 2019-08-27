@@ -29,11 +29,11 @@ class UserController extends Controller {
 
     public function actionCallBackWxCode() {
         $request = \Yii::$app->request;
-        $storeCode = $request->get('state');
+//        $storeCode = $request->get('state');
         $wxCode = $request->get('code', '');
         //$storeCode 参数拼接了门店公众号Code、H5跳转链接
-        $codeAry = explode('_', $storeCode);
-        $ret = UserService::getUserInfo($codeAry[0], $wxCode);
+//        $codeAry = explode('_', $storeCode);
+        $ret = UserService::getUserInfo(1, $wxCode);
         $pageUrl = \Yii::$app->params['page_url'];
         if ($ret['code'] != 600) {
             $url = \Yii::$app->params['awardDomain'] . '/' . $pageUrl[$codeAry[1]] . '?code=' . $ret['code'] . '&msg=' . $ret['msg'];

@@ -16,7 +16,7 @@ return [
 
     'wechat' => [//微信公众号参数
         'token' => 'gule',
-        'redirect_uri' => 'your redirect uri',
+        'redirect_uri' => 'http://www.gulezyun.com.cn/api/front/user/call-back-wx-code',
         'appid' => 'wxa2114b0a7c53ffc1',
         'appsecret' => 'e9678906d75d964e268aa35e1608ec15',
         'mchid' => 'your mchid',

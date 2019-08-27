@@ -19,13 +19,14 @@ class UserService{
      * @return int
      */
     public static function getUserInfo($type, $code = '') {
+        $wxInfo = \Yii::$app->params['wechat'];
         $appid = $wxInfo['appid'];
         $appsecret = $wxInfo['secret'];
         $redirect_uri = $wxInfo['redirect_uri'];
         if (empty($code)) {
             //触发微信返回code码
             $baseUrl = urlencode($redirect_uri);
-            $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" . $appid . "&redirect_uri=" . $baseUrl . "&response_type=code&scope=snsapi_userinfo&state=" . $storeCode . "&connect_redirect=1#wechat_redirect";
+            $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" . $appid . "&redirect_uri=" . $baseUrl . "&response_type=code&scope=snsapi_userinfo&state=state&connect_redirect=1#wechat_redirect";
             Header("Location: $url");
             exit;
         } else {
