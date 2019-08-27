@@ -69,6 +69,7 @@ class UserService{
         $weixin = file_get_contents($url); //通过code换取网页授权access_token
         $jsondecode = json_decode($weixin); //对JSON格式的字符串进行编码
         $array = get_object_vars($jsondecode); //转换成数组
+        print_r($array);die;
         $accessToken = $array['access_token']; //输出access_token
         $openid = $array['openid']; //输出openid
         //获取详细信息
