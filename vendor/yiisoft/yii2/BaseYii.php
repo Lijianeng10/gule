@@ -764,5 +764,19 @@ class BaseYii {
         }
         return $ret;
     }
-
+    /**
+     * 说明: datagrid数据返回
+     * @date 2018年11月15日 上午14:20:00
+     * @param $data  返回数据
+     * @param $total  数据总数
+     * @param $statistics  统计值(金额、销售张数)
+     * @return
+     */
+    public static function datagridJson($data,$total,$statistics=''){
+        $ret['rows'] = $data;
+        $ret['total'] = $total;
+        $ret['statistics'] = $statistics;
+        echo json_encode($ret);
+        \Yii::$app->end();
+    }
 }
