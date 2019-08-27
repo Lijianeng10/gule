@@ -236,4 +236,27 @@ class UserService{
         return $no;
     }
 
+    /**
+     * 绑定手机号
+     * 2019年8月16日10:54:29 ZYL
+     * @param type $tel
+     * @param type $wxUserInfo
+     * @return type
+     */
+    public static function bindTel($tel, $wxUserInfo) {
+        //根据微信信息查询用户是否绑定手机号
+        if (empty($wxUserInfo) && !isset($wxUserInfo['openid'])) {
+            return ['code' => 109, 'msg' => '信息错误！请稍后再试'];
+        }
+        $user = User::findOne(['openid' => $wxUserInfo['openid']]);
+        if (!$user) {
+            return ['code' => 109, 'msg' => '错误用户'];
+        }
+        $user->phone = $tel;
+        if (!$user->save()) {
+            return ['code' => 109, 'msg' => '绑定失败！请稍后再试'];
+        }
+        return ['code' => 600, 'msg' => '绑定成功！', 'data' => $tel];
+    }
+
 }

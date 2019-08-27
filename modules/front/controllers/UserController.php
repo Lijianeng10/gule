@@ -254,4 +254,23 @@ class UserController extends Controller {
         return $this->jsonResult($res["code"],$res["msg"],$res["data"]);
     }
 
+    /**
+     * 微信用户绑定手机号
+     */
+    public function actionBindUserTel() {
+        $request = \Yii::$app->request;
+        $userTel = $request->post('userTel');
+        $wxUserInfo = json_decode($request->post('wxUserInfo', ''), true);
+        if (empty($userTel)||empty($wxUserInfo)) {
+            return $this->jsonError(109, '参数缺失');
+        }
+
+        //绑定手机号,未注册需注册再登录
+//        $ret = UserService::createOrBindUser($userTel, $agentCode, $wxUserInfo);
+        $ret = UserService::bindTel($userTel, $wxUserInfo);
+        if ($ret['code'] != 600) {
+            return $this->jsonError($ret['code'], $ret['msg']);
+        }
+        return $this->jsonResult(600, '操作成功！', $ret['data']);
+    }
 }
