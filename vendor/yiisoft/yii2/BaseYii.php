@@ -578,7 +578,6 @@ class BaseYii {
     //自定义redis set 方法
     public static function redisSet($key, $value, $time = 0) {
         $redis = \yii::$app->redis;
-        $redis->database = 6;
         if (is_array($value)) {
             $value = json_encode($value);
         }
@@ -597,7 +596,6 @@ class BaseYii {
      */
     public static function redisGet($key, $type = 1) {
         $redis = \yii::$app->redis;
-        $redis->database = 6;
         $redisRet = $redis->executeCommand('get', ["{$key}"]);
         if ($type == 2) {
             if ($redisRet == '[]') {//当数组为空时返回-99
@@ -614,7 +612,6 @@ class BaseYii {
      */
     public static function redisDel($key) {
         $redis = \yii::$app->redis;
-        $redis->database = 6;
         $redisRet = $redis->executeCommand('del', ["{$key}"]);
 
         return $redisRet;
@@ -655,7 +652,6 @@ class BaseYii {
 
     public static function tokenSet($key, $val) {
         $redis = \yii::$app->redis;
-        $redis->database = 6;
         $ret = $redis->setex($key, 604800, $val); //设置过期时间7天
         $redis->database = 0;
         return $ret;
@@ -663,18 +659,15 @@ class BaseYii {
 
     public static function tokenGet($key) {
         $redis = \yii::$app->redis;
-        $redis->database = 6;
         $redisToken = $redis->get($key);
         if (!empty($redisToken)) {
             $redis->expire($key, 604800); //更新过期时间7天
         }
-        $redis->database = 0;
         return $redisToken;
     }
 
     public static function tokenDel($key) {
         $redis = \yii::$app->redis;
-        $redis->database = 6;
         $ret = $redis->del($key);
         $redis->database = 0;
         return $ret;
@@ -759,7 +752,6 @@ class BaseYii {
     //自定义redis Incr 数值递增
     public static function redisIncr($key) {
         $redis = \yii::$app->redis;
-        $redis->database = 6;
         $ret = $redis->executeCommand('Incr', ["{$key}"]);
         if($ret < 100000){
             $maxNo =User::find("cust_no")->orderBy("user_id desc")->asArray()->one();

@@ -37,20 +37,29 @@ class UserService{
             }
             $user = User::find()->where(['openid' => $wxUserInfo['openid']])->asArray()->one();
             $token = '';
-            //授权过的用户直接登录
-            if (!empty($user)) {
-                if (!empty($user['user_tel'])) {
-                    //已经存在则直接登录
-                    $token = self::autoLogin($user['cust_no'], $user['user_id']);
+            if (empty($user)) {
+                $createUser = self::createUser($wxUserInfo);
+                if ($createUser['code'] != 600) {
+                    return ['code' => $createUser['code'], 'msg' => $createUser['msg']];
                 }
+                $custNo = $createUser['data']['cust_no'];
+                $userId = $createUser['data']['user_id'];
+//                $thirdUser = ThirdUser::find()->where(['user_id' => $userId, 'cust_no' => $custNo, 'store_code' => $storeCode])->one();
+//                if (empty($thirdUser)) {
+//                    self::createThirdUserInfo($wxUserInfo, $storeCode, $userId, $custNo);
+//                }
+                $mobile = '';
+            } else {
+                $custNo = $user['cust_no'];
+                $userId = $user['user_id'];
+                $mobile = $user['user_tel'];
             }
+            $token = self::autoLogin($custNo, $userId);
             $userInfoAry = [];
-//            $userInfoAry['user_id'] = $userId;
-//            $userInfoAry['cust_no'] = $custNo;
-//            $userInfoAry['cust_type'] = $custType;
             $userInfoAry['token'] = $token;
             $userInfoAry['wxUserInfo'] = $wxUserInfo;
 //            $userInfoAry['agentCode'] = $storeCode;
+            $userInfoAry['mobile'] = $mobile;
             return ['code' => 600, 'msg' => '登录成功！', 'data' => $userInfoAry];
         }
     }
@@ -80,45 +89,27 @@ class UserService{
     /**
      * 创建用户
      * @param $wxUserInfo 微信用户信息包
-     * @param string $agent 所属上级
      * @param string $userTel 手机号
      */
-    public static function createUser($wxUserInfo, $storeCode = 'hy', $userTel = '') {
+    public static function createUser($wxUserInfo, $userTel = '') {
         $custNo = self::getNo();
         $cTime = date('Y-m-d H:i:s');
         $user = new User();
         $user->cust_no = $custNo;
-        $user->user_tel = $userTel;
-        $user->head_img = $wxUserInfo['headimgurl'];
-        $user->user_name = $wxUserInfo['nickname'];
-        $user->privince = $wxUserInfo['province'];
+        $user->phone = $userTel;
+        $user->pic = $wxUserInfo['headimgurl'];
+        $user->nickname = $wxUserInfo['nickname'];
+        $user->province = $wxUserInfo['province'];
         $user->city = $wxUserInfo['city'];
-        $user->area = $wxUserInfo['country']; //国家
-        $user->agent = $storeCode;
 //        $user->unionid = $wxUserInfo['unionid'];
         $user->openid = $wxUserInfo['openid'];
-        $user->c_time = $cTime;
-        $db = \Yii::$app->db;
-        $tran = $db->beginTransaction();
-        try {
-            if (!$user->save()) {
-                throw new Exception('用户新增失败！');
-            }
-            $userId = $user->attributes['user_id'];
-            $userFunds = new UserFunds();
-            $userFunds->user_id = $userId;
-            $userFunds->cust_no = $custNo;
-            $userFunds->c_time = $cTime;
-            if (!$userFunds->save()) {
-                throw new Exception('用户资金表新增失败！');
-            }
-            $tran->commit();
-            $userData = ['user_id' => $userId, 'cust_no' => $custNo];
-            return ['code' => 600, 'msg' => '新增成功！', 'data' => $userData];
-        } catch (\yii\db\Exception $e) {
-            $tran->rollBack();
-            return ['code' => 109, 'msg' => $e->getMessage()];
+        $user->create_time = $cTime;
+        if (!$user->save()) {
+            return ['code' => 109, 'msg' => '用户新增失败！'];
         }
+        $userId = $user->attributes['user_id'];
+        $userData = ['user_id' => $userId, 'cust_no' => $custNo];
+        return ['code' => 600, 'msg' => '新增成功！', 'data' => $userData];
     }
     /**
      * 自动登录 生成token
@@ -234,6 +225,15 @@ class UserService{
         }
         $counts = ShopCar::find()->where(["user_id"=>$userId])->count();
         return ["code"=>600,"msg"=>"操作成功","data"=>$counts];
+    }
+
+    /**
+     * 生成唯一用户编号
+     */
+    public static function getNo() {
+        $No = \Yii::redisIncr('cust_number');
+        $no = "TD" . $No;
+        return $no;
     }
 
 }
