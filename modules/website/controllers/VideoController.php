@@ -50,8 +50,8 @@ class VideoController extends Controller {
      * 新增动态广告
      */
     public function actionAddVideo() {
-            $post = Yii::$app->request->post();
-            $type = $post['type'];
+            $request = Yii::$app->request;
+            $type = $request->post('type',1);
             $session = Yii::$app->session;
             $timer = date('Y-m-d H:i:s');
             if (isset($_FILES['upfile'])) {

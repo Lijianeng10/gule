@@ -1,7 +1,7 @@
 <?php
 return [
     'userDomain' => "http://www.gulezyun.com.cn", //前台域名
-    'lottery_img_host' => 'http://sys.gulezyun.com.cn/img', //图片服务器地址
+    'lottery_img_host' => 'http://sys.gulezyun.com.cn/img/', //图片服务器地址
 
     'gl_shop_appid' => 'wx774016baa223f8f6',//咕啦商城小程序appid
     'gl_shop_mch_id' => '1514825831',//咕啦商城商户ID
