@@ -34,11 +34,11 @@ class UserController extends Controller {
         //$storeCode 参数拼接了门店公众号Code、H5跳转链接
 //        $codeAry = explode('_', $storeCode);
         $ret = UserService::getUserInfo(1, $wxCode);
-        $pageUrl = \Yii::$app->params['page_url'];
-        if ($ret['code'] != 600) {
-            $url = \Yii::$app->params['awardDomain'] . '/' . $pageUrl[$codeAry[1]] . '?code=' . $ret['code'] . '&msg=' . $ret['msg'];
-        }
-        $url = \Yii::$app->params['awardDomain'] . '/' . $pageUrl[$codeAry[1]] . '?userInfo=' . json_encode($ret['data']);
+//        $pageUrl = \Yii::$app->params['page_url'];
+//        if ($ret['code'] != 600) {
+//            $url = \Yii::$app->params['awardDomain'] . '/' . $pageUrl[$codeAry[1]] . '?code=' . $ret['code'] . '&msg=' . $ret['msg'];
+//        }
+        $url = \Yii::$app->params['userDomain'] . '/home/homePage?userInfo=' . json_encode($ret['data']);
         return $this->redirect($url);
     }
 
