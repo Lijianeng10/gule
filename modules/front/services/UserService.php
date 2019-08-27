@@ -52,7 +52,7 @@ class UserService{
             } else {
                 $custNo = $user['cust_no'];
                 $userId = $user['user_id'];
-                $mobile = $user['user_tel'];
+                $mobile = $user['phone'];
             }
             $token = self::autoLogin($custNo, $userId);
             $userInfoAry = [];
