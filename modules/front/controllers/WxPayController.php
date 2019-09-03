@@ -42,12 +42,12 @@ class WxPayController extends Controller{
      */
     public function actionPayNotice(){
         $postData = \Yii::$app->request->post();
-        KafkaService::addLog("appletsPaylog",var_export($postData,true));
+//        KafkaService::addLog("appletsPaylog",var_export($postData,true));
         $wxPay =new WxPay();
         $ret = $wxPay->notify($postData);
-        if($ret['code']!=600){
-            KafkaService::addLog("appletsPayError",var_export($ret['msg'].'&postData='.$postData,true));
-        }
+//        if($ret['code']!=600){
+//            KafkaService::addLog("appletsPayError",var_export($ret['msg'].'&postData='.$postData,true));
+//        }
         return $wxPay->return_success("SUCCESS","OK");
     }
     /**
