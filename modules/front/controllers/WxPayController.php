@@ -47,11 +47,10 @@ class WxPayController extends Controller{
         $jsonxml = json_encode(simplexml_load_string($testxml, 'SimpleXMLElement', LIBXML_NOCDATA));
         $postData = json_decode($jsonxml, true);//转成数组
         Commonfun::addLogs(1,$postData);
-        die;
         $wxPay = new WxPay();
         $ret = $wxPay->notify($postData);
         if($ret['code']!=600){
-            Commonfun::addLogs(2,var_export($ret['msg'].'&postData='.$postData,true));
+            Commonfun::addLogs(2,$ret['msg'].'&postData='.$postData);
         }
         return $wxPay->return_success("SUCCESS","OK");
     }
