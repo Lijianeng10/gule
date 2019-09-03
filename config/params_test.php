@@ -3,10 +3,10 @@ return [
     'userDomain' => "http://www.gulezyun.com.cn", //前台域名
     'lottery_img_host' => 'http://sys.gulezyun.com.cn/img/', //图片服务器地址
 
-    'gl_shop_appid' => 'wx774016baa223f8f6',//咕啦商城小程序appid
-    'gl_shop_mch_id' => '1514825831',//咕啦商城商户ID
-    'gl_shop_secret' => '77d196072921adfd9656bbb94e72a717',//咕啦商城 app secret
-    'gl_shop_pay_key' => '0257c8b69d6f9a49285a82a8b7942636',//咕啦商城支付秘钥
+    'gl_shop_appid' => 'wxa2114b0a7c53ffc1',//谷乐财顾appid
+    'gl_shop_mch_id' => '1541649181',//谷乐财顾商户ID
+    'gl_shop_secret' => '77d196072921adfd9656bbb94e72a717',//谷乐财顾 app secret
+    'gl_shop_pay_key' => '5dfabd0343b4055226859a8e00a8e891',//谷乐财顾支付秘钥
 
     'smtpServer'=>'smtp.qq.com',//SMTP服务器
     'smtpServerport' =>25,//SMTP服务器端口
