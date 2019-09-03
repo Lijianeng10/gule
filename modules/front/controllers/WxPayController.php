@@ -9,6 +9,7 @@ namespace app\modules\front\controllers;
 
 use yii\web\Controller;
 use app\modules\common\helpers\WxPay;
+use app\modules\common\helpers\Commonfun;
 
 class WxPayController extends Controller{
     /**
@@ -42,13 +43,13 @@ class WxPayController extends Controller{
      */
     public function actionPayNotice(){
         $postData = \Yii::$app->request->post();
-//        KafkaService::addLog("appletsPaylog",var_export($postData,true));
+        Commonfun::addLogs(1,var_export($postData,true));
         $wxPay =new WxPay();
         $ret = $wxPay->notify($postData);
-//        if($ret['code']!=600){
-//            KafkaService::addLog("appletsPayError",var_export($ret['msg'].'&postData='.$postData,true));
-//        }
-//        return $wxPay->return_success("SUCCESS","OK");
+        if($ret['code']!=600){
+            Commonfun::addLogs(2,var_export($ret['msg'].'&postData='.$postData,true));
+        }
+        return $wxPay->return_success("SUCCESS","OK");
     }
     /**
      * 回调退款通知

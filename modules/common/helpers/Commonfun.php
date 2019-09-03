@@ -20,6 +20,7 @@ use app\modules\common\models\Lottery;
 use app\modules\common\models\Queue;
 use yii\db\Query;
 use app\modules\user\helpers\WechatTool;
+use app\modules\common\models\Logs;
 
 class Commonfun {
 
@@ -829,6 +830,19 @@ class Commonfun {
         $serialnum = sprintf("%04d", $serialnum);
         $code = $likeStr .$serialnum;
         return $code;
+    }
+
+    /**
+     * 新增日志
+     * @param int $type 日志类型
+     * @param string $content 日志内容
+     */
+    public static function addLogs($type=1,$content=''){
+        $logs = new Logs();
+        $logs->type = $type;
+        $logs->content = $content;
+        $logs->c_time = date('Y-m-d H:i:s');
+        $logs->save();
     }
 
 }
