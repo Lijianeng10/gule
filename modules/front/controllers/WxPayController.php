@@ -48,7 +48,7 @@ class WxPayController extends Controller{
 //        if($ret['code']!=600){
 //            KafkaService::addLog("appletsPayError",var_export($ret['msg'].'&postData='.$postData,true));
 //        }
-        return $wxPay->return_success("SUCCESS","OK");
+//        return $wxPay->return_success("SUCCESS","OK");
     }
     /**
      * 回调退款通知
