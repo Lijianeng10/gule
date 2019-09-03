@@ -43,8 +43,9 @@ class WxPayController extends Controller{
      */
     public function actionPayNotice(){
         $postData = \Yii::$app->request->post();
-        Commonfun::addLogs(1,var_export($postData,true));
-        $wxPay =new WxPay();
+        Commonfun::addLogs(1,json_encode($postData));
+        return;
+        $wxPay = new WxPay();
         $ret = $wxPay->notify($postData);
         if($ret['code']!=600){
             Commonfun::addLogs(2,var_export($ret['msg'].'&postData='.$postData,true));
