@@ -130,7 +130,7 @@ class OrderService {
             $payService = new PayService();
             $payService->addPayRecord($orderModel->order_id,$orderModel->order_code,$userId,$custNo,1, 2,$orderMoney);
             //微信小程序支付
-            $body = '咕啦商城-购买商品';
+            $body = '谷乐-购买商品';
             $money = floatval($orderMoney*100);//接口中参数支付金额单位为【分】
             $wxPay =new WxPay();
             $payRet =$wxPay->unifiedorder($orderModel->order_code,$body,$money,$openid);

@@ -7,6 +7,7 @@ use Yii;
 use yii\web\Controller;
 use app\modules\pay\helpers\WxPay;
 use app\modules\front\services\OrderService;
+use app\modules\common\models\User;
 
 class OrderController extends Controller {
 
@@ -19,12 +20,11 @@ class OrderController extends Controller {
         $post = $request->post();
         $custNo = $this->custNo;
         $userId = $this->userId;
-//        $user = ThirdUser::find()->where(["uid"=>$userId,'type'=>2])->asArray()->one();
-//        if(empty($user)){
-//            return $this->jsonError(109,"查无此用户授权信息，请确保账户已绑定手机完成授权！");
-//        }
-//        $user['third_uid']
-        $ret = OrderService::validateOrder($post, $custNo, $userId,'');
+        $user = User::find()->where(["cust_no"=>$custNo])->asArray()->one();
+        if(empty($user)){
+            return $this->jsonError(109,"查无此用户授权信息，请确保账户已绑定手机完成授权！");
+        }
+        $ret = OrderService::validateOrder($post, $custNo, $userId,$user['openid']);
         if($ret['code'] != 600) {
             return $this->jsonError($ret['code'], $ret['msg']);
         }
