@@ -31,7 +31,7 @@ class WxPayController extends Controller{
         $body = '咕啦商城-购买商品';
         $money = floatval(0.01*100);//接口中参数支付金额单位为【分】
         $wxPay =new WxPay();
-        $ret =$wxPay->unifiedorder(date('YmdHis'),$body,$money,'oMhNW42NT_HsPMjMu0D5dSa1hDSQ');
+        $ret =$wxPay->unifiedorder(date('YmdHis'),$body,$money,'oJPbb1Q0ViLS_bwZmFTDCMjPtKgE');
         if($ret["code"]!=600){
             return $this->jsonError($ret['code'],$ret['msg']);
         }
