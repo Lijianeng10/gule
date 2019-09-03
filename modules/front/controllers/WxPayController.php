@@ -42,7 +42,10 @@ class WxPayController extends Controller{
      * 回调支付通知
      */
     public function actionPayNotice(){
-        $postData = \Yii::$app->request->post();
+//        $postData = \Yii::$app->request->post();
+        $testxml  = file_get_contents("php://input");
+        $jsonxml = json_encode(simplexml_load_string($testxml, 'SimpleXMLElement', LIBXML_NOCDATA));
+        $postData = json_decode($jsonxml, true);//转成数组
         Commonfun::addLogs(1,$postData);
         die;
         $wxPay = new WxPay();
