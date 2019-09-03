@@ -42,7 +42,7 @@ class WxPay
             'out_trade_no' => $out_trade_no,
             'total_fee' => $total_fee,
             'spbill_create_ip' => $_SERVER['REMOTE_ADDR'], //终端IP
-            'notify_url' => \YII::$app->params["userDomain"]."/api/pay/wx-pay/pay-notice", //通知地址确保外网能正常访问
+            'notify_url' => \YII::$app->params["userDomain"]."/api/front/wx-pay/pay-notice", //通知地址确保外网能正常访问
             'openid' => $openid, //用户openid
             'trade_type' => 'JSAPI'//交易类型
         );
