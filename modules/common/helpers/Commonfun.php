@@ -840,7 +840,7 @@ class Commonfun {
     public static function addLogs($type=1,$content=''){
         $logs = new Logs();
         $logs->type = $type;
-        $logs->content = $content;
+        $logs->content = json_encode($content);
         $logs->c_time = date('Y-m-d H:i:s');
         $logs->save();
     }
