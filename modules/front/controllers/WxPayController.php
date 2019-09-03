@@ -50,7 +50,7 @@ class WxPayController extends Controller{
         $wxPay = new WxPay();
         $ret = $wxPay->notify($postData);
         if($ret['code']!=600){
-            Commonfun::addLogs(2,$ret['msg'].'&postData='.$postData);
+            Commonfun::addLogs(2,$ret);
         }
         return $wxPay->return_success("SUCCESS","OK");
     }
