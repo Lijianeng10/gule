@@ -25,7 +25,7 @@ class DataController extends Controller{
         $news->pic_url = $this->arrParameter($data[0], 'pic_url');
         $news->content = $this->arrParameter($data[0], 'content');
         $news->type = $this->arrParameter($data[0], 'type');
-//        $news->info_type = $this->arrParameter($data[0], 'info_type');
+        $news->info_type = $this->arrParameter($data[0], 'info_type');
 //        $news->league_code = $this->arrParameter($data[0], 'league_code');
         $news->create_time = $this->arrParameter($data[0], 'create_time');
         $news->sub_content = $this->arrParameter($data[0], 'sub_content');

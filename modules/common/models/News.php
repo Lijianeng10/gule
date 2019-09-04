@@ -81,4 +81,4 @@ class News extends \yii\db\ActiveRecord
             'comment_num' => 'Comment Num',
         ];
     }
-} 
+}
