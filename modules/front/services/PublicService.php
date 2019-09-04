@@ -54,7 +54,7 @@ class PublicService{
             ->orderBy('create_time desc')
             ->asArray()
             ->all();
-        return ['page_num' => $page, 'data' => $newsList, 'size' => $size, 'pages' => $pages, 'totalpage' => $total];
+        return ['page_num' => $page, 'data' => $newsList, 'size' => $size, 'totalpage' => $pages, 'total' => $total];
     }
     /*
      * 获取资讯详情
