@@ -45,7 +45,7 @@ class PublicService{
         $total = News::find()->where($where)->count();
         $pages = ceil($total / $size);
         $offset = ($page - 1) * $size;
-        $field = ['news_id', 'pic_name', 'pic_url', 'content','type','info_type', 'create_time'];
+        $field = ['news_id', 'pic_name', 'pic_url', 'type','info_type', 'create_time'];
         $newsList = News::find()
             ->select($field)
             ->where($where)
