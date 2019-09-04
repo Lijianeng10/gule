@@ -19,5 +19,15 @@ class PublicController extends Controller {
         return $this->jsonResult(600, '获取成功', $bannerData);
     }
 
-
+    /**
+     * 获取谷乐新闻列表
+     */
+    public function actionGetNews(){
+        $request = \Yii::$app->request;
+        $infoType = $request->post('infoType', '');
+        $page = $request->post('page', 1);
+        $size = $request->post('size', 10);
+        $newsData = PublicService::getNews($infoType,$page,$size);
+        return $this->jsonResult(600, '获取成功', $newsData);
+    }
 }

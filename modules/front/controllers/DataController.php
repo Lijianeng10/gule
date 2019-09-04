@@ -13,7 +13,7 @@ use app\modules\common\models\News;
 
 class DataController extends Controller{
     /**
-     * 赛事资讯数据接入
+     * 爬虫谷乐资讯数据接入
      * @return json
      */
     public function actionInformationData() {
