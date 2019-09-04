@@ -44,7 +44,6 @@ class News extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pic_name', 'create_time'], 'required'],
             [['pic_name', 'content', 'sub_content'], 'string'],
             [['jump_type', 'area', 'type', 'info_type', 'use_type', 'status', 'opt_id', 'praise_num', 'comment_num'], 'integer'],
             [['create_time', 'update_time'], 'safe'],
@@ -82,4 +81,4 @@ class News extends \yii\db\ActiveRecord
             'comment_num' => 'Comment Num',
         ];
     }
-}
+} 
