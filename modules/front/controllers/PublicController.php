@@ -30,4 +30,14 @@ class PublicController extends Controller {
         $newsData = PublicService::getNews($infoType,$page,$size);
         return $this->jsonResult(600, '获取成功', $newsData);
     }
+
+    public function actionGetNewsDetail(){
+        $request = \Yii::$app->request;
+        $id = $request->post('id', '');
+        if(empty($id)){
+            return $this->jsonError(109,'参数缺失！');
+        }
+        $newsData = PublicService::getNewsDetail($id);
+        return $this->jsonResult(600, '获取成功', $newsData);
+    }
 }

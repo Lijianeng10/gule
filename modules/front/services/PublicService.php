@@ -52,6 +52,13 @@ class PublicService{
             ->orderBy('create_time desc')
             ->asArray()
             ->all();
-        return ['page_num' => $page, 'data' => $newsList, 'size' => $size, 'pages' => $pages, 'total' => $total];
+        return ['page_num' => $page, 'data' => $newsList, 'size' => $size, 'pages' => $pages, 'totalpage' => $total];
+    }
+    /*
+     * 获取资讯详情
+     */
+    public static function getNewsDetail($id){
+        $data = News::find()->where(['news_id'=>$id])->asArray()->one();
+        return $data;
     }
 }
