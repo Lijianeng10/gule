@@ -44,12 +44,12 @@ class News extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['pic_name', 'create_time'], 'required'],
+            [['pic_name', 'content', 'sub_content'], 'string'],
             [['jump_type', 'area', 'type', 'info_type', 'use_type', 'status', 'opt_id', 'praise_num', 'comment_num'], 'integer'],
-            [['content', 'sub_content'], 'string'],
-            [['create_time'], 'required'],
             [['create_time', 'update_time'], 'safe'],
-            [['pic_name', 'jump_title'], 'string', 'max' => 50],
             [['pic_url', 'pc_pic_url', 'jump_url'], 'string', 'max' => 255],
+            [['jump_title'], 'string', 'max' => 50],
             [['league_code'], 'string', 'max' => 25],
         ];
     }
