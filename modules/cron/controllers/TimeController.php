@@ -95,7 +95,7 @@ class TimeController extends Controller {
     public function actionCancleNoPayOrders(){
 //        $timer = date('Y-m-d H:i:s',strtotime('-30 minute'));//30分钟前
         $timer = date('Y-m-d H:i:s',strtotime('-2 hours'));
-        $ret = ShopOrders::updateAll(['order_status'=>5,'pay_status'=>2],['<=','order_time',$timer]);
+        $ret = ShopOrders::updateAll(['order_status'=>5,'pay_status'=>2],['and',['<=','order_time',$timer],['order_status'=>0,'pay_status'=>0]]);
         print_r($ret);
     }
 
