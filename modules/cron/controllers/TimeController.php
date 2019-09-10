@@ -4,7 +4,8 @@ namespace app\modules\cron\controllers;
 
 use Yii;
 use yii\web\Controller;
-use app\modules\common\models\Machine;
+//use app\modules\common\models\Machine;
+use app\modules\common\models\ShopOrders;
 
 class TimeController extends Controller {
     /**
@@ -86,6 +87,16 @@ class TimeController extends Controller {
         }
         \Yii::redisSet('wxgzh_token', $access_token, 6000);
         return $this->jsonResult(600, 'succ', ['token' => $access_token, 'flag' => $flag]);
+    }
+
+    /**
+     * 定时取消订单
+     */
+    public function actionCancleNoPayOrders(){
+//        $timer = date('Y-m-d H:i:s',strtotime('-30 minute'));//30分钟前
+        $timer = date('Y-m-d H:i:s',strtotime('-2 hours'));
+        $ret = ShopOrders::updateAll(['order_status'=>5,'pay_status'=>2],['<=','order_time',$timer]);
+        print_r($ret);
     }
 
 }
