@@ -125,7 +125,7 @@ class OrderService {
                 throw new Exception('下单失败-子单');
             }
             $db->createCommand($upStr)->execute();
-            $trans->commit();
+
             //生成交易记录
             $payService = new PayService();
             $payService->addPayRecord($orderModel->order_id,$orderModel->order_code,$userId,$custNo,1, 2,$orderMoney);
@@ -139,11 +139,11 @@ class OrderService {
             }
 //            订单ID
             $payRet['data']['orderId'] = $orderModel->order_id;
-            //保存wx支付返回的数据包
-//            ShopOrders::updateAll(['wxpay_data'=>json_encode($payRet['data'])],['order_code'=>$orderModel->order_code]);
+//            保存wx支付返回的数据包
+            ShopOrders::updateAll(['wxpay_data'=>json_encode($payRet['data'])],['order_code'=>$orderModel->order_code]);
             //删除购物车数据
             ShopCar::deleteAll(['and', ['user_id' => $userId],['in', 'product_id', $carCode]]);
-//            'data' =>$payRet['data']
+            $trans->commit();
             return ['code' => 600, 'msg' => '下单成功','data' =>$payRet['data']];
         } catch (Exception $ex) {
             $trans->rollBack();
@@ -172,16 +172,16 @@ class OrderService {
                 throw new Exception('操作失败！请重新再试');
             }
             //取消订单更新商品库存
-            $detail = ShopOrdersDetail::find()->where(["order_id"=>$orderData->order_id])->asArray()->all();
-            foreach ($detail as $v){
-                $str = '';
-                //更新商品子库存
-                $str .= "update shop_goods_sku set stock = stock + {$v['sku_num']} where sku_id = '{$v["sku_id"]}';";
-                $ret = $db->createCommand($str)->execute();
-                if(!$ret){
-                    throw new Exception('商品库存更新失败');
-                }
-            }
+//            $detail = ShopOrdersDetail::find()->where(["order_id"=>$orderData->order_id])->asArray()->all();
+//            foreach ($detail as $v){
+//                $str = '';
+//                //更新商品子库存
+//                $str .= "update shop_goods_sku set stock = stock + {$v['sku_num']} where sku_id = '{$v["sku_id"]}';";
+//                $ret = $db->createCommand($str)->execute();
+//                if(!$ret){
+//                    throw new Exception('商品库存更新失败');
+//                }
+//            }
             $trans->commit();
             return ['code' => 600, 'msg' => '操作成功'];
         }catch (Exception $ex) {
