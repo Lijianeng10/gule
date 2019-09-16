@@ -92,11 +92,11 @@ class TimeController extends Controller {
     /**
      * 定时取消订单
      */
-    public function actionCancleNoPayOrders(){
+    public function actionCancelNoPayOrders(){
 //        $timer = date('Y-m-d H:i:s',strtotime('-30 minute'));//30分钟前
         $timer = date('Y-m-d H:i:s',strtotime('-2 hours'));
-        $ret = ShopOrders::updateAll(['order_status'=>5,'pay_status'=>2],['and',['<=','order_time',$timer],['order_status'=>0,'pay_status'=>0]]);
-        print_r($ret);
+        $ret = ShopOrders::updateAll(['order_status'=>5,'pay_status'=>2,'wxpay_data'=>''],['and',['<=','order_time',$timer],['order_status'=>0,'pay_status'=>0]]);
+       return $this->jsonResult(600,'操作成功！',$ret);
     }
 
 }
