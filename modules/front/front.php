@@ -34,7 +34,8 @@ class front extends \yii\base\Module
                      'user/opt-user-shop-car',
                      'order/play-order',
                     'order/get-user-order-num',
-                    'order/get-order-list'
+                    'order/get-order-list',
+                    'order/cancle-order'
 
                 ],
                 "any" => [
