@@ -55,7 +55,8 @@ class UserController extends Controller {
             return $this->jsonError(109,'该手机号已被注册，请检查！');
         }
         $user = new  User();
-        $custNo =$this->getCustNo();
+//        $custNo =$this->getCustNo();
+        $custNo =  UserService::getNo();
         $user->cust_no = $custNo;
         $user->nickname = $phone;
         $user->phone = $phone;
@@ -74,11 +75,11 @@ class UserController extends Controller {
     /**
      * 生成唯一用户编号
      */
-    public function getCustNo(){
-        $No= \Yii::redisIncr('cust_number');
-        $cust_no = "gl" . $No;
-        return $cust_no;
-    }
+//    public function getCustNo(){
+//        $No= \Yii::redisIncr('cust_number');
+//        $cust_no = "GL" . $No;
+//        return $cust_no;
+//    }
 //    public function actionSetNo(){
 //        $No= \Yii::redisIncrby('register_no',100000);
 //        print_r($No);die;

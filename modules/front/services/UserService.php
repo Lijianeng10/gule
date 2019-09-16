@@ -232,7 +232,7 @@ class UserService{
      */
     public static function getNo() {
         $No = \Yii::redisIncr('cust_number');
-        $no = "TD" . $No;
+        $no = "GL" . $No;
         return $no;
     }
 
