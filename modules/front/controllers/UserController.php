@@ -75,7 +75,7 @@ class UserController extends Controller {
      * 生成唯一用户编号
      */
     public function getCustNo(){
-        $No= \Yii::redisIncr('register_no');
+        $No= \Yii::redisIncr('cust_number');
         $cust_no = "gl" . $No;
         return $cust_no;
     }
