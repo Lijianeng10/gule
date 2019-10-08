@@ -22,9 +22,9 @@ class user extends \yii\base\Module {
 
     public function behaviors() {
          return [
-            "LoginFilter" => [
-                "class" => 'app\modules\core\filters\LoginFilter'
-            ],
+//            "LoginFilter" => [
+//                "class" => 'app\modules\core\filters\LoginFilter'
+//            ],
         ];
     }
 
