@@ -95,7 +95,7 @@
                         field: 'opt',
                         title: '操作',
                         width: 80,
-                        align: 'center',
+                        align: 'left',
                         formatter: optFormatter,
                     }]
                 ],
@@ -132,7 +132,7 @@
                 if(row.auth_status ==0){
                     str += '<a href="#" name="up" style="margin-left: 5px" class="easyui-linkbutton info auth adminAuthChangeStatus" onclick="change_status('+row.auth_id+','+row.auth_status+')"></a>';
                 }else if(row.auth_status == 1){
-                    str += '<a href="#" name="down" style="margin-left: 5px" class="easyui-linkbutton info auth adminAuthChangeStatus" onclick="change_status('+row.auth_id+','+row.auth_status+')"></a>';
+                    str += '<a href="#" name="down" style="margin-left: 5px" class="easyui-linkbutton error auth adminAuthChangeStatus" onclick="change_status('+row.auth_id+','+row.auth_status+')"></a>';
                 }
                 // str += '<a href="#" name="edit" style="margin-left: 5px" class="easyui-linkbutton info" onclick="edit_auth('+row+')"></a>';
                 return str;
@@ -144,7 +144,7 @@
 		<table id="datagrid"></table>
 	</div>
 
-	<div id="tb" style="padding:5px;">
+	<div id="tb">
         <div class="tb-menu">
             <a href="#" class="easyui-linkbutton info auth adminAuthAdd" iconCls="fa fa-plus"  onclick="add_dialog('dlg','/adminmod/views/to-auth-add','/adminmod/auth/add');">新增</a>
             <a href="#" class="easyui-linkbutton info auth adminAuthEdit" iconCls="fa fa-edit"  onclick="update_dialog('dlg','/adminmod/views/to-auth-edit','/adminmod/auth/edit-save');">编辑</a>
@@ -152,20 +152,31 @@
             <a href="#" class="easyui-linkbutton primary auth adminAuthSearch" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
         </div>
 
-    	<div style="margin: 5px 0px 5px 0px; color:#000000;">
-    	    权限名称：<input type="text"  name="auth_name" class="textbox" style="height: 24px;"  >
-            <label for="" class="label-top">所属权限：</label>
-            <input name="auth_pid" class="easyui-combotree" data-options="url:'/adminmod/auth/get-auth-tree?type=1',method:'get',lines: true,animate:true,checkbox:true">
-            状态<select class="easyui-combobox" name="status" style="width: 100px;">
-    	          <option value="" selected>全部</option>
-                  <option value="0">禁用</option>
-                  <option value="1">启用</option>
-               </select>
-            权限类型<select class="easyui-combobox" name="auth_type" style="width: 100px;">
-                <option value="" selected>全部</option>
-                <option value="1">导航栏菜单</option>
-                <option value="2">页面功能</option>
-            </select>
+    	<div class="tb-column">
+            <div class="tb_item">
+                <span>权限名称：</span>
+                <input type="text"  name="auth_name" class="easyui-textbox" style="height: 24px;"  >
+            </div>
+            <div class="tb_item">
+                <span for="" class="label-top">所属权限：</span>
+                <input name="auth_pid" class="easyui-combotree" data-options="url:'/adminmod/auth/get-auth-tree?type=1',method:'get',lines: true,animate:true,checkbox:true">
+            </div>
+            <div class="tb_item">
+                <span>状态：</span>
+                <select class="easyui-combobox" name="status" style="width: 100px;">
+                    <option value="" selected>全部</option>
+                    <option value="0">禁用</option>
+                    <option value="1">启用</option>
+                </select>
+            </div>
+            <div class="tb_item">
+                <span>权限类型：</span>
+                <select class="easyui-combobox" name="auth_type" style="width: 100px;">
+                    <option value="" selected>全部</option>
+                    <option value="1">导航栏菜单</option>
+                    <option value="2">页面功能</option>
+                </select>
+            </div>
         </div>
     </div>
 	<div id="dlg"></div>

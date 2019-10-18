@@ -86,7 +86,7 @@
                         field: 'opt',
                         title: '操作',
                         width: 80,
-						align: 'center',
+						align: 'left',
                         formatter: optFormatter,
                     }]
                 ],
@@ -120,7 +120,7 @@
                 if(row.status ==0){
                     str += '<a href="#" name="up" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" onclick="change_status('+row.admin_id+','+row.status+')"></a>';
                 }else if(row.status == 1){
-                    str += '<a href="#" name="down" style="margin-left: 5px" class="easyui-linkbutton info  auth adminAdminChangeStatus" onclick="change_status('+row.admin_id+','+row.status+')"></a>';
+                    str += '<a href="#" name="down" style="margin-left: 5px" class="easyui-linkbutton error  auth adminAdminChangeStatus" onclick="change_status('+row.admin_id+','+row.status+')"></a>';
                 }
                  return str;
             }
@@ -141,19 +141,19 @@
             <a href="#" id="remove" class="easyui-linkbutton error auth adminAdminDelete" iconCls="fa fa-remove" plain="true" onclick="deleteAll('/adminmod/admin/delete');">删除</a>
             <a href="#" class="easyui-linkbutton primary auth adminAdminSearch" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
         </div>
-    	<div class="tb-column"  id="mySeachFrom">
+    	<div class="tb-column">
             <div class="tb_item">
                 <span>登录名：</span>
-                <input type="text"  name="admin_name" class="textbox" >
+                <input type="text"  name="admin_name" class="easyui-textbox" >
             </div>
             <div class="tb_item">
                 <span>昵称：</span>
-                <input type="text"  name="admin_nickname" class="textbox" >
+                <input type="text"  name="admin_nickname" class="easyui-textbox" >
             </div>
 
             <div class="tb_item">
                 <span>手机号：</span>
-                <input type="text"  name="admin_tel" class="textbox" >
+                <input type="text"  name="admin_tel" class="easyui-textbox" >
             </div>
 			<?php if($login_type == '0'){?>
 				<div class="tb_item">
@@ -174,7 +174,7 @@
                 </select>
             </div>
             <div class="tb_item">
-                <span>创建时间:</span>
+                <span>创建时间：</span>
                 <input type="text" id="start_time" name="start_time" class="easyui-datetimebox">
                 -
                 <input type="text" id="end_time" name="end_time" class="easyui-datetimebox" value="<?php echo date('Y-m-d H:i:s')?>" >

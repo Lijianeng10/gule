@@ -99,7 +99,7 @@
                 if(row.status ==0){
                     str += '<a href="#" name="up" style="margin-left: 5px" class="easyui-linkbutton info  auth adminRoleChangeStatus" onclick="change_status('+row.role_id+','+row.status+')"></a>';
                 }else if(row.status == 1){
-                    str += '<a href="#" name="down" style="margin-left: 5px" class="easyui-linkbutton info  auth adminRoleChangeStatus" onclick="change_status('+row.role_id+','+row.status+')"></a>';
+                    str += '<a href="#" name="down" style="margin-left: 5px" class="easyui-linkbutton error  auth adminRoleChangeStatus" onclick="change_status('+row.role_id+','+row.status+')"></a>';
                 }
                 str += '<a href="#" name="add_role" style="margin-left: 5px" class="easyui-linkbutton info auth adminRoleAuth" onclick="role_admin('+row.role_id+',\''+row.role_name+'\')"></a>';
                 return str;
@@ -111,22 +111,32 @@
 		<table id="datagrid"></table>
 	</div>
 
-	<div id="tb" style="padding:5px;">
+	<div id="tb">
         <div class="tb-menu">
             <a href="#" class="easyui-linkbutton info auth adminRoleAdd" iconCls="fa fa-plus"  onclick="add_dialog('dlg','/adminmod/views/to-role-add','/adminmod/role/add');">新增</a>
             <a href="#" class="easyui-linkbutton info auth adminRoleEdit" iconCls="fa fa-edit"  onclick="update_dialog('dlg','/adminmod/views/to-role-edit','/adminmod/role/update');">修改</a>
             <a href="#" id="remove" class="easyui-linkbutton error auth adminRoleDelete" iconCls="fa fa-remove" plain="true" onclick="deleteAll('/adminmod/role/delete');">删除</a>
             <a href="#" class="easyui-linkbutton primary auth adminRoleSearch" iconCls="fa fa-search" onclick="obj.search();"> 查 询 </a>
         </div>
-    	<div style="margin: 5px 0px 5px 0px; color:#000000;">
-    	    角色名：<input type="text"  name="role_name" class="textbox" >
-            状态<select class="easyui-combobox" name="status" style="width: 100px">
-    	          <option value="" selected>全部</option>
-                  <option value="0">禁用</option>
-                  <option value="1">启用</option>
-               </select>
-            创建时间从：<input type="text" id="start_time" name="start_time" class="easyui-datetimebox" style="width:150px" >
-    		到：<input type="text" id="end_time" name="end_time" class="easyui-datetimebox"  style="width:150px">
+    	<div class="tb-column">
+            <div class="tb_item">
+                <span>角色名：</span>
+                <input type="text"  name="role_name" class="easyui-textbox" >
+            </div>
+            <div class="tb_item">
+                <span>状态：</span>
+                <select class="easyui-combobox" name="status" style="width: 100px">
+                    <option value="" selected>全部</option>
+                    <option value="0">禁用</option>
+                    <option value="1">启用</option>
+                </select>
+            </div>
+            <div class="tb_item">
+                <span>创建时间：</span>
+                <input type="text" id="start_time" name="start_time" class="easyui-datetimebox" style="width:150px" >
+                -
+                <input type="text" id="end_time" name="end_time" class="easyui-datetimebox"  style="width:150px">
+            </div>
         </div>
     </div>
     <script>
