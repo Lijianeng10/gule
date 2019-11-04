@@ -10,6 +10,7 @@
 		<script src="/easyui/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="/easyui/js/jquery.easyui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="/easyui/extensions/superDemo.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/js/socket.io.js" type="text/javascript" charset="utf-8"></script>
         <!--非easyui-->
         <link rel="stylesheet" href="/css/left-nav.css">
 
@@ -72,4 +73,22 @@
 		</div>
 
 	</body>
+    <script>
+        //连接websocket
+        function connectSocket() {
+            localStorage.setItem('soundSwitch','true');
+            var custNo = '<?= \Yii::$app->session['admin']['admin_name'] ?>';
+            // 连接服务端
+            var socket = io('http://139.159.143.55:2120');
+            console.log(socket);
+            // 连接后登录
+            socket.on('connect', function () {
+                socket.emit('login', custNo);
+            });
+            socket.on('new_msg', function(msg){
+                console.log("收到消息："+msg);
+            });
+        }
+        // connectSocket();
+    </script>
 </html>
